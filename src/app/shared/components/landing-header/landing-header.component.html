@@ -1,0 +1,7 @@
+
+  @if(navigator.actualRoute() == '/'){
+    <button (click)="navigator.navigateTo('register')">Sign up</button>
+  }@else{
+    <button (click)="navigator.navigateTo('')">Sign in</button>
+  }
+

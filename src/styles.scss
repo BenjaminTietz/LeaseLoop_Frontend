@@ -1,1 +1,69 @@
 /* You can add global styles to this file, and also import other style files */
+@use "app/shared/styles/mixins" as *;
+
+* {
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--color-text-base);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-body);
+}
+
+a{
+  text-decoration: none;
+
+}
+
+main{
+  width: 100%;
+  max-width: 100vw;
+}
+
+.c-pointer{
+  cursor: pointer;
+}
+
+
+content{
+  width: 100%;
+  max-width: 1920px;
+}
+
+button {
+  background: var(--color-btn-bg);
+  color: var(--color-btn-text);
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  padding: 10px 16px;
+  font-size: 20px;
+  @include display(flex, row, center, center);
+  cursor: pointer;
+  box-shadow: 0 4px 8px var(--color-btn-shadow, rgba(0, 0, 0, 0.1));
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: var(--color-btn-hover-bg);
+    box-shadow: 0 2px 6px var(--color-icon-focus, rgba(0, 0, 0, 0.2));
+  }
+
+  &:disabled {
+    background: var(--color-btn-disabled-bg);
+    color: var(--color-btn-disabled-text);
+    border: 1px solid var(--color-btn-disabled-border);
+    cursor: not-allowed;
+  }
+
+  &.secondary {
+    background: var(--color-btn-secondary-bg);
+    color: var(--color-btn-secondary-text);
+
+    &:hover {
+      background: var(--color-btn-secondary-hover-bg);
+    }
+  }
+}

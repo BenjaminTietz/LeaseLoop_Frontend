@@ -1,0 +1,6 @@
+@use "../../styles/mixins" as *;
+button{
+  padding: 4px;
+  border-radius: 5px;
+  @include position(fixed, $top:15px, $left:15px);
+}

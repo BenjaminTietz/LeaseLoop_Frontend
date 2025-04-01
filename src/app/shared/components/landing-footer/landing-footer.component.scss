@@ -1,0 +1,11 @@
+@use '../../styles/mixins.scss' as *;
+
+footer{
+  @include position(fixed, $bottom: 20px);
+  @include display(flex, row, center, center);
+  width: 100%;
+  gap: 30px;
+  font-size: 24px;
+  
+}
+

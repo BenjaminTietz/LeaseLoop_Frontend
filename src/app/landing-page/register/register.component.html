@@ -1,0 +1,38 @@
+<main>
+  <content>
+    
+    <form action="" onsubmit="return false">
+      <h1>Register</h1>
+
+      <div class="name-field">
+        <div class="form-field">
+          <input type="text" required placeholder="Firstname">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="form-field">
+          <input type="text"  required placeholder="Lastname">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+      </div>
+
+
+      <div class="form-field">
+        <input type="email" id="email" name="email" required placeholder="Email">
+        <mat-icon>email</mat-icon>
+      </div>
+
+      <div class="form-field">
+        <input  [type]="passVisible() ? 'text' : 'password'"  id="password" name="password" required placeholder="Password">
+        <mat-icon class="c-pointer" (click)="togglePassVisible()">
+          @if(passVisible()){
+            visibility_off
+          } @else {
+            visibility
+          }
+        </mat-icon>
+      </div>
+        <button>Sign up</button>
+     
+    </form>
+  </content>
+</main>

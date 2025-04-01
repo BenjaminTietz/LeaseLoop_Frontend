@@ -1,0 +1,39 @@
+<main>
+  <content>
+    
+    <form [formGroup]="loginForm" (submit)="login()">
+      <h1>Login</h1>
+      <div class="form-field">
+        <input type="email" id="email" name="email" required placeholder="Email" formControlName="email">
+        <mat-icon>email</mat-icon>
+        @if (emailErrors?.['required']) {
+          <small>Email is required</small>
+        } @else if (emailErrors?.['pattern']) {
+          <small>Enter a valid email address</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <input  [type]="passVisible() ? 'text' : 'password'"  id="password" name="password" required  placeholder="Password" formControlName="password">
+        <mat-icon class="c-pointer" (click)="togglePassVisible()">
+          @if(passVisible()){
+            visibility_off
+          } @else {
+            visibility
+          }
+        </mat-icon>
+        @if (passwordErrors?.['required']) {
+          <small>Password is required</small>
+        } @else if (passwordErrors?.['minlength']) {
+          <small>Minimum 8 characters</small>
+        } @else if (passwordErrors?.['pattern']) {
+          <small>Password must include upper/lowercase, a number and a special character</small>
+        } @else if (passwordErrors?.['maxlength']) {
+          <small>Password is too long</small>
+        }
+      </div>
+        <button type="submit" (mouseenter)="markAllAsTouched()" (mouseleave)="unmarkAllAsTouched()" [disabled]="loginForm.invalid">Sign in</button>
+        <a class="c-pointer" (click)="navigator.navigateTo('forgot-password')">Forgot your password?</a>
+    </form>
+  </content>
+</main>
