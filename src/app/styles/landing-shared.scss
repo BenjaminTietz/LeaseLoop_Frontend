@@ -1,15 +1,16 @@
 @use "../styles/mixins.scss" as *;
-main{
+
+main {
   height: 100vh
 }
 
-content{
+content {
   @include display(flex, column, center, center);
   height: 100%;
   padding: 0 20px;
 }
 
-form{
+form {
   @include display(flex, column, center, center);
   gap: 40px;
   background-color: var(--color-bg-surface);
@@ -19,17 +20,17 @@ form{
   width: 100%;
 }
 
-h1{
+h1 {
   font-size: 54px;
 }
 
-input{
+input {
   outline: none;
   border: none;
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  padding:0px 10px;
+  padding: 0px 10px;
   margin-right: 10px;
   color: black;
   font-size: 20px;
@@ -41,31 +42,33 @@ mat-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px; 
-  color: var(color-text-base);       
+  border-radius: 4px;
+  color: var(color-text-base);
 }
 
-.form-field{
+.form-field {
   background: var(--color-btn-bg);
   @include display(flex, row, center, center);
   width: 100%;
   border-radius: 10px;
   padding: 10px;
   height: 56px;
-  &:focus-within{
-    mat-icon{
+
+  &:focus-within {
+    mat-icon {
       color: var(--color-icon-focus);
     }
   }
+
   position: relative;
 }
 
-.name-field{
+.name-field {
   @include display(flex, row, center, center);
   gap: 20px;
 }
 
-small{
+small {
   color: var(--color-error-message);
   font-size: 14px;
   position: absolute;
