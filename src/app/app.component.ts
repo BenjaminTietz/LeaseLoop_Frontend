@@ -4,6 +4,7 @@ import { ThemeButtonComponent } from './shared/components/theme-button/theme-but
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet, ThemeButtonComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
