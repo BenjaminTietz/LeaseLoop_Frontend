@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@use "app/shared/styles/mixins" as *;
+@use "app/styles/mixins" as *;
 
 * {
   margin: 0 auto;
@@ -13,22 +13,22 @@ body {
   background-color: var(--color-bg-body);
 }
 
-a{
+a {
   text-decoration: none;
 
 }
 
-main{
+main {
   width: 100%;
   max-width: 100vw;
 }
 
-.c-pointer{
+.c-pointer {
   cursor: pointer;
 }
 
 
-content{
+content {
   width: 100%;
   max-width: 1920px;
 }
