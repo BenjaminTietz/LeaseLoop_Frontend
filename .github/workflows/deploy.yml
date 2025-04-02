@@ -28,6 +28,11 @@ jobs:
           mkdir -p src/environments
           echo "${{ secrets.PROD_ENV_FILE }}" > src/environments/environment.prod.ts
 
+      - name: Create environment.ts (dummy for type checking)
+        run: |
+          mkdir -p src/environments
+          echo "export const environment = { production: false };" > src/environments/environment.ts
+
       - name: 🛠️ Build Angular app
         run: npm run build -- --configuration=production
 
