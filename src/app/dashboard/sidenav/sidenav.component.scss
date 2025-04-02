@@ -1,0 +1,35 @@
+@use "../../styles/mixins.scss" as *;
+
+.sidenav {
+    @include display(flex, column, space-between, flex-start);
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+
+    background-color: var(--color-bg-surface);
+
+    .top-section,
+    .bottom-section {
+        @include display(flex, column, center, center);
+        width: 100%;
+        padding: 20px;
+        background-color: var(--color-bg-surface);
+    }
+
+    a {
+        text-decoration: none;
+        color: var(--color-text-primary);
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        &:hover {
+            background-color: grey;
+            color: var(--color-text-hover);
+            cursor: pointer;
+        }
+    }
+
+}

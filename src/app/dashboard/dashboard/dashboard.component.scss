@@ -1,0 +1,22 @@
+@use "../../styles/mixins.scss" as *;
+
+.dashboard-wrapper {
+    @include display(flex, row, center, center);
+
+    app-sidenav {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: var(--color-bg-surface);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .content {
+        margin-left: 250px;
+        width: calc(100% - 250px);
+        height: 100vh;
+        background-color: var(--color-bg-surface);
+    }
+}

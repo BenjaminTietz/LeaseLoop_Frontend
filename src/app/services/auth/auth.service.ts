@@ -1,21 +1,68 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+
+interface User {
+  username: string;
+  email?: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: User;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  loginData = signal({});
+  private apiUrl = environment.apiBaseUrl;
+  private _loginData = signal<LoginResponse | null>(null);
+  readonly loginData = this._loginData.asReadonly();
 
+  readonly isAuthenticated = computed(() => !!this.getToken());
 
-  constructor() { }
+  constructor(private http: HttpClient) {
+    const token =
+      localStorage.getItem('accessToken') ||
+      sessionStorage.getItem('accessToken');
+    const user = localStorage.getItem('user') || sessionStorage.getItem('user');
 
-  loginUser(){
-    console.log(this.loginData());
-    
+    if (token && user) {
+      this._loginData.set({ token, user: JSON.parse(user) });
+    }
   }
-  
 
-  
+  loginUser(
+    credentials: { username: string; password: string },
+    remember: boolean
+  ) {
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login/`, credentials)
+      .pipe(
+        tap((res) => {
+          const storage = remember ? localStorage : sessionStorage;
+          storage.setItem('accessToken', res.token);
+          storage.setItem('user', JSON.stringify(res.user));
+          this._loginData.set(res);
+        })
+      );
+  }
 
+  logoutUser() {
+    console.log('Logout user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('user');
+    this._loginData.set(null);
+  }
 
+  getToken(): string | null {
+    return (
+      localStorage.getItem('accessToken') ||
+      sessionStorage.getItem('accessToken')
+    );
+  }
 }
