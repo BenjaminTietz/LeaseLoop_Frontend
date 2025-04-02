@@ -10,6 +10,9 @@ import { ActivateAccountComponent } from './landing-page/activate-account/activa
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { BookingsComponent } from './dashboard/bookings/bookings.component';
 
+// Guards
+import { AuthGuard } from './guards/auth.guard';
+
 export const routes: Routes = [
   {
     path: '',
@@ -25,6 +28,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'bookings', component: BookingsComponent },
       { path: '', redirectTo: 'rooms', pathMatch: 'full' },
