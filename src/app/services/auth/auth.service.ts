@@ -18,10 +18,11 @@ interface LoginResponse {
 })
 export class AuthService {
   private apiUrl = environment.apiBaseUrl;
-  private _loginData = signal<LoginResponse | null>(null);
-  readonly loginData = this._loginData.asReadonly();
 
-  readonly isAuthenticated = computed(() => !!this._loginData());
+
+  loginData = signal({});
+
+  readonly isAuthenticated = computed(() => this.loginData());
 
   constructor(private http: HttpClient) {
     const token =
@@ -30,7 +31,7 @@ export class AuthService {
     const user = localStorage.getItem('user') || sessionStorage.getItem('user');
 
     if (token && user) {
-      this._loginData.set({ token, user: JSON.parse(user) });
+      this.loginData.set({ token, user: JSON.parse(user) });
     }
   }
 
@@ -39,13 +40,13 @@ export class AuthService {
     remember: boolean
   ) {
     return this.http
-      .post<LoginResponse>(`${this.apiUrl}/login/`, credentials)
+      .post<LoginResponse>(`${this.apiUrl}/auth/login/`, credentials)
       .pipe(
         tap((res) => {
           const storage = remember ? localStorage : sessionStorage;
           storage.setItem('accessToken', res.token);
           storage.setItem('user', JSON.stringify(res.user));
-          this._loginData.set(res);
+          this.loginData.set(res);
         })
       );
   }
@@ -56,7 +57,7 @@ export class AuthService {
     localStorage.removeItem('user');
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('user');
-    this._loginData.set(null);
+    this.loginData.set({});
   }
 
   getToken(): string | null {
