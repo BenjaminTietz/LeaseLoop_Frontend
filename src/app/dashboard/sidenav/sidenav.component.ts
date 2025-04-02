@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ThemeButtonComponent } from "../../shared/global/theme-button/theme-button.component";
+import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
+import { NavigatorService } from '../../services/navigator/navigator.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -9,4 +11,7 @@ import { ThemeButtonComponent } from "../../shared/global/theme-button/theme-but
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
 })
-export class SidenavComponent {}
+export class SidenavComponent {
+  navigator = inject(NavigatorService);
+  auth = inject(AuthService);
+}

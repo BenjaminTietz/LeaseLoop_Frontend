@@ -1,15 +1,15 @@
 <nav class="sidenav">
     <div class="top-section">
-        <button><a routerLink="/dashboard/rooms" routerLinkActive="active">Rooms</a></button>
-        <a routerLink="/dashboard/clients" routerLinkActive="active">Clients</a>
-        <a routerLink="/dashboard/bookings" routerLinkActive="active">Bookings</a>
-        <a routerLink="/dashboard/services" routerLinkActive="active">Services</a>
-        <a routerLink="/dashboard/billing" routerLinkActive="active">Billing</a>
-        <a routerLink="/dashboard/analytics" routerLinkActive="active">Analytics</a>
+        <button (click)="this.navigator.navigateTo('dashboard/rooms')">Rooms</button>
+        <button (click)="this.navigator.navigateTo('dashboard//clients')">Clients</button>
+        <button (click)="this.navigator.navigateTo('dashboard/bookings')">Bookings</button>
+        <button (click)="this.navigator.navigateTo('dashboard/services')">Services</button>
+        <button (click)="this.navigator.navigateTo('dashboard/billing')">Billing</button>
+        <button (click)="this.navigator.navigateTo('dashboard/analytics')">Analytics</button>
     </div>
     <div class="bottom-section">
-        <a routerLink="/dashboard/settings" routerLinkActive="active">Settings</a>
-        <a routerLink="/logout" routerLinkActive="active">Logout</a>
-        <a routerLink="/dashboard/help" routerLinkActive="active">Help</a>
+        <button (click)="this.navigator.navigateTo('dashboard/settings')">Settings</button>
+        <button (click)="this.auth.logoutUser()">Logout</button>
+        <button (click)="this.navigator.navigateTo('dashboard/help')">Help</button>
     </div>
 </nav>

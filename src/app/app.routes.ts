@@ -29,9 +29,6 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
-    children: [
-      { path: 'bookings', component: BookingsComponent },
-      { path: '', redirectTo: 'rooms', pathMatch: 'full' },
-    ],
+    children: [{ path: 'bookings', component: BookingsComponent }],
   },
 ];
