@@ -6,16 +6,28 @@ import { ForgotPasswordComponent } from './landing-page/forgot-password/forgot-p
 import { ResetPasswordComponent } from './landing-page/reset-password/reset-password.component';
 import { ActivateAccountComponent } from './landing-page/activate-account/activate-account.component';
 
+// Dashboard
+import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
+import { BookingsComponent } from './dashboard/bookings/bookings.component';
+
 export const routes: Routes = [
   {
     path: '',
     component: LandingPageComponent,
     children: [
       { path: '', component: LoginComponent },
-      { path: 'register', component: RegisterComponent},
-      { path: 'activate-account/:token', component: ActivateAccountComponent},
-      { path: 'forgot-password', component: ForgotPasswordComponent},
-      { path: 'reset-password/:token', component: ResetPasswordComponent},
-    ]
-  }
+      { path: 'register', component: RegisterComponent },
+      { path: 'activate-account/:token', component: ActivateAccountComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'reset-password/:token', component: ResetPasswordComponent },
+    ],
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    children: [
+      { path: 'bookings', component: BookingsComponent },
+      { path: '', redirectTo: 'rooms', pathMatch: 'full' },
+    ],
+  },
 ];
