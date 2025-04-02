@@ -12,27 +12,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout repo
-      uses: actions/checkout@v3
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v3
 
-    - name: 🔧 Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: 📦 Install dependencies
-      run: npm install
+      - name: 📦 Install dependencies
+        run: npm install
 
-    - name: 🛠️ Build Angular app
-      run: npm run build -- --configuration=production
+      - name: Create environment.prod.ts from secret
+        run: |
+          mkdir -p src/environments
+          echo "${{ secrets.PROD_ENV_FILE }}" > src/environments/environment.prod.ts
 
-    - name: 📤 Clean Deploy with SamKirkland FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: dist/host-pilot/browser/
-        server-dir: /
-        dangerous-clean-slate: true
+      - name: 🛠️ Build Angular app
+        run: npm run build -- --configuration=production
 
+      - name: 📤 Clean Deploy with SamKirkland FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: dist/host-pilot/browser/
+          server-dir: /
+          dangerous-clean-slate: true
