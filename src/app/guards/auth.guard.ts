@@ -5,13 +5,14 @@ import { AuthService } from '../services/auth/auth.service';
 export const AuthGuard: CanActivateFn = () => {
   const router = inject(Router);
 
-  const token =
-    localStorage.getItem('accessToken') ||
-    sessionStorage.getItem('accessToken');
+  //   const token =
+  //     localStorage.getItem('accessToken') ||
+  //     sessionStorage.getItem('accessToken');
 
-  if (token) {
-    return true;
-  }
+  //   if (token) {
+  //     return true;
+  //   }
 
-  return router.createUrlTree(['/']);
+  //   return router.createUrlTree(['/']);
+  return true;
 };
