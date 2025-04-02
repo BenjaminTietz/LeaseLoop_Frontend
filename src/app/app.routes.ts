@@ -20,7 +20,10 @@ export const routes: Routes = [
     children: [
       { path: '', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'activate-account/:token', component: ActivateAccountComponent },
+      {
+        path: 'activate-account/:uid/:token',
+        component: ActivateAccountComponent,
+      },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password/:token', component: ResetPasswordComponent },
     ],

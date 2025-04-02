@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastService } from '../../services/toast-service/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class RegisterComponent {
   auth = inject(AuthService);
+  toast = inject(ToastService);
 
   passVisible = signal(false);
 
@@ -46,10 +48,12 @@ export class RegisterComponent {
     this.auth.registerUser(credentials).subscribe({
       next: (res: any) => {
         // TODO: show success message to user via toast
+        this.toast.showToast('Registration succesfully!', 'success');
         // TODO: redirect to login page using navigator service
       },
       error: (err) => {
         // TODO: show error message to user via toast
+        this.toast.showToast('Registration failed!', 'error');
       },
     });
   }
