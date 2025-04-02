@@ -35,6 +35,7 @@ export class LoginComponent {
         Validators.maxLength(50),
       ],
     ],
+    remember: [false],
   });
 
   togglePassVisible() {
@@ -42,8 +43,12 @@ export class LoginComponent {
   }
 
   login() {
-    this.auth.loginData.set(this.loginForm.value);
-    this.auth.loginUser();
+    const credentials = {
+      username: this.loginForm.value.email!,
+      password: this.loginForm.value.password!,
+    };
+    const remember = this.loginForm.value.remember!;
+    this.auth.loginUser(credentials, remember);
   }
 
   get passwordErrors() {
