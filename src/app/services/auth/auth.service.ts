@@ -21,7 +21,7 @@ export class AuthService {
   private _loginData = signal<LoginResponse | null>(null);
   readonly loginData = this._loginData.asReadonly();
 
-  readonly isAuthenticated = computed(() => !!this.getToken());
+  readonly isAuthenticated = computed(() => !!this._loginData());
 
   constructor(private http: HttpClient) {
     const token =
