@@ -2,11 +2,11 @@
   <content>
     <form [formGroup]="registerForm" (ngSubmit)="register()">
       <h1>Register</h1>
-
       <div class="name-field">
         <div class="form-field">
           <input type="text" formControlName="first_name" required placeholder="Firstname" />
           <mat-icon>account_circle</mat-icon>
+          
         </div>
         <div class="form-field">
           <input type="text" formControlName="last_name" required placeholder="Lastname" />
