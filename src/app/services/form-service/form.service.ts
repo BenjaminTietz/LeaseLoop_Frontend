@@ -28,4 +28,14 @@ export class FormService {
       form.markAsUntouched();
     }
   }
+
+  getFormErrors(form: FormGroup, controlName: string) {
+    const control = form.controls[controlName];
+    return control?.touched && control?.invalid ? control.errors : null;
+  }
+
+  resetForm(form: FormGroup) {
+    form.reset();
+    this.unmarkAllAsTouched(form);
+  }
 }
