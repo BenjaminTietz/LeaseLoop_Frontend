@@ -1,3 +1,3 @@
-<button [ngClass]="navigator.actualRoute() == '/legal-notice' || navigator.actualRoute() == '/privacy-policy' ? 'relative-button' : ''" (click)="toggleTheme()">
-  <mat-icon>{{ currentTheme === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+<button (click)="toggleTheme()">
+  <mat-icon >{{ currentTheme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
 </button>

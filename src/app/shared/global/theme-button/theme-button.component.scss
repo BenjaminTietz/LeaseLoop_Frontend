@@ -1,14 +1,6 @@
 @use "../../../styles/mixins" as *;
 
 button {
-  z-index: 99999;
   padding: 4px;
   border-radius: 5px;
-  @include position(fixed, $top: 15px, $left: 15px);
-}
-
-.relative-button {
-  @include position(relative);
-  margin-left: 0px;
-  margin-bottom: -36px
 }

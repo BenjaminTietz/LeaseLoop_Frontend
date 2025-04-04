@@ -1,16 +1,38 @@
 @use '../../../styles/mixins.scss' as *;
 
-button {
-  @include position(fixed, $top: 15px, $right: 15px);
+header{
+  position: relative;
+  width: 100%;
+  @include display(flex, row, space-between, center);
+  max-width: 1440px;
+  padding: 20px 20px 0px 20px;
 }
 
-.back-arrow {
-  padding: 5px 8px;
-  @include position(relative);
+.buttons {
+  @include display(flex, row, center, center);
+  margin-right: 0px;
+  width: 110px;
+}
+
+button{
   margin-right: 0px;
 }
 
-app-logo {
-  @include position(fixed, $top: 15px, $left: 60px);
-  cursor: pointer;
+
+span{
+  width: fit-content;
+  overflow: visible;
+  margin-left: 0px;
 }
+
+app-logo{
+  margin: 0 0 0 0;
+}
+
+.logo-scrollbar{
+  margin-right: -12px
+}
+
+
+
+

@@ -1,0 +1,38 @@
+@use "../styles/mixins.scss" as *;
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  border: 2px solid var(--color-text-base);
+  border-radius: 4px;
+  background-color: var(--color-bg-surface);
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  width: 8px;
+  height: 14px;
+  border-right: 2px solid var(--color-btn-text);
+  border-bottom: 2px solid var(--color-btn-text);
+  transform: rotate(0) scale(0);
+  opacity: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--color-btn-bg);
+  border-color: transparent;
+}
+
+input[type="checkbox"]:checked::after {
+  transform: rotate(42deg) scale(1);
+  opacity: 1;
+}
