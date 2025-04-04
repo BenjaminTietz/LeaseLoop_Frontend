@@ -3,17 +3,22 @@ import { MatIcon } from '@angular/material/icon';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
+import { AriaConverterDirective } from '../../directives/aria-label-converter/aria-converter.directive';
+import { FormService } from '../../services/form-service/form.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatIcon, ReactiveFormsModule],
+  imports: [MatIcon, ReactiveFormsModule, MatProgressBarModule, ProgressBarComponent, AriaConverterDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   auth = inject(AuthService);
   navigator = inject(NavigatorService);
+  formService = inject(FormService);
   passVisible = signal(false);
 
   loginForm = new FormBuilder().nonNullable.group({
@@ -35,7 +40,6 @@ export class LoginComponent {
         Validators.maxLength(50),
       ],
     ],
-    remember: [false],
   });
 
   togglePassVisible() {
@@ -43,12 +47,8 @@ export class LoginComponent {
   }
 
   login() {
-    const credentials = {
-      username: this.loginForm.value.email!,
-      password: this.loginForm.value.password!,
-    };
-    const remember = this.loginForm.value.remember!;
-    this.auth.loginUser(credentials, remember);
+    this.auth.loginData.set(this.loginForm.value);
+    this.auth.login()
   }
 
   get passwordErrors() {
@@ -59,15 +59,5 @@ export class LoginComponent {
   get emailErrors() {
     const control = this.loginForm.controls.email;
     return control.touched && control.invalid ? control.errors : null;
-  }
-
-  markAllAsTouched() {
-    this.loginForm.markAllAsTouched();
-  }
-
-  unmarkAllAsTouched() {
-    Object.values(this.loginForm.controls).forEach((control) => {
-      control.markAsUntouched();
-    });
   }
 }

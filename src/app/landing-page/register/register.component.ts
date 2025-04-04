@@ -38,23 +38,18 @@ export class RegisterComponent {
   }
 
   register() {
-    const credentials = this.registerForm.getRawValue() as {
-      first_name: string;
-      last_name: string;
-      email: string;
-      password: string;
-    };
-    console.log('Registering user', credentials);
-    this.auth.registerUser(credentials).subscribe({
-      next: (res: any) => {
-        // TODO: show success message to user via toast
-        this.toast.showToast('Registration succesfully!', 'success');
-        // TODO: redirect to login page using navigator service
-      },
-      error: (err) => {
-        // TODO: show error message to user via toast
-        this.toast.showToast('Registration failed!', 'error');
-      },
-    });
+    this.auth.registerData.set(this.registerForm.value);
+    this.auth.register();
   }
+
+  get emailErrors() {
+    const control = this.registerForm.controls.email;
+    return control.touched && control.invalid ? control.errors : null;
+  }
+
+  get passwordErrors() {
+    const control = this.registerForm.controls.password;
+    return control.touched && control.invalid ? control.errors : null;
+  }
+
 }
