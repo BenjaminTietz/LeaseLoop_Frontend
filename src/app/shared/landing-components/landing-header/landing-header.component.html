@@ -1,10 +1,9 @@
+@if(navigator.actualRoute() == '/' || navigator.actualRoute() == '/register'){
+<button (click)="navigator.navigateTo('/login')">Log in</button>
 
-  @if(navigator.actualRoute() == '/'){
-    <button (click)="navigator.navigateTo('register')">Sign up</button>
-  }@else if(navigator.actualRoute() == '/legal-notice' || navigator.actualRoute() == '/privacy-policy'){
-    <button class="back-arrow" (click)="navigator.goBack()"><mat-icon>arrow_back</mat-icon></button>
-  }
-  @else{
-    <button (click)="navigator.navigateTo('')">Sign in</button>
-  }
-
+}@else if(navigator.actualRoute() == '/legal-notice' || navigator.actualRoute() == '/privacy-policy'){
+<button class="back-arrow" (click)="navigator.goBack()"><mat-icon>arrow_back</mat-icon></button>
+}
+@else{
+<button (click)="navigator.navigateTo('register')">Sign up</button>
+}
