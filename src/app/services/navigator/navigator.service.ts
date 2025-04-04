@@ -21,4 +21,8 @@ export class NavigatorService {
   navigateTo(path: string): void {
     this.router.navigate([path]);
   }
+
+  goBack(): void {
+    window.history.back();
+  }
 }

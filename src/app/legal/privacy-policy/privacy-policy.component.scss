@@ -1,3 +1,13 @@
+@use "../../styles/landing-shared" as *;
+
+content{
+    padding: 40px 40px
+}
+
+main{
+    height:unset
+}
+
 .form-container {
     max-height: 80vh;
     height: 100%;

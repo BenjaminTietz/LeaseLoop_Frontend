@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { AuthService } from '../../services/auth/auth.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 import { AriaConverterDirective } from '../../directives/aria-label-converter/aria-converter.directive';
@@ -11,7 +11,7 @@ import { FormService } from '../../services/form-service/form.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatIcon, ReactiveFormsModule, MatProgressBarModule, ProgressBarComponent, AriaConverterDirective],
+  imports: [MatIcon, ReactiveFormsModule, MatProgressBarModule, ProgressBarComponent, AriaConverterDirective ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -26,7 +26,7 @@ export class LoginComponent {
       '',
       [
         Validators.required,
-        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'),
       ],
     ],
     password: [
@@ -42,6 +42,14 @@ export class LoginComponent {
     ],
   });
 
+  constructor() {
+    effect(() => {
+      if (this.auth.successful()) {
+        this.formService.resetForm(this.loginForm);
+      }
+    });
+  }
+
   togglePassVisible() {
     this.passVisible.set(!this.passVisible());
   }
@@ -51,13 +59,5 @@ export class LoginComponent {
     this.auth.login()
   }
 
-  get passwordErrors() {
-    const control = this.loginForm.controls.password;
-    return control.touched && control.invalid ? control.errors : null;
-  }
-
-  get emailErrors() {
-    const control = this.loginForm.controls.email;
-    return control.touched && control.invalid ? control.errors : null;
-  }
+ 
 }

@@ -1,16 +1,16 @@
 <main>
   <content>
     <form [formGroup]="loginForm" (submit)="login()">
-      @if(!auth.sending()) {
-        <app-progress-bar></app-progress-bar>
+      @if(auth.sending()) {
+        <app-progress-bar aria-label="Login progress bar"></app-progress-bar>
       }
       <h1>Login</h1>
       <div class="form-field">
         <input aria-label="Email" type="email" id="email" name="email" required placeholder="Email" formControlName="email">
         <mat-icon appAriaConverter >email</mat-icon>
-        @if (emailErrors?.['required']) {
+        @if (formService.getFormErrors(loginForm, 'email')?.['required']) {
           <small>Email is required</small>
-        } @else if (emailErrors?.['pattern']) {
+        } @else if (formService.getFormErrors(loginForm, 'email')?.['pattern']) {
           <small>Enter a valid email address</small>
         }
       </div>
@@ -24,13 +24,13 @@
             visibility
           }
         </mat-icon>
-        @if (passwordErrors?.['required']) {
+        @if (formService.getFormErrors(loginForm, 'password')?.['required']) {
           <small>Password is required</small>
-        } @else if (passwordErrors?.['minlength']) {
+        } @else if (formService.getFormErrors(loginForm, 'password')?.['minlength']) {
           <small>Minimum 8 characters</small>
-        } @else if (passwordErrors?.['pattern']) {
+        } @else if (formService.getFormErrors(loginForm, 'password')?.['pattern']) {
           <small>Password must include upper/lowercase, a number and a special character</small>
-        } @else if (passwordErrors?.['maxlength']) {
+        } @else if (formService.getFormErrors(loginForm, 'password')?.['maxlength']) {
           <small>Password is too long</small>
         }
       </div>

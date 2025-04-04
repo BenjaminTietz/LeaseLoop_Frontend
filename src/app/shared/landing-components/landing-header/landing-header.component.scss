@@ -3,3 +3,9 @@
 button {
   @include position(fixed, $top: 15px, $right: 15px);
 }
+
+.back-arrow {
+  padding: 5px 8px;
+  @include position(relative);
+  margin-right: 0px;
+}

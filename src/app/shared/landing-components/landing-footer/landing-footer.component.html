@@ -1,5 +1,4 @@
-<footer>
+<footer [ngClass]="navigator.actualRoute() == '/legal-notice' || navigator.actualRoute() == '/privacy-policy' ? 'relative-footer' : ''">
   <div class="legal-link" (click)="this.navigator.navigateTo('legal-notice')">Legal Notice</div>
-  <div>© Paul Ivan 2025</div>
   <div class="legal-link" (click)="this.navigator.navigateTo('privacy-policy')">Privacy Policy</div>
 </footer>
