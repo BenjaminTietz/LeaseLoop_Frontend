@@ -67,7 +67,10 @@
 
       <div class="checkbox">
         <input type="checkbox" aria-label="" id="remember" name="remember" formControlName="checkbox">
-        <label for="remember">I accept the <a class="c-pointer" (click)="navigator.navigateTo('terms-and-conditions')">Terms and Conditions</a></label>
+        <label for="remember">I accept the <a  class="legal-link" (click)="navigator.navigateTo('privacy-policy')">privacy policy</a></label>
+        @if(formService.getFormErrors(registerForm, 'checkbox')?.['required']) {
+          <small>You must accept the privacy policy</small>
+        }
       </div>
       <button type="submit" (mouseenter)="formService.markAllAsTouched(registerForm)" (mouseleave)="formService.unmarkAllAsTouched(registerForm)" [disabled]="registerForm.invalid || auth.sending()">Sign up</button>
     </form>

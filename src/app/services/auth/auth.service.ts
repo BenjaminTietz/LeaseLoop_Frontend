@@ -147,14 +147,17 @@ export class AuthService {
 
 
   activateAccount(uid: string, token: string): void {
+    this.sending.set(true);
     this.httpService.get<{ message: string }>(`${this.apiUrl}/auth/activate-account/${uid}/${token}/`)
     .subscribe({
       next: (response) => {
         this.error.set('')
         setTimeout(() => this.navigator.navigateTo('/login'), 3000);
+        this.sending.set(false);
       },
       error: (error) => {
         this.error.set(error.error.error || 'Account activation failed.')
+        this.sending.set(false);
       }
     })    
   }

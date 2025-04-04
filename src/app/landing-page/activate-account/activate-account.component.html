@@ -1,10 +1,20 @@
 <main>
   <content>
     <form action="" onsubmit="return false">
-      <h1>Account Activated</h1>
-      <p>Your account has been activated. <br> You can now sign in</p>
-      <button (click)="navigator.navigateTo('')">Gotcha</button>
+      @if(auth.sending()) {
+        <app-progress-bar></app-progress-bar>
+        <h1>Activating Account</h1>
+      }
+      @else if(!auth.error()) {
+        <h1>Account Activated</h1>
+        <p>Your account has been activated. <br> You can now sign in</p>
+        <button (click)="navigator.navigateTo('')">Gotcha</button>
+      }
+      @else {
+        <h1>Please retry</h1>
+        <p>{{auth.error()}}</p>
+        <button (click)="navigator.navigateTo('forgot-password')">Gotcha</button>
+      }
     </form>
   </content>
 </main>
-

@@ -58,6 +58,4 @@ export class LoginComponent {
     this.auth.loginData.set(this.loginForm.value);
     this.auth.login()
   }
-
- 
 }

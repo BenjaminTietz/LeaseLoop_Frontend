@@ -39,7 +39,7 @@
         <label for="remember">Remember me</label>
       </div>
         <button type="submit" (mouseenter)="formService.markAllAsTouched(loginForm)" (mouseleave)="formService.unmarkAllAsTouched(loginForm)" [disabled]="loginForm.invalid || auth.sending()">Sign in</button>
-        <a class="c-pointer" (click)="navigator.navigateTo('forgot-password')">Forgot your password?</a>
+        <a class="legal-link" (click)="navigator.navigateTo('forgot-password')">Forgot your password?</a>
     </form>
   </content>
 </main>
