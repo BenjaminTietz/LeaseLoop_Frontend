@@ -68,3 +68,15 @@ button {
   }
 
 }
+
+// TODO : define a container for router-outlet decide if we need it or not and decice if header and footer should be sticky or not
+.landing-container {
+  width: 100% !important;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
