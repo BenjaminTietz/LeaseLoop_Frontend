@@ -12,6 +12,8 @@ import { BookingsComponent } from './dashboard/bookings/bookings.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
+import { LegalNoticeComponent } from './legal/legal-notice/legal-notice.component';
+import { PrivacyPolicyComponent } from './legal/privacy-policy/privacy-policy.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +28,8 @@ export const routes: Routes = [
       },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'reset-password/:token', component: ResetPasswordComponent },
+      { path: 'legal-notice', component: LegalNoticeComponent },
+      { path: 'privacy-policy', component: PrivacyPolicyComponent },
     ],
   },
   {
