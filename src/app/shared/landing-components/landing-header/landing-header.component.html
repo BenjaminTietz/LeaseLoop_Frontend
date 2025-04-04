@@ -1,3 +1,5 @@
+<app-logo (click)="this.navigator.navigateTo('/')"></app-logo>
+
 @if(navigator.actualRoute() == '/' || navigator.actualRoute() == '/register'){
 <button (click)="navigator.navigateTo('/login')">Log in</button>
 

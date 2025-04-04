@@ -9,3 +9,8 @@ button {
   @include position(relative);
   margin-right: 0px;
 }
+
+app-logo {
+  @include position(fixed, $top: 15px, $left: 60px);
+  cursor: pointer;
+}
