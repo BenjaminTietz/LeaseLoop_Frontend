@@ -8,6 +8,7 @@ content {
   @include display(flex, column, center, center);
   height: 100%;
   padding: 0 20px;
+  max-width: 1440px;
 }
 
 form {
