@@ -1,0 +1,24 @@
+.form-container {
+    max-height: 80vh;
+    height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 16px;
+}
+
+h2,
+p,
+ul {
+    width: 100%;
+    cursor: default;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+strong {
+    cursor: default !important;
+}
