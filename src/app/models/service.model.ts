@@ -6,4 +6,6 @@ export interface Service {
   price: number;
   type: ServiceType;
   propertyId: number;
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
 }

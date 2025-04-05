@@ -1,5 +1,3 @@
-import { Equipment } from './equipment.model';
-
 export interface Unit {
   id: number;
   propertyId: number;
@@ -7,5 +5,6 @@ export interface Unit {
   basePrice: number;
   baseCapacity: number;
   pricePerExtraPerson: number;
-  equipments: Equipment[];
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
 }

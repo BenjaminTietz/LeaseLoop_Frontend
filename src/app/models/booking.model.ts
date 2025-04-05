@@ -11,6 +11,10 @@ export interface Booking {
   totalPrice: number;
   depositRequired: boolean;
   depositPaid: boolean;
-  services: Service[];
+  depositAmount: number;
+  status: string; // e.g., 'pending', 'confirmed', 'cancelled'
+  services?: Service[];
   promoCode?: PromoCode;
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
 }

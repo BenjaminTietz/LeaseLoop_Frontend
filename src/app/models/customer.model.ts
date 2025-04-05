@@ -1,9 +1,10 @@
-export interface Owner {
+export interface Customer {
   id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  adress: number;
   userId: number; // Refers to auth user
-  name: string;
-  address: number;
-  taxId: string;
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }

@@ -5,4 +5,6 @@ export interface PromoCode {
   discountPercent: number;
   used: boolean;
   ownerId: number;
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
 }
