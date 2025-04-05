@@ -1,17 +1,16 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
+import { Component, inject, Input } from '@angular/core';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [RouterLink, ThemeButtonComponent],
+  imports: [],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
 })
 export class SidenavComponent {
+  @Input () isOpen = true;
   navigator = inject(NavigatorService);
   auth = inject(AuthService);
 }

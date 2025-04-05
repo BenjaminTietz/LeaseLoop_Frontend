@@ -1,9 +1,11 @@
 import { Component, effect, signal } from '@angular/core';
 import { SidenavComponent } from '../sidenav/sidenav.component';
-import { Router, RouterOutlet } from '@angular/router';
-import { SidenavToggleComponent } from '../../shared/dashboard-components/sidenav-toggle/sidenav-toggle.component';
+import { RouterOutlet, withDebugTracing } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
+import { SidenavToggleComponent } from '../../shared/dashboard-components/sidenav-toggle/sidenav-toggle.component';
+import { animate, style, transition, trigger } from '@angular/animations';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -11,15 +13,26 @@ import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-but
   imports: [
     SidenavComponent,
     RouterOutlet,
-    SidenavToggleComponent,
     CommonModule,
     ThemeButtonComponent,
-  ],
+    SidenavToggleComponent
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
+  animations: [
+    trigger('fadeAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(-100%)' }),
+        animate('250ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateX(-100%)' }))
+      ])
+    ])
+  ]
 })
 export class DashboardComponent {
-  isSidebarOpen = signal(true);
+  isSidebarOpen = signal(false);
 
   constructor() {
     effect(() => {

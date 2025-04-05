@@ -5,6 +5,9 @@
     width: 250px;
     height: 100vh;
     position: fixed;
+    top: 0;
+    left: 0;
+    border-right: 2px solid white;
     background-color: var(--color-bg-surface);
 
     .top-section,
@@ -14,9 +17,30 @@
         padding: 20px;
         background-color: var(--color-bg-surface);
         gap: 8px;
+
     }
 
     button {
         min-width: 200px;
+        animation: fadeInStaggered 0.5s ease forwards;
+        opacity: 0;
+
+        @for $i from 1 through 10 {
+            &:nth-child(#{$i}) {
+                animation-delay: #{($i - 1) * 0.15}s;
+            }
+        }
+    }
+}
+
+@keyframes fadeInStaggered {
+    0% {
+        opacity: 0;
+        transform: translateY(-20%);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

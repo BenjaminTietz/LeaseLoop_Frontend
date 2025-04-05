@@ -1,5 +1,13 @@
 @use './mixins.scss' as *;
 
+main {
+    @include display(flex, column, flex-start, center);
+    min-height: 100vh;
+    height: fit-content;
+    padding: 20px 50px;
+    background-color: var(--color-bg-surface);
+}
+
 .header {
     @include display(flex, row, space-between, center);
     margin-bottom: 20px;
