@@ -1,0 +1,63 @@
+<div class="calendar">
+    <div class="calendar-title">
+        <h2>Availability Calendar</h2>
+        <div class="calendar-controls">
+            <label>
+                Property:
+                <select [(ngModel)]="selectedPropertyIdSignal">
+                    @for (p of properties; track p.id; let i = $index) {
+                    <option [ngValue]="p.id">{{ p.name }}</option>
+                    }
+                </select>
+            </label>
+
+            <label>
+                Month:
+                <select [(ngModel)]="selectedMonth">
+                    @for (m of months; track m.value; let i = $index) {
+                    <option [ngValue]="m.value">{{ m.label }}</option>
+                    }
+                </select>
+            </label>
+
+            <label>
+                Year:
+                <select [(ngModel)]="selectedYear">
+                    @for (y of years; track y; let i = $index) {
+                    <option [ngValue]="y">{{ y }}</option>
+                    }
+                </select>
+            </label>
+        </div>
+        <div class="calendar-info">
+            <p>Unit availability for the next 30 days. TODO: horizonbtal scroll directive
+            </p>
+        </div>
+        <div class="calendar-header">
+            <div class="unit-cell header-cell">Unit</div>
+            @for (day of dates(); track dayString(day); let i = $index) {
+            <div class="date-cell header-cell">
+                {{ day | date: 'EEE dd.MM' }}
+            </div>
+            }
+        </div>
+        @for (unit of units(); track unit.id; let i = $index) {
+        <div class="calendar-row">
+            <div class="unit-cell">{{ unit.name }}</div>
+            @for (day of dates(); track dayString(day); let i = $index) {
+            <div class="date-cell" [ngClass]="{
+            'available': isAvailable(unit.id, day),
+            'unavailable': !isAvailable(unit.id, day)
+          }">
+                <!-- show bookings -->
+                @if (hasBooking(unit.id, day)) {
+                <div class="booking" [style.background-color]="getBookingColor()"
+                    [attr.title]="getBookingInfo(unit.id, day)">
+                    {{ getBookingLabel(unit.id, day) }}
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+    </div>

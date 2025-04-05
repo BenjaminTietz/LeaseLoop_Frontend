@@ -1,0 +1,73 @@
+@use '../../../styles/mixins.scss' as *;
+
+.calendar {
+    overflow-x: auto;
+    font-size: 14px;
+
+    .calendar-header,
+    .calendar-row {
+        display: flex;
+        color: var(--color-text-base);
+    }
+
+    .header-cell {
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        background-color: var(--color-bg-surface);
+        border: 1px solid var(--color-text-base);
+    }
+
+    .unit-cell {
+        min-width: 120px;
+        background-color: var(--color-bg-surface);
+        border: 1px solid var(--color-text-base);
+        padding: 10px;
+    }
+
+    .date-cell {
+        min-width: 100px;
+        height: 60px;
+        border: 1px solid var(--color-text-base);
+        position: relative;
+
+        &.available {
+            background-color: #e7ffe7;
+        }
+
+        &.unavailable {
+            background-color: #ffe7e7;
+        }
+
+        .booking {
+            @include position(absolute, 6px, 6px, 6px, 6px);
+            @include display(flex, column, center, center);
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            padding: 4px;
+        }
+    }
+}
+
+.calendar-controls {
+    @include display(flex);
+    gap: 20px;
+    margin-bottom: 20px;
+
+    label {
+        font-size: 14px;
+        color: var(--color-text-base);
+        @include display(flex, column, center, center);
+        font-weight: bold;
+
+        select {
+            background-color: var(--color-bg-surface);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--color-text-base);
+            margin-top: 4px;
+            cursor: pointer;
+        }
+    }
+}

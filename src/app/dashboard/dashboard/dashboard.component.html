@@ -1,6 +1,15 @@
 <div class="dashboard-wrapper">
-    <app-sidenav></app-sidenav>
-    <div class="content">
-    <router-outlet/>
-    </div>
+    <aside [class.closed]="!isSidebarOpen()">
+        <app-sidenav></app-sidenav>
+    </aside>
+
+    <app-theme-button></app-theme-button>
+
+    <section class="main-content">
+        <app-sidenav-toggle [isOpen]="isSidebarOpen()" (toggle)="toggleSidebar()"></app-sidenav-toggle>
+
+        <div class="router-container">
+            <router-outlet />
+        </div>
+    </section>
 </div>
