@@ -21,10 +21,15 @@ form {
   max-width: 600px;
   width: 100%;
   position: relative;
+  animation: grow 0.75s ease-in-out;
 }
 
 h1 {
   font-size: 54px;
+}
+
+h2{
+  text-align: center;
 }
 
 input {
@@ -116,4 +121,17 @@ small {
   }
 }
 
+
+.animated-form {
+ 
+}
+
+@keyframes grow {
+  0% {
+    transform: scale(0.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 

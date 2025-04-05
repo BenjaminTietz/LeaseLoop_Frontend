@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpService } from '../httpclient/http.service';
 import { NavigatorService } from '../navigator/navigator.service';
@@ -19,8 +19,7 @@ export class AuthService {
   forgotEmail = signal('')
   resetData = signal({})
   error = signal<string | null>(null);
-
-  readonly isAuthenticated = computed(() => this.loginData());
+  successMessage = signal<string | null>(null);
 
   constructor() {
     setInterval(() => {
@@ -31,17 +30,12 @@ export class AuthService {
 
   login() {
     this.sending.set(true);
-    this.httpService.post<{ token: string; message: string }>(`${this.apiUrl}/auth/login/`, this.loginData())
-      .subscribe({
-        next: (response) => { this.successfulLogin(response); },
-        error: (error) => { this.setErrorLogin(error); }
-      });
-  }
-
-  setErrorLogin(error: any) {
-    const errorMessage = error.error.message || 'Login failed. Please try again.';
-    // this.toastService.setNegativeMessage(errorMessage);
-    this.sending.set(false);
+    this.httpService.post<{ token: string; message: string }>(
+      `${this.apiUrl}/auth/login/`, this.loginData()
+    ).subscribe({
+      next: (response) => this.successfulLogin(response),
+      error: (error) => this.handleError(error, 'Login failed. Please try again.')
+    });
   }
 
   successfulLogin(response: any) {
@@ -60,82 +54,60 @@ export class AuthService {
     }
   }
 
-
   rememberedLogin() {
-    let remembertoken = localStorage.getItem('token');
-    if (remembertoken) {
-      this.sending.set(true);
-      this.httpService.post<{ token: string; message: string }>(`${this.apiUrl}/auth/remember-login/`, { token: remembertoken })
-        .subscribe({
-          next: (response) => { this.succesfullRememberLogin(response); },
-          error: (error) => { this.setErrorLogin(error) }
-        })
-    }
+    const remembertoken = localStorage.getItem('token');
+    if (!remembertoken) return;
+    this.sending.set(true);
+    this.httpService.post<{ token: string; message: string }>(
+      `${this.apiUrl}/auth/remember-login/`, { token: remembertoken }
+    ).subscribe({
+      next: (response) => this.succesfullRememberLogin(response),
+      error: (error) => this.handleError(error, 'Token login failed.')
+    });
   }
 
   succesfullRememberLogin(response: any) {
     if (response.token) {
+      this.handleSuccess();
       this.navigator.navigateTo('/dashboard');
-      this.sending.set(false);
     }
   }
 
   register() {
     this.sending.set(true);
-    this.httpService.post<{ message: string }>(`${this.apiUrl}/auth/register/`, this.registerData())
-      .subscribe({
-        next: (response) => { this.setSuccessfullRegisterMessage(response); },
-        error: (error) => { this.setErrorRegisterMessage(error); }
-      })
+    this.httpService.post<{ message: string }>(
+      `${this.apiUrl}/auth/register/`, this.registerData()
+    ).subscribe({
+      next: (response) => this.handleSuccess(response.message),
+      error: (error) => this.handleError(error, 'Registration failed. Please try again.')
+    });
   }
-
-  setSuccessfullRegisterMessage(response: any) {
-    // this.toastService.setPositiveMessage(response.message);
-    this.successful.set(true);
-    this.sending.set(false);
-  }
-
-  setErrorRegisterMessage(error: any) {
-    const errorMessage = error.error.message || 'Registration failed. Please try again.';
-    // this.toastService.setNegativeMessage(errorMessage);
-    this.sending.set(false);
-  }
-
+  
   sendResetPasswordEmail() {
     this.sending.set(true);
-    this.httpService.post<{ message: string }>(`${this.apiUrl}/auth/reset-password/`, { email: this.forgotEmail() })
-      .subscribe({
-        error: () => { this.setErrorResetPasswordMessage(); }
-      });
-  }
-
-  setErrorResetPasswordMessage() {
-    this.successful.set(true);
-    this.forgotEmail.set('');
-    this.sending.set(false);
+    this.httpService.post<{ message: string }>(
+      `${this.apiUrl}/auth/forgot-password/`, { email: this.forgotEmail() }
+    ).subscribe({
+      next: (response) => {
+        this.forgotEmail.set('');
+        this.handleSuccess(response.message);
+      },
+      error: (error) => this.handleError(error, 'Failed to send reset password email.')
+    });
   }
 
   resetPassword() {
     this.sending.set(true);
-    this.httpService.post<{ message: string }>(`${this.apiUrl}/auth/reset-password/confirm/${this.resetToken()}/`, this.resetData())
-      .subscribe({
-        next: (response) => { this.setSucessfulResetedMessage(response); },
-        error: (error) => { this.setErrorResetedPassword(error); }
-      })
-  }
-
-  setSucessfulResetedMessage(response: any) {
-    // this.toastService.setPositiveMessage(response.message);
-    this.successful.set(true);
-    this.resetToken.set('');
-    this.resetData.set({});
-    this.sending.set(false);
-  }
-
-  setErrorResetedPassword(error: any) {
-    const errorMessage = error.error.error || 'Password reset email failed. Please try again.';
-    // this.toastService.setNegativeMessage(errorMessage);
-    this.sending.set(false);
+    this.httpService.post<{ message: string }>(
+      `${this.apiUrl}/auth/reset-password/${this.resetToken()}/`, this.resetData()
+    ).subscribe({
+      next: (response) => {
+        this.resetToken.set('');
+        this.resetData.set({});
+        this.handleSuccess(response.message);
+      },
+      error: (error) => this.handleError(error, 'Password reset failed. Please try again.')
+    });
   }
 
   logout() {
@@ -145,20 +117,41 @@ export class AuthService {
     this.loginData.set({});
   }
 
-
   activateAccount(uid: string, token: string): void {
     this.sending.set(true);
-    this.httpService.get<{ message: string }>(`${this.apiUrl}/auth/activate-account/${uid}/${token}/`)
-    .subscribe({
+    this.httpService.get<{ message: string }>(
+      `${this.apiUrl}/auth/activate-account/${uid}/${token}/`
+    ).subscribe({
       next: (response) => {
-        this.error.set('')
+        this.handleSuccess(response.message);
         setTimeout(() => this.navigator.navigateTo('/login'), 3000);
-        this.sending.set(false);
       },
-      error: (error) => {
-        this.error.set(error.error.error || 'Account activation failed.')
-        this.sending.set(false);
-      }
-    })    
+      error: (error) => this.handleError(error, 'Account activation failed.')
+    });
+  }
+
+  handleSuccess(message?: string) {
+    this.successful.set(true);
+    this.sending.set(false);
+    if (message){
+      this.successMessage.set(message);
+      this.error.set(null);
+    }
+  }
+  
+  handleError(error: any, fallbackMessage: string = 'Something went wrong.') {
+    console.log(error);
+    
+    const msg = error?.error?.message || error?.error?.error || error?.error?.detail || fallbackMessage;
+    this.error.set(msg);
+    this.successMessage.set(null);
+    console.log(msg);
+    
+    this.sending.set(false);
+  }
+
+  resetMessages() {
+    this.error.set(null);
+    this.successMessage.set(null);
   }
 }

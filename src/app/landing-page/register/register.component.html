@@ -1,8 +1,12 @@
 <main>
   <content>
+    @if(auth.error() === null && auth.successMessage() === null ) {
     <form [formGroup]="registerForm" (submit)="register()">
+
+
+
       @if(auth.sending()) {
-        <app-progress-bar aria-label="Register progress bar"></app-progress-bar>
+      <app-progress-bar aria-label="Register progress bar"></app-progress-bar>
       }
       <h1>Register</h1>
       <div class="name-field">
@@ -10,26 +14,26 @@
           <input type="text" formControlName="first_name" required placeholder="Firstname" />
           <mat-icon>account_circle</mat-icon>
           @if(formService.getFormErrors(registerForm, 'first_name')?.['required']) {
-            <small>First name is required</small>
+          <small>First name is required</small>
           }@else if(formService.getFormErrors(registerForm, 'first_name')?.['pattern']){
-            <small>Only letters are allowed</small>
+          <small>Only letters are allowed</small>
           }@else if(formService.getFormErrors(registerForm, 'first_name')?.['minlength']){
-            <small>Minimum 2 characters</small>
+          <small>Minimum 2 characters</small>
           }@else if(formService.getFormErrors(registerForm, 'first_name')?.['maxlength']){
-            <small>First name is too long</small>
+          <small>First name is too long</small>
           }
         </div>
         <div class="form-field">
           <input type="text" formControlName="last_name" required placeholder="Lastname" />
           <mat-icon>account_circle</mat-icon>
           @if(formService.getFormErrors(registerForm, 'last_name')?.['required']) {
-            <small>Last name is required</small>
+          <small>Last name is required</small>
           }@else if(formService.getFormErrors(registerForm, 'last_name')?.['pattern']){
-            <small>Only letters are allowed</small>
+          <small>Only letters are allowed</small>
           }@else if(formService.getFormErrors(registerForm, 'last_name')?.['minlength']){
-            <small>Minimum 2 characters</small>
+          <small>Minimum 2 characters</small>
           }@else if(formService.getFormErrors(registerForm, 'last_name' )?.['maxlength']){
-            <small>Last name is too long</small>
+          <small>Last name is too long</small>
           }
         </div>
       </div>
@@ -38,9 +42,9 @@
         <input type="email" formControlName="email" required placeholder="Email" />
         <mat-icon>email</mat-icon>
         @if(formService.getFormErrors(registerForm, 'email')?.['required']) {
-          <small>Email is required</small>
+        <small>Email is required</small>
         }@else if(formService.getFormErrors(registerForm, 'email')?.['pattern']){
-          <small>Enter a valid email address</small>
+        <small>Enter a valid email address</small>
         }
       </div>
 
@@ -55,24 +59,40 @@
           }
         </mat-icon>
         @if(formService.getFormErrors(registerForm, 'password')?.['required']) {
-          <small>Password is required</small>
+        <small>Password is required</small>
         }@else if(formService.getFormErrors(registerForm, 'password')?.['minlength']){
-          <small>Minimum 8 characters</small>
+        <small>Minimum 8 characters</small>
         }@else if(formService.getFormErrors(registerForm, 'password')?.['pattern']){
-          <small>Password must include upper/lowercase, a number and a special character</small>
+        <small>Password must include upper/lowercase, a number and a special character</small>
         }@else if(formService.getFormErrors(registerForm, 'password')?.['maxlength']){
-          <small>Password is too long</small>
+        <small>Password is too long</small>
         }
       </div>
 
       <div class="checkbox">
         <input type="checkbox" aria-label="" id="remember" name="remember" formControlName="checkbox">
-        <label for="remember">I accept the <a  class="legal-link" (click)="navigator.navigateTo('privacy-policy')">privacy policy</a></label>
+        <label for="remember">I accept the <a class="legal-link"
+            (click)="navigator.navigateTo('privacy-policy')">privacy policy</a></label>
         @if(formService.getFormErrors(registerForm, 'checkbox')?.['required']) {
-          <small>You must accept the privacy policy</small>
+        <small>You must accept the privacy policy</small>
         }
       </div>
-      <button type="submit" (mouseenter)="formService.markAllAsTouched(registerForm)" (mouseleave)="formService.unmarkAllAsTouched(registerForm)" [disabled]="registerForm.invalid || auth.sending()">Sign up</button>
+      <button type="submit" (mouseenter)="formService.markAllAsTouched(registerForm)"
+        (mouseleave)="formService.unmarkAllAsTouched(registerForm)"
+        [disabled]="registerForm.invalid || auth.sending()">Sign up</button>
+
     </form>
+    }
+    @if(auth.successMessage()!== null || auth.error()!==null) {
+      <form class="animated-form" >
+          <h2>{{ auth.successMessage() || auth.error()}}</h2>
+          @if(auth.successMessage()) {
+            <button (click)="auth.resetMessages(); navigator.navigateTo('/login')">Gotcha</button>
+          }
+          @if(auth.error()) {
+            <button (click)="auth.resetMessages()">Gotcha</button>
+          }
+      </form>
+    }
   </content>
 </main>
