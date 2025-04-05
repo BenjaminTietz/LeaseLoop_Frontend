@@ -21,7 +21,7 @@ form {
   max-width: 600px;
   width: 100%;
   position: relative;
-  animation: grow 0.75s ease-in-out;
+  animation: grow 0.5s ease-in-out;
 }
 
 h1 {
@@ -121,16 +121,15 @@ small {
   }
 }
 
-
-.animated-form {
- 
-}
-
 @keyframes grow {
   0% {
+    rotate: 180deg;
+    opacity: 0.1;
     transform: scale(0.4);
   }
   100% {
+    rotate: 0deg;
+    opacity: 1;
     transform: scale(1);
   }
 }

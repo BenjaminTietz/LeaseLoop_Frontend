@@ -6,11 +6,12 @@ import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-
 import { FormService } from '../../services/form-service/form.service';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { AriaConverterDirective } from '../../directives/aria-label-converter/aria-converter.directive';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [MatIcon, ProgressBarComponent, ReactiveFormsModule],
+  imports: [MatIcon, ProgressBarComponent, ReactiveFormsModule, AriaConverterDirective],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
 })

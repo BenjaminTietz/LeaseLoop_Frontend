@@ -48,6 +48,11 @@ export class LoginComponent {
         this.formService.resetForm(this.loginForm);
       }
     });
+    
+  }
+
+  ngOnInit(){
+    this.auth.rememberedLogin();
   }
 
   togglePassVisible() {

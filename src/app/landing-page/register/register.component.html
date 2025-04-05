@@ -3,13 +3,13 @@
     @if(auth.error() === null && auth.successMessage() === null ) {
     <form [formGroup]="registerForm" (submit)="register()">
       @if(auth.sending()) {
-      <app-progress-bar aria-label="Register progress bar"></app-progress-bar>
+      <app-progress-bar aria-label="Loading"></app-progress-bar>
       }
       <h1>Register</h1>
       <div class="name-field">
         <div class="form-field">
           <input type="text" formControlName="first_name" required placeholder="Firstname" />
-          <mat-icon>account_circle</mat-icon>
+          <mat-icon aria-label="First name">account_circle</mat-icon>
           @if(formService.getFormErrors(registerForm, 'first_name')?.['required']) {
           <small>First name is required</small>
           }@else if(formService.getFormErrors(registerForm, 'first_name')?.['pattern']){
@@ -22,7 +22,7 @@
         </div>
         <div class="form-field">
           <input type="text" formControlName="last_name" required placeholder="Lastname" />
-          <mat-icon>account_circle</mat-icon>
+          <mat-icon aria-label="Last name">account_circle</mat-icon>
           @if(formService.getFormErrors(registerForm, 'last_name')?.['required']) {
           <small>Last name is required</small>
           }@else if(formService.getFormErrors(registerForm, 'last_name')?.['pattern']){
@@ -37,7 +37,7 @@
 
       <div class="form-field">
         <input type="email" formControlName="email" required placeholder="Email" />
-        <mat-icon>email</mat-icon>
+        <mat-icon aria-label="Email">email</mat-icon>
         @if(formService.getFormErrors(registerForm, 'email')?.['required']) {
         <small>Email is required</small>
         }@else if(formService.getFormErrors(registerForm, 'email')?.['pattern']){
@@ -48,7 +48,7 @@
       <div class="form-field">
         <input [type]="passVisible() ? 'text' : 'password'" formControlName="password" required
           placeholder="Password" />
-        <mat-icon class="c-pointer" (click)="togglePassVisible()">
+        <mat-icon appAriaConverter class="c-pointer" (click)="togglePassVisible()">
           @if (passVisible()) {
           visibility_off
           } @else {
@@ -67,7 +67,7 @@
       </div>
 
       <div class="checkbox">
-        <input type="checkbox" aria-label="" id="remember" name="remember" formControlName="checkbox">
+        <input type="checkbox" aria-label="I accept the privacy policy checkbox" aria-label="" id="remember" name="remember" formControlName="checkbox">
         <label for="remember">I accept the <a class="legal-link"
             (click)="navigator.navigateTo('privacy-policy')">privacy policy</a></label>
         @if(formService.getFormErrors(registerForm, 'checkbox')?.['required']) {

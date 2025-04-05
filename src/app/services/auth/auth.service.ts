@@ -22,15 +22,13 @@ export class AuthService {
   successMessage = signal<string | null>(null);
 
   constructor() {
-    setInterval(() => {
-
-    }, 3000)
+    
   }
 
 
   login() {
     this.sending.set(true);
-    this.httpService.post<{ token: string; message: string }>(
+    this.httpService.post<{ message: string }>(
       `${this.apiUrl}/auth/login/`, this.loginData()
     ).subscribe({
       next: (response) => this.successfulLogin(response),
@@ -58,11 +56,11 @@ export class AuthService {
     const remembertoken = localStorage.getItem('token');
     if (!remembertoken) return;
     this.sending.set(true);
-    this.httpService.post<{ token: string; message: string }>(
+    this.httpService.post<{ remembertoken: string; message: string }>(
       `${this.apiUrl}/auth/remember-login/`, { token: remembertoken }
     ).subscribe({
       next: (response) => this.succesfullRememberLogin(response),
-      error: (error) => this.handleError(error, 'Token login failed.')
+      error: (error) => this.handleError(error, 'Remember login failed. Please try again.')
     });
   }
 
