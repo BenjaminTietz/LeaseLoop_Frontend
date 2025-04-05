@@ -19,6 +19,12 @@ import { AuthGuard } from './guards/auth.guard';
 // Legal
 import { LegalNoticeComponent } from './legal/legal-notice/legal-notice.component';
 import { PrivacyPolicyComponent } from './legal/privacy-policy/privacy-policy.component';
+import { PropertiesComponent } from './dashboard/properties/properties.component';
+import { UnitsComponent } from './dashboard/units/units.component';
+import { BillingComponent } from './dashboard/billing/billing.component';
+import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
+import { SettingsComponent } from './dashboard/settings/settings.component';
+import { HelpPageComponent } from './dashboard/help-page/help-page.component';
 
 export const routes: Routes = [
   {
@@ -44,9 +50,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: OverviewComponent },
-      { path: 'bookings', component: BookingsComponent },
+      { path: 'properties', component: PropertiesComponent },
+      { path: 'units', component: UnitsComponent },
       { path: 'clients', component: ClientsComponent },
+      { path: 'bookings', component: BookingsComponent },
       { path: 'services', component: ServiceManagementComponent },
+      { path: 'billing', component: BillingComponent },
+      { path: 'analytics', component: AnalyticsComponent },
+      { path: 'settings', component: SettingsComponent },
+      { path: 'help', component: HelpPageComponent },
     ],
   },
 ];
