@@ -1,0 +1,36 @@
+<main>
+    <content>
+        <div class="service-header">
+            <h1>Services</h1>
+            <button class="btn-add" (click)="openDialog()">+ Add Service</button>
+        </div>
+
+        <div class="service-table-wrapper">
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price (€)</th>
+                        <th>Type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (service of services(); track $index) {
+                    <tr>
+                        <td>{{ service.name }}</td>
+                        <td>{{ service.price }}</td>
+                        <td>{{ service.type === 'one_time' ? 'One-time' : 'Per day' }}</td>
+                        <td>
+                            <div class="btn-container">
+                                <button (click)="openDialog()">Edit</button>
+                                <button (click)="deleteService()">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </content>
+</main>

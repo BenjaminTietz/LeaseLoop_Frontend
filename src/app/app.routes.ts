@@ -9,6 +9,9 @@ import { MainLandingComponent } from './landing-page/main-landing/main-landing.c
 // Dashboard
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { BookingsComponent } from './dashboard/bookings/bookings.component';
+import { OverviewComponent } from './dashboard/overview/overview.component';
+import { ClientsComponent } from './dashboard/clients/clients.component';
+import { ServiceManagementComponent } from './dashboard/service-management/service-management.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -16,8 +19,12 @@ import { AuthGuard } from './guards/auth.guard';
 // Legal
 import { LegalNoticeComponent } from './legal/legal-notice/legal-notice.component';
 import { PrivacyPolicyComponent } from './legal/privacy-policy/privacy-policy.component';
-import { OverviewComponent } from './dashboard/overview/overview.component';
-import { ClientsComponent } from './dashboard/clients/clients.component';
+import { PropertiesComponent } from './dashboard/properties/properties.component';
+import { UnitsComponent } from './dashboard/units/units.component';
+import { BillingComponent } from './dashboard/billing/billing.component';
+import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
+import { SettingsComponent } from './dashboard/settings/settings.component';
+import { HelpPageComponent } from './dashboard/help-page/help-page.component';
 
 export const routes: Routes = [
   {
@@ -43,8 +50,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: OverviewComponent },
-      { path: 'bookings', component: BookingsComponent },
+      { path: 'properties', component: PropertiesComponent },
+      { path: 'units', component: UnitsComponent },
       { path: 'clients', component: ClientsComponent },
+      { path: 'bookings', component: BookingsComponent },
+      { path: 'services', component: ServiceManagementComponent },
+      { path: 'billing', component: BillingComponent },
+      { path: 'analytics', component: AnalyticsComponent },
+      { path: 'settings', component: SettingsComponent },
+      { path: 'help', component: HelpPageComponent },
     ],
   },
 ];

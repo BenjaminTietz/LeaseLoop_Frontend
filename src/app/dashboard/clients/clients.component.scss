@@ -1,11 +1,11 @@
+@use "../../styles/mixins" as *;
+
+
 content {
     padding: 40px 20px;
 
-
     .client-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @include display(flex, row, space-between, center);
         margin-bottom: 20px;
 
         h1 {
@@ -14,21 +14,9 @@ content {
         }
 
         .btn-add-client {
-            background-color: #2A3647;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 16px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
+            @include display(flex, row, center, center);
             gap: 10px;
-            transition: background 0.3s ease;
-
-            &:hover {
-                background-color: #1e2632;
-            }
 
             .icon {
                 font-weight: bold;
@@ -39,9 +27,10 @@ content {
 
     .client-table-wrapper {
         overflow-x: auto;
-        background: white;
+        background: var(--color-bg-surface);
         border-radius: 12px;
-        box-shadow: 0 0 0 1px #E0E0E0;
+        box-shadow: 0 0 1px var(--color-text-base);
+
     }
 
     .client-table {
@@ -69,9 +58,9 @@ content {
                     font-size: 15px;
                 }
 
-                &.active-row {
-                    border-left: 3px solid #4589FF;
-                    border-right: 3px solid #4589FF;
+                .btn-container {
+                    @include display(flex, row, center, center);
+                    gap: 10px;
                 }
             }
         }

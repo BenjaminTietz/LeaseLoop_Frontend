@@ -1,6 +1,8 @@
 <nav class="sidenav">
     <div class="top-section">
-        <button (click)="this.navigator.navigateTo('dashboard/rooms')">Rooms</button>
+        <button (click)="this.navigator.navigateTo('dashboard')">Dashboard</button>
+        <button (click)="this.navigator.navigateTo('dashboard/properties')">Properties</button>
+        <button (click)="this.navigator.navigateTo('dashboard/units')">Units</button>
         <button (click)="this.navigator.navigateTo('dashboard//clients')">Clients</button>
         <button (click)="this.navigator.navigateTo('dashboard/bookings')">Bookings</button>
         <button (click)="this.navigator.navigateTo('dashboard/services')">Services</button>
@@ -9,7 +11,7 @@
     </div>
     <div class="bottom-section">
         <button (click)="this.navigator.navigateTo('dashboard/settings')">Settings</button>
-        <button (click)="this.auth.logout()">Logout</button>
         <button (click)="this.navigator.navigateTo('dashboard/help')">Help</button>
+        <button (click)="this.auth.logout()">Logout</button>
     </div>
 </nav>

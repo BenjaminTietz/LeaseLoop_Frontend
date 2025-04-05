@@ -1,0 +1,50 @@
+@use "../../styles/mixins" as *;
+
+.service-header {
+    @include display(flex, row, space-between, center);
+    margin-bottom: 20px;
+    padding: 60px 40px;
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .btn-add {
+        cursor: pointer;
+    }
+}
+
+.service-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    background: var(--color-bg-surface);
+    box-shadow: 0 0 0 1px #ddd;
+
+    .service-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            color: var(--color-text-base);
+            padding: 16px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f8f8;
+            color: #647188;
+        }
+
+        .btn-container {
+            @include display(flex, row, center, center);
+            gap: 10px;
+
+            button {
+                font-weight: 400;
+                padding: 5px 8px;
+                font-size: 14px;
+            }
+        }
+    }
+}
