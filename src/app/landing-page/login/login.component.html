@@ -47,7 +47,7 @@
     <form class="animated-form" >
         <h2>{{ auth.error()}}</h2>
         @if(auth.error()) {
-          <button (click)="auth.resetMessages()">Gotcha</button>
+          <button (click)="auth.resetMessages(); auth.logout();" >Gotcha</button>
         }
     </form>
   }

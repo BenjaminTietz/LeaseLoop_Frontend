@@ -2,7 +2,7 @@
   <content>
     <form action="" onsubmit="return false">
       @if(auth.sending()) {
-        <app-progress-bar></app-progress-bar>
+        <app-progress-bar aria-label="Loading"></app-progress-bar>
         <h1>Activating Account</h1>
       }
       @else if(!auth.error()) {

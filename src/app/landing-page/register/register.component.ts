@@ -6,11 +6,12 @@ import { ToastService } from '../../services/toast-service/toast.service';
 import { FormService } from '../../services/form-service/form.service';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
+import { AriaConverterDirective } from '../../directives/aria-label-converter/aria-converter.directive';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatIcon, ReactiveFormsModule, ProgressBarComponent],
+  imports: [MatIcon, ReactiveFormsModule, ProgressBarComponent, AriaConverterDirective],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
