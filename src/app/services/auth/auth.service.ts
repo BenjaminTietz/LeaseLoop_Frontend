@@ -124,7 +124,6 @@ export class AuthService {
     ).subscribe({
       next: (response) => {
         this.handleSuccess(response.message);
-        setTimeout(() => this.navigator.navigateTo('/login'), 3000);
       },
       error: (error) => this.handleError(error, 'Account activation failed.')
     });

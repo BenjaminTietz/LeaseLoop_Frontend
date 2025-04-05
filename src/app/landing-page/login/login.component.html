@@ -1,5 +1,6 @@
 <main>
   <content>
+    @if(auth.error() == null) {
     <form [formGroup]="loginForm" (submit)="login()">
       @if(auth.sending()) {
         <app-progress-bar aria-label="Login progress bar"></app-progress-bar>
@@ -41,5 +42,14 @@
         <button type="submit" (mouseenter)="formService.markAllAsTouched(loginForm)" (mouseleave)="formService.unmarkAllAsTouched(loginForm)" [disabled]="loginForm.invalid || auth.sending()">Sign in</button>
         <a class="legal-link" (click)="navigator.navigateTo('forgot-password')">Forgot your password?</a>
     </form>
+  }
+  @if( auth.error()!==null) {
+    <form class="animated-form" >
+        <h2>{{ auth.error()}}</h2>
+        @if(auth.error()) {
+          <button (click)="auth.resetMessages()">Gotcha</button>
+        }
+    </form>
+  }
   </content>
 </main>

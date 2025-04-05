@@ -2,9 +2,6 @@
   <content>
     @if(auth.error() === null && auth.successMessage() === null ) {
     <form [formGroup]="registerForm" (submit)="register()">
-
-
-
       @if(auth.sending()) {
       <app-progress-bar aria-label="Register progress bar"></app-progress-bar>
       }
