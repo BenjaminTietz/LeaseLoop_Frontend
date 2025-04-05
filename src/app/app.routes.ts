@@ -9,6 +9,9 @@ import { MainLandingComponent } from './landing-page/main-landing/main-landing.c
 // Dashboard
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 import { BookingsComponent } from './dashboard/bookings/bookings.component';
+import { OverviewComponent } from './dashboard/overview/overview.component';
+import { ClientsComponent } from './dashboard/clients/clients.component';
+import { ServiceManagementComponent } from './dashboard/service-management/service-management.component';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
@@ -16,8 +19,6 @@ import { AuthGuard } from './guards/auth.guard';
 // Legal
 import { LegalNoticeComponent } from './legal/legal-notice/legal-notice.component';
 import { PrivacyPolicyComponent } from './legal/privacy-policy/privacy-policy.component';
-import { OverviewComponent } from './dashboard/overview/overview.component';
-import { ClientsComponent } from './dashboard/clients/clients.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,7 @@ export const routes: Routes = [
       { path: '', component: OverviewComponent },
       { path: 'bookings', component: BookingsComponent },
       { path: 'clients', component: ClientsComponent },
+      { path: 'services', component: ServiceManagementComponent },
     ],
   },
 ];
