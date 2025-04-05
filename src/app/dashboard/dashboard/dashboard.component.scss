@@ -1,53 +1,24 @@
 @use "../../styles/mixins.scss" as *;
 
-app-theme-button {
-    @include position(fixed, 16px, 16px);
-    z-index: 1000;
+main{
+    margin-right: 0px;
 }
 
-.dashboard-wrapper {
-    @include display(flex, row, flex-start, stretch);
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
+header{
+    @include display(flex, row, space-between, center);
+    position: fixed;
+    top: 10px;
+    right: 0;
+}
 
-    aside {
-        width: 260px;
-        background-color: var(--color-bg-surface);
-        border-right: 1px solid #e0e0e0;
-        transition: width 0.175s ease;
-        position: relative;
-        z-index: 100;
+main, header {
+    transition: width 200ms ease-in-out;
+}
 
-        &.closed {
-            width: 0px;
-            border: none;
+app-sidenav-toggle{
+    margin-left: 10px;
+}
 
-            app-sidenav {
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.175s ease;
-                transform: translateX(-150%);
-            }
-        }
-
-        app-sidenav {
-            height: 100%;
-            width: 100%;
-            transition: opacity 0.175s ease;
-            transform: translateX(0);
-        }
-    }
-
-    .main-content {
-        flex: 1;
-        height: 100%;
-        background-color: var(--color-bg-surface);
-        position: relative;
-        overflow-y: auto;
-
-        .router-container {
-            padding: 24px;
-        }
-    }
+app-theme-button{
+    margin-right: 10px;
 }

@@ -1,15 +1,10 @@
-<div class="dashboard-wrapper">
-    <aside [class.closed]="!isSidebarOpen()">
-        <app-sidenav></app-sidenav>
-    </aside>
-
-    <app-theme-button></app-theme-button>
-
-    <section class="main-content">
-        <app-sidenav-toggle [isOpen]="isSidebarOpen()" (toggle)="toggleSidebar()"></app-sidenav-toggle>
-
-        <div class="router-container">
-            <router-outlet />
-        </div>
-    </section>
-</div>
+<main [ngStyle]="{'width': isSidebarOpen() ? 'calc(100% - 250px)' : '100%'}">
+    @if(isSidebarOpen()){
+        <app-sidenav [@fadeAnimation] ></app-sidenav>
+    }
+    <header [ngStyle]="{'width': isSidebarOpen() ? 'calc(100% - 250px)' : '100%'}">
+        <app-sidenav-toggle [isOpen]="isSidebarOpen().valueOf()" (click)="isSidebarOpen.set(!isSidebarOpen())"></app-sidenav-toggle>
+        <app-theme-button></app-theme-button>
+    </header>
+    <router-outlet></router-outlet>
+</main>
