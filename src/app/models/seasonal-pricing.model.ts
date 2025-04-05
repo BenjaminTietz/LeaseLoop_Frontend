@@ -5,4 +5,6 @@ export interface SeasonalPricing {
   startDate: string; // ISO
   endDate: string;
   priceModifierPercent: number;
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
 }
