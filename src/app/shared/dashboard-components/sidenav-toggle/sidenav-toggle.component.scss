@@ -1,0 +1,10 @@
+@use '../../../styles/mixins.scss' as *;
+
+.toggle-btn {
+    @include position(absolute, 20px, null, null, 16px);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 18px;
+    z-index: 1000;
+}
