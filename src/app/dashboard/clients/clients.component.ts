@@ -1,12 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-clients',
   standalone: true,
   imports: [],
   templateUrl: './clients.component.html',
-  styleUrl: './clients.component.scss'
+  styleUrl: './clients.component.scss',
 })
-export class ClientsComponent {
-
-}
+export class ClientsComponent {}
