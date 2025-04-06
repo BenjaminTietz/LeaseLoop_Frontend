@@ -6,6 +6,7 @@ export interface Unit {
   capacity: number;
   pricePerExtraPerson: number;
   property: PropertyShort;
+  status: string; // 'available' | 'booked' | 'cleaning' | 'maintenance'
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }
