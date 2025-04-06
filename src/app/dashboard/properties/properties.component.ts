@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { DatabaseService } from '../../services/database-service/database.service';
-
+import { PropertiesService } from '../../services/properties-service/properties.service';
 @Component({
   selector: 'app-properties',
   standalone: true,
@@ -9,16 +8,16 @@ import { DatabaseService } from '../../services/database-service/database.servic
   styleUrl: './properties.component.scss',
 })
 export class PropertiesComponent implements OnInit {
-  dbService = inject(DatabaseService);
+  ps = inject(PropertiesService);
 
   ngOnInit(): void {
     this.loadProperties();
   }
 
   loadProperties() {
-    this.dbService.loadProperties().subscribe({
+    this.ps.loadProperties().subscribe({
       next: (data) => {
-        this.dbService.properties.set(data);
+        this.ps.properties.set(data);
       },
       error: (error) => {
         console.error('Failed to load properties', error);

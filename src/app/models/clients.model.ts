@@ -1,7 +1,7 @@
-export interface Customer {
+export interface Clients {
   id: number;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   adress: number;
   userId: number; // Refers to auth user

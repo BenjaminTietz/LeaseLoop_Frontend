@@ -19,13 +19,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (u of this.dbService.units(); track u.id; let i = $index) {
+                    @for (u of this.us.units(); track u.id; let i = $index) {
                     <tr>
                         <td>{{u.property.name}}</td>
                         <td>{{u.name}}</td>
                         <td>{{u.capacity}}</td>
                         <td>{{u.price_per_night}}</td>
-                        <td>STATUS</td>
+                        <td>{{u.status}}</td>
                         <td>
                             <div class="btn-container">
                                 <button>Edit</button>
