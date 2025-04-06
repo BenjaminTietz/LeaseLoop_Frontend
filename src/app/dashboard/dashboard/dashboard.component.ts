@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
 import { SidenavToggleComponent } from '../../shared/dashboard-components/sidenav-toggle/sidenav-toggle.component';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
 
 
 @Component({
@@ -15,7 +16,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
     RouterOutlet,
     CommonModule,
     ThemeButtonComponent,
-    SidenavToggleComponent
+    SidenavToggleComponent,
+    ClickOutsideDirective
 ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -43,4 +45,8 @@ export class DashboardComponent {
   toggleSidebar(): void {
     this.isSidebarOpen.update((prev) => !prev);
   }
+
+  closeSidenav = () => {
+    this.isSidebarOpen.set(false);
+  };
 }

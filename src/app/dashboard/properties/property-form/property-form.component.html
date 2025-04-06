@@ -1,0 +1,11 @@
+<form action="" onsubmit="return false">
+  <h1>Property</h1>
+  <div class="form-field">
+    <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
+    <mat-icon aria-label="Name">person</mat-icon>
+    @if(formService.getFormErrors(propertyForm, 'name')?.['required']) {
+      <small>Name is required</small>
+    }
+  </div>
+  <button type="submit" [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
+</form>

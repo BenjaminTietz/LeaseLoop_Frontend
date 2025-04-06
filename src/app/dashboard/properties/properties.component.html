@@ -2,8 +2,9 @@
     <content>
         <div class="header">
             <h1>Properties</h1>
-            <button class="btn-add">
-                <span class="icon">+</span> New Property
+            <button (click)="formOpen.set(true)">
+                <mat-icon>add</mat-icon>
+                <span >New Property</span> 
             </button>
         </div>
         <div class="table-wrapper">
@@ -31,5 +32,9 @@
                 </tbody>
             </table>
         </div>
+        
     </content>
+    @if(formOpen()) {
+        <app-property-form></app-property-form>
+    }
 </main>

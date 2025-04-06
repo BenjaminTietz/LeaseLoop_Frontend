@@ -1,6 +1,6 @@
 <main [ngStyle]="{'width': isSidebarOpen() ? 'calc(100% - 250px)' : '100%'}">
     @if(isSidebarOpen()){
-        <app-sidenav [@fadeAnimation] ></app-sidenav>
+        <app-sidenav [appClickOutside]="closeSidenav" [@fadeAnimation] ></app-sidenav>
     }
     <header [ngStyle]="{'width': isSidebarOpen() ? 'calc(100% - 250px)' : '100%'}">
         <app-sidenav-toggle [isOpen]="isSidebarOpen().valueOf()" (click)="isSidebarOpen.set(!isSidebarOpen())"></app-sidenav-toggle>
