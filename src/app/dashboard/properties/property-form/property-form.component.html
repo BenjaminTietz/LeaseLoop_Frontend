@@ -1,11 +1,29 @@
-<form action="" onsubmit="return false">
-  <h1>Property</h1>
-  <div class="form-field">
-    <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
-    <mat-icon aria-label="Name">person</mat-icon>
-    @if(formService.getFormErrors(propertyForm, 'name')?.['required']) {
-      <small>Name is required</small>
+<main>
+  <form  [formGroup]="propertyForm" (submit)="createProperty()" [appClickOutside]="closeForm">
+    @if(propertyService.sending()) {
+    <app-progress-bar aria-label="Loading"></app-progress-bar>
     }
-  </div>
-  <button type="submit" [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
-</form>
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    <h1>New Property</h1>
+    <div class="form-field">
+      <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
+      @if(formService.getFormErrors(propertyForm, 'name')?.['required']) {
+      <small>Name is required</small>
+      }
+    </div>
+    <div class="form-field">
+      <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
+      @if(formService.getFormErrors(propertyForm, 'address')?.['required']) {
+      <small>Address is required</small>
+      }
+    </div>
+    <div class="textarea-field">
+      <textarea type="text" id="description" name="description" required placeholder="Description"
+        formControlName="description"></textarea>
+      @if(formService.getFormErrors(propertyForm, 'description')?.['required']) {
+      <small>Description is required</small>
+      }
+    </div>
+    <button type="submit" [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
+  </form>
+</main>

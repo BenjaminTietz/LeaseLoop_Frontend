@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { PropertiesService } from '../../services/properties-service/properties.service';
 import { PropertyFormComponent } from "./property-form/property-form.component";
 import { MatIcon } from '@angular/material/icon';
@@ -12,7 +12,6 @@ import { MatIcon } from '@angular/material/icon';
 export class PropertiesComponent implements OnInit {
   ps = inject(PropertiesService);
   formOpen = signal(false);
-
   ngOnInit(): void {
     this.loadProperties();
   }

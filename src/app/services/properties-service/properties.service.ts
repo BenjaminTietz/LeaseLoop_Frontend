@@ -8,6 +8,8 @@ import { throwError, tap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class PropertiesService {
   httpService = inject(HttpService);
+  sending = signal(false);
+  selectedProperty = signal<Property | null>(null);
 
   // Signals to hold reactive state
   properties = signal<Property[]>([]);

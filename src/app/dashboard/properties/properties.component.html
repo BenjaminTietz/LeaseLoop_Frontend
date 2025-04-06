@@ -35,6 +35,6 @@
         
     </content>
     @if(formOpen()) {
-        <app-property-form></app-property-form>
+        <app-property-form (close)="formOpen.set(false)"></app-property-form>
     }
 </main>
