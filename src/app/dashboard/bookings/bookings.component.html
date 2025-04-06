@@ -1,90 +1,44 @@
 <main>
-    <content>
-        <div class="header">
-            <h1>Bookings</h1>
-            <button class="btn-add">
-                <span class="icon">+</span> New Booking
-            </button>
-        </div>
-        <div class="table-wrapper">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Room</th>
-                        <th>Arrival Date</th>
-                        <th>Departure Date</th>
-                        <th>Booked Service</th>
-                        <th>Deposit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                    <tr>
-                        <td>Max Mustermann</td>
-                        <td>2</td>
-                        <td>24.08.2024</td>
-                        <td>24.08.2024</td>
-                        <td>Intermediate Package</td>
-                        <td>✔</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </content>
+  <content>
+    <div class="header">
+      <h1>Bookings</h1>
+      <button class="btn-add"><span class="icon">+</span> New Booking</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Guests</th>
+            <th>Property</th>
+            <th>Room</th>
+            <th>Arrival Date</th>
+            <th>Departure Date</th>
+            <th>Booked Service</th>
+            <th>Total Price</th>
+            <th>Deposit</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (b of this.bs.bookings(); track b.id; let index = $index) {
+          <tr>
+            <td>{{b.client.first_name}} {{b.client.last_name}}</td>
+            <td>{{ b.guests }}</td>
+            <td>{{b.unit.property.name}}</td>
+            <td>{{b.unit.name}}</td>
+            <td>{{ b.check_in }}</td>
+            <td>{{ b.check_out }}</td>
+            <td>
+              @for (s of b.services; track s.id; let i = $index) {
+              {{ s?.name }}@if (i < ((b.services?.length || 0) - 1)) {, } } </td>
+            <td>{{ b.total_price }} €</td>
+            <td>@if (b.deposit_paid) {✔ {{ b.deposit_amount }} €} @else {X}</td>
+            <td>{{ b.status }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </content>
 </main>

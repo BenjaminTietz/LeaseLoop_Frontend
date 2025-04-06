@@ -1,10 +1,12 @@
 import { Service } from './service.model';
 import { PromoCode } from './promocode.model';
+import { Clients } from './clients.model';
+import { Unit } from './unit.model';
 
 export interface Booking {
   id: number;
-  unit_id: number;
-  client_id: number;
+  unit: Unit;
+  client: Clients;
   check_in: string; // ISO date
   check_out: string; // ISO date
   guests: number;
