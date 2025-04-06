@@ -30,15 +30,30 @@
       }
     </div>
     <div class="form-field">
-      <input type="file" id="image" name="image" accept="image/*" multiple
+      <input type="file" id="image" name="image" accept="image/*" multiple hidden
       (change)="onImageChange($event)">
+      <label for="image" class="upload-button">
+        <mat-icon>drive_folder_upload</mat-icon>
+        <span>Upload images</span>
+      </label>
     </div>
+    @if(propertyService.selectedProperty() === null && imagePreviews.length > 0) {
+      <div class="image-field">
+      @for(preview of imagePreviews; track preview) {
+        <div class="image">
+          <img [src]="preview" alt="Selected image preview" />
+          <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
+        </div>
+      }
+      </div>
+    }
+
     @if(propertyService.selectedProperty() !== null) {
-      <div class="images">
+      <div class="image-field">
         @for(image of propertyService.selectedProperty()?.images; track image.id) {
           <div class="image">
             <img [src]="'http://localhost:8000' + image.image" alt="property image" />
-            <mat-icon aria-label="Delete">delete</mat-icon>
+            <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
           </div>
         }
       </div>
