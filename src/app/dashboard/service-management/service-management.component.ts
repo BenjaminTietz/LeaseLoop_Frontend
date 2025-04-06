@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ServiceManagementService } from '../../services/service-management/service-management.service';
 
 interface ServiceModel {
   id: number;
@@ -16,20 +17,22 @@ interface ServiceModel {
   styleUrl: './service-management.component.scss',
 })
 export class ServiceManagementComponent implements OnInit {
-  services = signal<ServiceModel[]>([]);
-  private nextId = 3;
+  sms = inject(ServiceManagementService);
 
   ngOnInit(): void {
-    this.services.set([
-      { id: 1, name: 'Airport Transfer', price: 40, type: 'one_time' },
-      { id: 2, name: 'Breakfast', price: 8, type: 'per_day' },
-      { id: 1, name: 'Airport Transfer', price: 40, type: 'one_time' },
-      { id: 2, name: 'Breakfast', price: 8, type: 'per_day' },
-      { id: 1, name: 'Airport Transfer', price: 40, type: 'one_time' },
-      { id: 2, name: 'Breakfast', price: 8, type: 'per_day' },
-      { id: 1, name: 'Airport Transfer', price: 40, type: 'one_time' },
-      { id: 2, name: 'Breakfast', price: 8, type: 'per_day' },
-    ]);
+    this.loadServices();
+  }
+
+  loadServices() {
+    this.sms.loadService().subscribe({
+      next: (data) => {
+        this.sms.services.set(data);
+      },
+      error: (error) => {
+        console.error('Failed to load services', error);
+        // TODO: Handle error appropriately, e.g., show a notification to the user
+      },
+    });
   }
 
   openDialog() {

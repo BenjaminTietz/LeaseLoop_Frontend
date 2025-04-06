@@ -4,23 +4,24 @@
             <h1>Services</h1>
             <button class="btn-add" (click)="openDialog()">+ Add Service</button>
         </div>
-
         <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Associated</th>
                         <th>Price (€)</th>
                         <th>Type</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (service of services(); track $index) {
+                    @for (s of this.sms.services(); track s.id; let index = $index) {
                     <tr>
-                        <td>{{ service.name }}</td>
-                        <td>{{ service.price }}</td>
-                        <td>{{ service.type === 'one_time' ? 'One-time' : 'Per day' }}</td>
+                        <td>{{ s.name }}</td>
+                        <td>{{ s.property_info.name }}</td>
+                        <td>{{ s.price }}</td>
+                        <td>{{ s.type === 'one_time' ? 'One-time' : 'Per day' }}</td>
                         <td>
                             <div class="btn-container">
                                 <button (click)="openDialog()">Edit</button>
