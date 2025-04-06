@@ -4,56 +4,98 @@ import { Property } from '../../models/property.model';
 import { environment } from '../../../environments/environment';
 import { catchError } from 'rxjs/operators';
 import { throwError, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesService {
   httpService = inject(HttpService);
   sending = signal(false);
   selectedProperty = signal<Property | null>(null);
+  properties = signal<Property[]>([])
+  singleProperty = signal<Property | null>(null);
+  successful = signal<boolean>(false);
+  http = inject(HttpClient)
+  
 
-  // Signals to hold reactive state
-  properties = signal<Property[]>([]);
 
-  /** Load all properties owned by the current user */
   loadProperties() {
-    return this.httpService
-      .get<Property[]>(`${environment.apiBaseUrl}/api/properties/`)
-      .pipe(
-        tap((data) => this.properties.set(data)),
-        catchError((error) => {
-          console.error('Failed to load properties', error);
-          return throwError(() => error);
-        })
-      );
+   this.httpService.get<Property[]>(`${environment.apiBaseUrl}/api/properties/`).subscribe({
+     next: (data) => this.properties.set(data),
+     error: (error) => console.error('Failed to load properties', error)
+   })
   }
 
-  /** Load a single property by its ID */
-  getProperty(id: number) {
-    return this.httpService.get<Property>(
-      `${environment.apiBaseUrl}/api/properties/${id}/`
-    );
-  }
 
   /** Create a new property */
-  createProperty(data: Partial<Property>) {
-    return this.httpService.post<Property>(
-      `${environment.apiBaseUrl}/api/properties/`,
-      data
-    );
+  createProperty(formData: FormData, images: File[]): void {
+    this.sending.set(true);
+  
+    const token = localStorage.getItem('token');
+    const headers = token ? new HttpHeaders().set('Authorization', `Token ${token}`) : undefined;
+  
+    this.http.post<Property>(`${environment.apiBaseUrl}/api/properties/`, formData, { headers }).subscribe({
+      next: (property) => {
+        this.uploadImages(property.id, images);
+        this.loadProperties();
+        this.sending.set(false);
+        this.successful.set(true);
+      },
+      error: (err) => {
+        this.sending.set(false);
+        this.successful.set(false);
+        console.error(err);
+      }
+    });
   }
 
+  uploadImages(propertyId: number, files: File[]): void {
+  const token = localStorage.getItem('token');
+  const headers = token ? new HttpHeaders().set('Authorization', `Token ${token}`) : undefined;
+
+  files.forEach(file => {
+    const imageForm = new FormData();
+    imageForm.append('property', String(propertyId));
+    imageForm.append('image', file);
+
+    this.http.post(`${environment.apiBaseUrl}/api/property-images/`, imageForm, { headers }).subscribe({
+      next: (res) => console.log('Image uploaded:', res),
+      error: (err) => console.error('Image upload failed:', err)
+    });
+  });
+}
+
   /** Update an existing property */
-  updateProperty(id: number, data: Partial<Property>) {
-    return this.httpService.patch<Property>(
-      `${environment.apiBaseUrl}/api/properties/${id}/`,
+  updateProperty( data: Partial<Property>) {
+    this.httpService.patch<Property>(
+      `${environment.apiBaseUrl}/api/properties/${this.selectedProperty()?.id}/`,
       data
-    );
+    ).subscribe({
+      next: (response) => {
+        console.log('Property updated successfully:', response);
+        this.loadProperties();
+        this.selectedProperty.set(null);
+        this.successful.set(true);
+      },
+      error: (error) => {
+        console.error('Failed to update property:', error);
+        this.successful.set(false);
+      }
+    })
   }
 
   /** Delete a property */
-  deleteProperty(id: number) {
-    return this.httpService.delete(
-      `${environment.apiBaseUrl}/api/properties/${id}/`
-    );
+  deleteProperty() {
+    this.httpService.delete<Property>(`${environment.apiBaseUrl}/api/properties/${this.selectedProperty()?.id}/`).subscribe({
+      next: (response) => {
+        console.log('Property deleted successfully:', response);
+        this.selectedProperty.set(null);
+        this.loadProperties();
+        this.successful.set(true);	
+      },
+      error: (error) => {
+        console.error('Failed to delete property:', error);
+        this.successful.set(false);
+      }
+    })
   }
 }

@@ -10,21 +10,21 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './properties.component.scss',
 })
 export class PropertiesComponent implements OnInit {
-  ps = inject(PropertiesService);
+  propertyService = inject(PropertiesService); 
   formOpen = signal(false);
-  ngOnInit(): void {
-    this.loadProperties();
+
+  openForm() {
+    this.formOpen.set(true);
+    this.propertyService.selectedProperty.set(null);
+    this.propertyService.successful.set(false);
   }
 
-  loadProperties() {
-    this.ps.loadProperties().subscribe({
-      next: (data) => {
-        this.ps.properties.set(data);
-      },
-      error: (error) => {
-        console.error('Failed to load properties', error);
-        // TODO: Handle error appropriately, e.g., show a notification to the user
-      },
-    });
+  ngOnInit(): void {
+    this.propertyService.loadProperties();
+  }
+
+  openEditForm(){
+    this.formOpen.set(true);
+    this.propertyService.successful.set(false);
   }
 }

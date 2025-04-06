@@ -3,6 +3,13 @@ import { environment } from '../../../environments/environment';
 import { HttpService } from '../httpclient/http.service';
 import { NavigatorService } from '../navigator/navigator.service';
 
+export interface User {
+  user_id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -25,6 +32,10 @@ export class AuthService {
     
   }
 
+  setUserDataStorage(user:any) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
 
   login() {
     this.sending.set(true);
@@ -40,6 +51,7 @@ export class AuthService {
     if (response.token) {
       this.settokentostorage(response);
       this.sending.set(false);
+      this.setUserDataStorage(response);
       this.navigator.navigateTo('/dashboard');
     }
   }
@@ -67,6 +79,7 @@ export class AuthService {
   succesfullRememberLogin(response: any) {
     if (response.token) {
       this.handleSuccess();
+      this.setUserDataStorage(response);
       this.navigator.navigateTo('/dashboard');
     }
   }
@@ -138,7 +151,6 @@ export class AuthService {
   
   handleError(error: any, fallbackMessage: string = 'Something went wrong.') {
     console.log(error);
-    
     const msg = error?.error?.message || error?.error?.error || error?.error?.detail || fallbackMessage;
     this.error.set(msg);
     this.successMessage.set(null);

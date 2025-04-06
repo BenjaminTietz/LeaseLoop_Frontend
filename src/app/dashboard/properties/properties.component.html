@@ -2,7 +2,7 @@
     <content>
         <div class="header">
             <h1>Properties</h1>
-            <button (click)="formOpen.set(true)">
+            <button (click)="openForm()">
                 <mat-icon>add</mat-icon>
                 <span >New Property</span> 
             </button>
@@ -17,13 +17,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (p of this.ps.properties(); track p.id; let i = $index) {
+                    @for (property of propertyService.properties(); track property.id;) {
                     <tr>
-                        <td>{{p.name}}</td>
-                        <td>{{p.units.length}}</td>
+                        <td>{{property.name}}</td>
+                        <td>{{property.units.length}}</td>
                         <td>
                             <div class="btn-container">
-                                <button (click)="ps.selectedProperty.set(p); formOpen.set(true)">Edit</button>
+                                <button (click)="propertyService.selectedProperty.set(property); openEditForm()">Edit</button>
                                 <button>Delete</button>
                             </div>
                         </td>

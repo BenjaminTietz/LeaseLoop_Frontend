@@ -1,23 +1,23 @@
 <main>
-  <form  [formGroup]="propertyForm" (submit)="createProperty()" [appClickOutside]="closeForm">
+  <form [formGroup]="propertyForm" [appClickOutside]="closeForm">
     @if(propertyService.sending()) {
     <app-progress-bar aria-label="Loading"></app-progress-bar>
     }
     <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
     @if(propertyService.selectedProperty() === null) {
-      <h1>New Property</h1>
+    <h1>New Property</h1>
     }
-    @if(propertyService.selectedProperty() == null) {
-      <h1>Edit Property</h1>
+    @if(propertyService.selectedProperty() !== null) {
+    <h1>Edit Property</h1>
     }
     <div class="form-field">
-      <input type="text" id="name" name="name" required placeholder="Name"  formControlName="name">
+      <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
       @if(formService.getFormErrors(propertyForm, 'name')?.['required']) {
       <small>Name is required</small>
       }
     </div>
     <div class="form-field">
-      <input type="text" id="address" name="address" required placeholder="Address"  formControlName="address">
+      <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
       @if(formService.getFormErrors(propertyForm, 'address')?.['required']) {
       <small>Address is required</small>
       }
@@ -29,13 +29,33 @@
       <small>Description is required</small>
       }
     </div>
-    @if(propertyService.selectedProperty() === null) {
-      <div class="button-area">
-        @if(propertyService.selectedProperty() !== null) {
-          <button type="button" (click)="deleteProperty()">Delete</button>
+    <div class="form-field">
+      <input type="file" id="image" name="image" accept="image/*" multiple
+      (change)="onImageChange($event)">
+    </div>
+    @if(propertyService.selectedProperty() !== null) {
+      <div class="images">
+        @for(image of propertyService.selectedProperty()?.images; track image.id) {
+          <div class="image">
+            <img [src]="'http://localhost:8000' + image.image" alt="property image" />
+            <mat-icon aria-label="Delete">delete</mat-icon>
+          </div>
         }
-        <button type="submit" [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
       </div>
     }
+    <div>
+
+    </div>
+    <div class="button-area">
+      @if(propertyService.selectedProperty() !== null) {
+      <button type="button" (click)="deleteProperty()">Delete</button>
+      <button type="submit" (click)="updateProperty()"
+        [disabled]="propertyForm.invalid || propertyService.sending()">Update</button>
+      }
+      @if(propertyService.selectedProperty() === null) {
+      <button type="submit" (click)="createProperty()"
+        [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
+      }
+    </div>
   </form>
 </main>
