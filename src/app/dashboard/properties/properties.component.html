@@ -16,9 +16,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @for (p of this.dbService.properties(); track p.id; let i = $index) {
                     <tr>
-                        <td>Vineyrad Villa</td>
-                        <td>2</td>
+                        <td>{{p.name}}</td>
+                        <td>{{p.units.length}}</td>
                         <td>
                             <div class="btn-container">
                                 <button>Edit</button>
@@ -26,6 +27,7 @@
                             </div>
                         </td>
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>

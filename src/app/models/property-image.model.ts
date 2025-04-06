@@ -1,6 +1,6 @@
 export interface PropertyImage {
   id: number;
-  image: string; // URL
+  image_url: string; // URL
   altText: string;
   propertyId: number;
   created_at: string; // ISO date
