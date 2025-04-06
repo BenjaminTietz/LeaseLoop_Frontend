@@ -2,8 +2,9 @@
     <content>
         <div class="header">
             <h1>Properties</h1>
-            <button class="btn-add">
-                <span class="icon">+</span> New Property
+            <button (click)="openForm()">
+                <mat-icon>add</mat-icon>
+                <span >New Property</span> 
             </button>
         </div>
         <div class="table-wrapper">
@@ -16,13 +17,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (p of this.ps.properties(); track p.id; let i = $index) {
+                    @for (property of propertyService.properties(); track property.id;) {
                     <tr>
-                        <td>{{p.name}}</td>
-                        <td>{{p.units.length}}</td>
+                        <td>{{property.name}}</td>
+                        <td>{{property.units.length}}</td>
                         <td>
                             <div class="btn-container">
-                                <button>Edit</button>
+                                <button (click)="propertyService.selectedProperty.set(property); openEditForm()">Edit</button>
                                 <button>Delete</button>
                             </div>
                         </td>
@@ -31,5 +32,9 @@
                 </tbody>
             </table>
         </div>
+        
     </content>
+    @if(formOpen()) {
+        <app-property-form (close)="formOpen.set(false)"></app-property-form>
+    }
 </main>

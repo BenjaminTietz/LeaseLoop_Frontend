@@ -5,7 +5,7 @@ main {
     min-height: 100vh;
     height: fit-content;
     padding: 20px 50px;
-    background-color: var(--color-bg-surface);
+    background-color: var(--color-bg-body);
 }
 
 .header {
@@ -17,9 +17,6 @@ main {
         font-size: 32px;
     }
 
-    .btn-add {
-        cursor: pointer;
-    }
 }
 
 .table-wrapper {
