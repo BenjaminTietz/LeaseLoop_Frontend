@@ -19,7 +19,7 @@ export class PropertyFormComponent {
   propertyService = inject(PropertiesService);
   auth = inject(AuthService);
   @Output() close = new EventEmitter();
-
+  imagePreviews: string[] = [];
   images: any[] = [];
 
   propertyForm  = new FormBuilder().nonNullable.group({
@@ -39,8 +39,6 @@ export class PropertyFormComponent {
 
   ngOnInit(): void {
     const selected = this.propertyService.selectedProperty();
-    console.log(selected);
-    
     if (selected) {
       this.propertyForm.patchValue({
         name: selected.name,
@@ -55,18 +53,33 @@ export class PropertyFormComponent {
     if (input.files && input.files.length > 0) {
       const files: File[] = Array.from(input.files);
       this.images.push(...files);
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagePreviews.push(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    setTimeout(() => console.log('All previews:', this.imagePreviews), 500);
+    
+  }
+
+  removePreview(preview: string): void {
+    const index = this.imagePreviews.indexOf(preview);
+    if (index > -1) {
+      this.imagePreviews.splice(index, 1);
+      this.images.splice(index, 1);
     }
   }
 
 
   createProperty() {
     const raw = this.propertyForm.value;
-  
     const formData = new FormData();
     Object.entries(raw).forEach(([key, value]) => {
       formData.append(key, value ?? '');
     });
-  
     this.propertyService.createProperty(formData, this.images);
   }
 
@@ -75,12 +88,21 @@ export class PropertyFormComponent {
   }
 
   updateProperty() {
-    this.propertyService.updateProperty(this.propertyForm.value);
+    const raw = this.propertyForm.value;
+    const formData = new FormData();
+    Object.entries(raw).forEach(([key, value]) => {
+      formData.append(key, value ?? '');
+    });
+  
+    this.propertyService.updateProperty(formData, this.images);
   }
 
   closeForm = () => {
     this.close.emit();
   }
 
+  deleteImage(id: number) {
+    this.propertyService.deleteImage(id);
+  }
   
 }

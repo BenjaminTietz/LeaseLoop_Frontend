@@ -26,7 +26,6 @@ export class PropertiesService {
   }
 
 
-  /** Create a new property */
   createProperty(formData: FormData, images: File[]): void {
     this.sending.set(true);
   
@@ -64,26 +63,41 @@ export class PropertiesService {
   });
 }
 
-  /** Update an existing property */
-  updateProperty( data: Partial<Property>) {
-    this.httpService.patch<Property>(
-      `${environment.apiBaseUrl}/api/properties/${this.selectedProperty()?.id}/`,
-      data
+  
+  updateProperty(formData: FormData, newImages: File[]): void {
+    this.sending.set(true);
+  
+    const token = localStorage.getItem('token');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
+  
+    const propertyId = this.selectedProperty()?.id;
+  
+    if (!propertyId) return;
+  
+    this.http.patch<Property>(
+      `${environment.apiBaseUrl}/api/properties/${propertyId}/`,
+      formData,
+      { headers }
     ).subscribe({
-      next: (response) => {
-        console.log('Property updated successfully:', response);
+      next: (property) => {
+        console.log('Property updated successfully:', property);
+        if (newImages.length > 0) {
+          this.uploadImages(propertyId, newImages);
+        }
+  
         this.loadProperties();
         this.selectedProperty.set(null);
+        this.sending.set(false);
         this.successful.set(true);
       },
       error: (error) => {
         console.error('Failed to update property:', error);
+        this.sending.set(false);
         this.successful.set(false);
       }
-    })
+    });
   }
 
-  /** Delete a property */
   deleteProperty() {
     this.httpService.delete<Property>(`${environment.apiBaseUrl}/api/properties/${this.selectedProperty()?.id}/`).subscribe({
       next: (response) => {
@@ -97,5 +111,20 @@ export class PropertiesService {
         this.successful.set(false);
       }
     })
+  }
+
+  deleteImage(id: number) {
+    const property = this.selectedProperty();
+    if (!property) return;
+  
+    property.images = property.images.filter(image => image.id !== id);
+  
+    const token = localStorage.getItem('token');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
+  
+    this.http.delete(`${environment.apiBaseUrl}/api/property-images/${id}/`, { headers }).subscribe({
+      next: () => console.log('Image deleted:', id),
+      error: (err) => console.error('Failed to delete image:', err)
+    });
   }
 }
