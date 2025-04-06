@@ -4,15 +4,20 @@
     <app-progress-bar aria-label="Loading"></app-progress-bar>
     }
     <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
-    <h1>New Property</h1>
+    @if(propertyService.selectedProperty() === null) {
+      <h1>New Property</h1>
+    }
+    @if(propertyService.selectedProperty() == null) {
+      <h1>Edit Property</h1>
+    }
     <div class="form-field">
-      <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
+      <input type="text" id="name" name="name" required placeholder="Name"  formControlName="name">
       @if(formService.getFormErrors(propertyForm, 'name')?.['required']) {
       <small>Name is required</small>
       }
     </div>
     <div class="form-field">
-      <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
+      <input type="text" id="address" name="address" required placeholder="Address"  formControlName="address">
       @if(formService.getFormErrors(propertyForm, 'address')?.['required']) {
       <small>Address is required</small>
       }
@@ -24,6 +29,13 @@
       <small>Description is required</small>
       }
     </div>
-    <button type="submit" [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
+    @if(propertyService.selectedProperty() === null) {
+      <div class="button-area">
+        @if(propertyService.selectedProperty() !== null) {
+          <button type="button" (click)="deleteProperty()">Delete</button>
+        }
+        <button type="submit" [disabled]="propertyForm.invalid || propertyService.sending()">Save</button>
+      </div>
+    }
   </form>
 </main>

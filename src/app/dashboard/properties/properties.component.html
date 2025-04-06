@@ -23,7 +23,7 @@
                         <td>{{p.units.length}}</td>
                         <td>
                             <div class="btn-container">
-                                <button>Edit</button>
+                                <button (click)="ps.selectedProperty.set(p); formOpen.set(true)">Edit</button>
                                 <button>Delete</button>
                             </div>
                         </td>

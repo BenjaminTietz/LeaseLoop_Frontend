@@ -70,6 +70,11 @@ small {
   }
 }
 
+.button-area{
+  @include display(flex, row, space-between, center);
+  width: 100%;
+}
+
 
 @keyframes rotate-and-change-color {
   0% {

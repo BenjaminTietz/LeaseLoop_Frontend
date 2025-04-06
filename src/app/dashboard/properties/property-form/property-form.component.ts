@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormService } from '../../../services/form-service/form.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
@@ -20,11 +20,26 @@ export class PropertyFormComponent {
 
   propertyForm  = new FormBuilder().nonNullable.group({
     name: ['' , Validators.required],
-    address: ['', Validators.required],
+    address: [ '', Validators.required],
     description: ['', Validators.required]
   })
 
+  ngOnInit(): void {
+    const selected = this.propertyService.selectedProperty();
+    if (selected) {
+      this.propertyForm.patchValue({
+        name: selected.name,
+        address: selected.address,
+        description: selected.description
+      });
+    }
+  }
+
+
   createProperty() {
+  }
+
+  deleteProperty() {
   }
 
   closeForm = () => {
