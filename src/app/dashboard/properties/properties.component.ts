@@ -1,8 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { DatabaseService } from '../../services/database-service/database.service';
+import { PropertiesService } from '../../services/properties-service/properties.service';
 import { PropertyFormComponent } from "./property-form/property-form.component";
 import { MatIcon } from '@angular/material/icon';
-
 @Component({
   selector: 'app-properties',
   standalone: true,
@@ -11,7 +10,7 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './properties.component.scss',
 })
 export class PropertiesComponent implements OnInit {
-  dbService = inject(DatabaseService);
+  ps = inject(PropertiesService);
   formOpen = signal(false);
 
   ngOnInit(): void {
@@ -19,9 +18,9 @@ export class PropertiesComponent implements OnInit {
   }
 
   loadProperties() {
-    this.dbService.loadProperties().subscribe({
+    this.ps.loadProperties().subscribe({
       next: (data) => {
-        this.dbService.properties.set(data);
+        this.ps.properties.set(data);
       },
       error: (error) => {
         console.error('Failed to load properties', error);

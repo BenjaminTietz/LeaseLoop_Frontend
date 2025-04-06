@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { DatabaseService } from '../../services/database-service/database.service';
+import { UnitsService } from '../../services/units-service/units.service';
 
 @Component({
   selector: 'app-units',
@@ -9,16 +9,16 @@ import { DatabaseService } from '../../services/database-service/database.servic
   styleUrl: './units.component.scss',
 })
 export class UnitsComponent implements OnInit {
-  dbService = inject(DatabaseService);
+  us = inject(UnitsService);
 
   ngOnInit(): void {
     this.loadUnits();
   }
 
   loadUnits() {
-    this.dbService.loadUnits().subscribe({
+    this.us.loadUnits().subscribe({
       next: (data) => {
-        this.dbService.units.set(data);
+        this.us.units.set(data);
       },
       error: (error) => {
         console.error('Failed to load units', error);

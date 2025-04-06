@@ -17,7 +17,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (p of this.dbService.properties(); track p.id; let i = $index) {
+                    @for (p of this.ps.properties(); track p.id; let i = $index) {
                     <tr>
                         <td>{{p.name}}</td>
                         <td>{{p.units.length}}</td>
