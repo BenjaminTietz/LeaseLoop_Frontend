@@ -3,16 +3,15 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
- * Retrieves the authentication token from either session storage or local storage.
- * If the token is not found in either storage, returns null.
- */
+   * Retrieves the authentication token from either session storage or local storage.
+   * If the token is not found in either storage, returns null.
+   */
   getToken(): string | null {
     return sessionStorage.getItem('token') || localStorage.getItem('token');
   }
@@ -27,7 +26,9 @@ export class HttpService {
   getHeaders(): HttpHeaders {
     const token = this.getToken();
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    if (token) { headers = headers.set('Authorization', `Token ${token}`); }
+    if (token) {
+      headers = headers.set('Authorization', `Token ${token}`);
+    }
     return headers;
   }
 
@@ -61,5 +62,15 @@ export class HttpService {
    */
   get<T>(url: string): Observable<T> {
     return this.http.get<T>(url, { headers: this.getHeaders() });
+  }
+
+  /**
+   * Sends a DELETE request to the specified URL.
+   * The request includes headers obtained from the getHeaders() method.
+   * @param url - The URL to which the DELETE request is sent.
+   * @returns An Observable of the response, typed as T.
+   */
+  delete<T>(url: string): Observable<T> {
+    return this.http.delete<T>(url, { headers: this.getHeaders() });
   }
 }
