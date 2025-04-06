@@ -16,8 +16,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @for (c of this.cs.clients(); track c.id; let i = $index) {
                     <tr>
-                        <td>Max Mustermann</td>
+                        <td>{{c.first_name}} {{c.last_name}}</td>
                         <td>24.08.2024</td>
                         <td>
                             <div class="btn-container">
@@ -25,6 +26,7 @@
                             </div>
                         </td>
                     </tr>
+                    }
                 </tbody>
             </table>
         </div>
