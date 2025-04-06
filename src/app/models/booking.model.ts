@@ -3,18 +3,17 @@ import { PromoCode } from './promocode.model';
 
 export interface Booking {
   id: number;
-  unitId: number;
-  customerId: number;
-  checkIn: string; // ISO date
-  checkOut: string; // ISO date
+  unit_id: number;
+  client_id: number;
+  check_in: string; // ISO date
+  check_out: string; // ISO date
   guests: number;
-  totalPrice: number;
-  depositRequired: boolean;
-  depositPaid: boolean;
-  depositAmount: number;
+  total_price: number;
+  deposit_paid: boolean;
+  deposit_amount: number;
   status: string; // e.g., 'pending', 'confirmed', 'cancelled'
   services?: Service[];
-  promoCode?: PromoCode;
+  promo_code?: PromoCode;
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }
