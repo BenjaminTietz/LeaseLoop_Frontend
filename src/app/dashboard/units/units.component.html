@@ -12,24 +12,28 @@
                     <tr>
                         <th>Property</th>
                         <th>Name</th>
-                        <th>Categrization</th>
+                        <th>Capacity</th>
+                        <th>Price</th>
                         <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    @for (u of this.dbService.units(); track u.id; let i = $index) {
                     <tr>
-                        <td>Vineyard Villa</td>
-                        <td>Maisonette Appartment</td>
-                        <td>****</td>
-                        <td>Available</td>
+                        <td>{{u.property.name}}</td>
+                        <td>{{u.name}}</td>
+                        <td>{{u.capacity}}</td>
+                        <td>{{u.price_per_night}}</td>
+                        <td>STATUS</td>
                         <td>
                             <div class="btn-container">
                                 <button>Edit</button>
-                                <button>Delete</button>
                             </div>
                         </td>
                     </tr>
+                    }
+
                 </tbody>
             </table>
         </div>

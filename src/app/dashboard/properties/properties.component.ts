@@ -22,6 +22,7 @@ export class PropertiesComponent implements OnInit {
       },
       error: (error) => {
         console.error('Failed to load properties', error);
+        // TODO: Handle error appropriately, e.g., show a notification to the user
       },
     });
   }
