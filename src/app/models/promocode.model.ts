@@ -1,10 +1,10 @@
 export interface PromoCode {
   id: number;
   code: string;
-  validUntil: string; // ISO date
-  discountPercent: number;
-  used: boolean;
-  ownerId: number;
+  description: string;
+  valid_until: string; // ISO date
+  discount_percent: number;
+  owner_id: number;
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }

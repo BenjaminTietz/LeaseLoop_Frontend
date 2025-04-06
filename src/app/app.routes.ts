@@ -12,7 +12,7 @@ import { BookingsComponent } from './dashboard/bookings/bookings.component';
 import { OverviewComponent } from './dashboard/overview/overview.component';
 import { ClientsComponent } from './dashboard/clients/clients.component';
 import { ServiceManagementComponent } from './dashboard/service-management/service-management.component';
-
+import { PromocodesComponent } from './dashboard/promocodes/promocodes.component';
 // Guards
 import { AuthGuard } from './guards/auth.guard';
 
@@ -55,6 +55,7 @@ export const routes: Routes = [
       { path: 'clients', component: ClientsComponent },
       { path: 'bookings', component: BookingsComponent },
       { path: 'services', component: ServiceManagementComponent },
+      { path: 'promocodes', component: PromocodesComponent },
       { path: 'billing', component: BillingComponent },
       { path: 'analytics', component: AnalyticsComponent },
       { path: 'settings', component: SettingsComponent },

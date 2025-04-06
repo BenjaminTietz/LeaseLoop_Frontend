@@ -1,0 +1,39 @@
+<main>
+    <content>
+        <div class="header">
+            <h1>Promocodes</h1>
+            <button class="btn-add">
+                <span class="icon">+</span> New Promocode
+            </button>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Valdid until</th>
+                        <th>Discount Percentage</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (pc of this.pcs.promocodes(); track pc.id; let index = $index) {
+                    <tr>
+                        <td>{{pc.code}}</td>
+                        <td>{{pc.description}}</td>
+                        <td>{{pc.valid_until}}</td>
+                        <td>{{pc.discount_percent}}</td>
+                        <td>
+                            <div class="btn-container">
+                                <button>Edit</button>
+                                <button>Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </content>
+</main>
