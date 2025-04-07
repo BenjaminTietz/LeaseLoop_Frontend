@@ -6,15 +6,15 @@
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>Guests</h3>
-                        <p>7</p>
+                        <p>{{this.dashboardService.guestsSignal()}}</p>
                     </div>
                     <div class="feature-card">
                         <h3>Occupancy</h3>
-                        <p>92%</p>
+                        <p>{{this.dashboardService.currentOccupancySignal()}} %</p>
                     </div>
                     <div class="feature-card">
                         <h3>Monthly Occupancy</h3>
-                        <p>77%</p>
+                        <p>{{this.dashboardService.monthlyOccupancySignal()}} %</p>
                     </div>
                 </div>
             </div>
@@ -24,11 +24,11 @@
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>Next Arrival</h3>
-                        <p>Sat, 24. August</p>
+                        <p>{{this.dashboardService.nextArrivalSignal()}}</p>
                     </div>
                     <div class="feature-card">
                         <h3>Next Departure</h3>
-                        <p>Sat, 24. August</p>
+                        <p>{{this.dashboardService.nextDepartureSignal()}}</p>
                     </div>
                 </div>
             </div>
@@ -41,22 +41,13 @@
             <div class="container">
                 <h2>Rooms</h2>
                 <div class="room-container">
+                    @for (unit of this.unitService.units(); track unit.id; let index = $index) {
                     <div class="room-card">
-                        <h3>Room 1 'ROOMNAME'</h3>
-                        <p>Occupied 'ROOMSTATUS'</p>
+                        <h3>{{ unit.name }}</h3>
+                        <p>{{unit.status}}</p>
+                        <p>{{unit.property.name}}</p>
                     </div>
-                    <div class="room-card">
-                        <h3>Room 2</h3>
-                        <p>Available</p>
-                    </div>
-                    <div class="room-card">
-                        <h3>Room 3</h3>
-                        <p>Occupied</p>
-                    </div>
-                    <div class="room-card">
-                        <h3>Room 4</h3>
-                        <p>Available</p>
-                    </div>
+                    }
                 </div>
             </div>
         </section>
