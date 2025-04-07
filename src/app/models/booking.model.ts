@@ -9,6 +9,7 @@ export interface Booking {
   client: Clients;
   check_in: string; // ISO date
   check_out: string; // ISO date
+  total_days: number; // <-- TODO: include into backend
   guests: number;
   total_price: number;
   deposit_paid: boolean;

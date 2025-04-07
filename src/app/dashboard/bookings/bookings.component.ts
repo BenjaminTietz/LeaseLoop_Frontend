@@ -12,13 +12,6 @@ export class BookingsComponent implements OnInit {
   bs = inject(BookingsService);
 
   ngOnInit() {
-    this.bs.loadBooking().subscribe({
-      next: (data) => {
-        console.log('Bookings loaded:', data);
-      },
-      error: (error) => {
-        console.error('Error loading bookings:', error);
-      },
-    });
+    this.bs.loadBooking();
   }
 }
