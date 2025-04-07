@@ -14,15 +14,12 @@ export class BookingsService {
 
   /** Load all Booking assoziated to current user / property */
   loadBooking() {
-    return this.httpService
+    this.httpService
       .get<Booking[]>(`${environment.apiBaseUrl}/api/bookings/`)
-      .pipe(
-        tap((data) => this.bookings.set(data)),
-        catchError((error) => {
-          console.error('Failed to load bookings', error);
-          return throwError(() => error);
-        })
-      );
+      .subscribe({
+        next: (data) => this.bookings.set(data),
+        error: (error) => console.error('Failed to load bookings', error),
+      });
   }
 
   /** Load a single Booking by its ID */

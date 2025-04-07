@@ -15,15 +15,12 @@ export class UnitsService {
 
   /** Load all units (admin or general fetch) */
   loadUnits() {
-    return this.httpService
+    this.httpService
       .get<Unit[]>(`${environment.apiBaseUrl}/api/units/`)
-      .pipe(
-        tap((data) => this.units.set(data)),
-        catchError((error) => {
-          console.error('Failed to load units', error);
-          return throwError(() => error);
-        })
-      );
+      .subscribe({
+        next: (data) => this.units.set(data),
+        error: (error) => console.error('Failed to load units', error),
+      });
   }
 
   /** Get all units for a specific property */

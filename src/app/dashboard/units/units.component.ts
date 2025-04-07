@@ -12,18 +12,6 @@ export class UnitsComponent implements OnInit {
   us = inject(UnitsService);
 
   ngOnInit(): void {
-    this.loadUnits();
-  }
-
-  loadUnits() {
-    this.us.loadUnits().subscribe({
-      next: (data) => {
-        this.us.units.set(data);
-      },
-      error: (error) => {
-        console.error('Failed to load units', error);
-        // TODO: Handle error appropriately, e.g., show a notification to the user
-      },
-    });
+    this.us.loadUnits();
   }
 }
