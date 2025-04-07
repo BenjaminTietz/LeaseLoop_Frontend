@@ -1,34 +1,28 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, effect, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import { BookingsService } from '../../../services/bookings-service/bookings.service';
+import { PropertiesService } from '../../../services/properties-service/properties.service';
+import { UnitsService } from '../../../services/units-service/units.service';
+import { HorizontalDirectivesDirective } from '../../../directives/horizontal-scroll/horizontal-directives.directive';
 @Component({
   selector: 'app-availability-calendar',
   standalone: true,
-  imports: [DatePipe, CommonModule, FormsModule],
+  imports: [DatePipe, CommonModule, FormsModule, HorizontalDirectivesDirective],
   templateUrl: './availability-calendar.component.html',
   styleUrl: './availability-calendar.component.scss',
 })
 export class AvailabilityCalendarComponent implements OnInit {
-  properties = [
-    { id: 1, name: 'Villa Vista' },
-    { id: 2, name: 'Seaside Loft' },
-  ];
-
-  allUnits = [
-    { id: 1, name: 'Apartment A', propertyId: 1 },
-    { id: 2, name: 'Apartment B', propertyId: 1 },
-    { id: 3, name: 'Room C', propertyId: 2 },
-    { id: 4, name: 'Suite D', propertyId: 2 },
-  ];
-
-  allBookings = [
-    { unitId: 1, from: '2025-04-03', to: '2025-04-06', guest: 'Alice Schmidt' },
-    { unitId: 1, from: '2025-04-10', to: '2025-04-14', guest: 'Tom Berger' },
-    { unitId: 2, from: '2025-04-05', to: '2025-04-08', guest: 'Lena Weiß' },
-    { unitId: 3, from: '2025-04-11', to: '2025-04-13', guest: 'Elisa Meyer' },
-    { unitId: 4, from: '2025-04-20', to: '2025-04-24', guest: 'Paul König' },
-  ];
+  bookingService = inject(BookingsService);
+  propertyService = inject(PropertiesService);
+  unitService = inject(UnitsService);
 
   months = [
     { value: 0, label: 'January' },
@@ -53,20 +47,24 @@ export class AvailabilityCalendarComponent implements OnInit {
 
   dates = signal<Date[]>([]);
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
-  bookings = signal<any[]>([]);
-
-  units = computed(() =>
-    this.allUnits.filter((u) => u.propertyId === this.selectedPropertyId())
-  );
-
-  filteredBookings = computed(() => {
-    const unitIds = this.units().map((u) => u.id);
-    return this.bookings().filter((b) => unitIds.includes(b.unitId));
-  });
+  sortedBookings = signal<any[]>([]);
 
   ngOnInit(): void {
     this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+    this.propertyService.loadProperties();
+    this.unitService.loadUnits();
+    this.bookingService.loadBooking();
   }
+
+  setPropertyId = effect(
+    () => {
+      const props = this.propertyService.properties();
+      if (props.length > 0) {
+        this.selectedPropertyId.set(props[0].id);
+      }
+    },
+    { allowSignalWrites: true }
+  );
 
   calendarEffect = effect(
     () => {
@@ -76,6 +74,26 @@ export class AvailabilityCalendarComponent implements OnInit {
     { allowSignalWrites: true }
   );
 
+  units = computed(() =>
+    this.unitService
+      .units()
+      .filter((u) => u.property.id === this.selectedPropertyId())
+  );
+
+  filteredBookings = computed(() => {
+    const unitIds = this.units().map((u) => u.id);
+    return this.bookingService
+      .bookings()
+      .filter((b) => unitIds.includes(b.unit.id));
+  });
+
+  /**
+   * Generates an array of dates for the given month and year and sets it as the value
+   * of the dates signal.
+   *
+   * @param year - The year of the month to generate dates for.
+   * @param month - The month of the year to generate dates for.
+   */
   generateDatesForMonth(year: number, month: number): void {
     const dates: Date[] = [];
     const first = new Date(year, month, 1);
@@ -86,50 +104,117 @@ export class AvailabilityCalendarComponent implements OnInit {
     this.dates.set(dates);
   }
 
+  /**
+   * Filters the bookings of the bookings service by the IDs of the units currently visible
+   * in the component and sets the result as the value of the sortedBookings signal.
+   *
+   * This is used to update the bookings displayed in the component when the selected property
+   * changes.
+   */
   loadBookings(): void {
     const unitIds = this.units().map((u) => u.id);
-    const filtered = this.allBookings.filter((b) => unitIds.includes(b.unitId));
-    this.bookings.set(filtered);
+    const filtered = this.bookingService
+      .bookings()
+      .filter((b) => unitIds.includes(b.unit.id));
+    this.sortedBookings.set(filtered);
   }
 
+  /**
+   * Returns a string representation of the given date, in the format 'YYYY-MM-DD'.
+   *
+   * @param date - The date to format.
+   *
+   * @returns {string} A string representation of the date, in the format 'YYYY-MM-DD'.
+   */
   dayString(date: Date): string {
     return date.toISOString().split('T')[0];
   }
 
+  /**
+   * Checks if a unit is available on a specific date.
+   *
+   * @param unitId - The ID of the unit.
+   * @param date - The date to check for availability.
+   *
+   * @returns {boolean} true if the unit is available, false if not.
+   */
   isAvailable(unitId: number, date: Date): boolean {
     const dateStr = this.dayString(date);
     const unitAvailability = this.availability()?.[unitId];
     return unitAvailability?.[dateStr] !== 0;
   }
 
+  /**
+   * Checks if a booking exists for a given unit on a specific day.
+   *
+   * @param unitId - The ID of the unit.
+   * @param day - The day to check for a booking.
+   *
+   * @returns {boolean} true if a booking exists, false if not.
+   */
   hasBooking(unitId: number, day: Date): boolean {
     const dateStr = this.dayString(day);
     return this.filteredBookings().some(
-      (b) => b.unitId === unitId && dateStr >= b.from && dateStr < b.to
+      (b) =>
+        b.unit.id === unitId && dateStr >= b.check_in && dateStr < b.check_out
     );
   }
+
+  /**
+   * Retrieves the label for a booking on a specific day for a given unit.
+   *
+   * @param unitId - The ID of the unit.
+   * @param day - The day to check for a booking.
+   * @returns {string} The first name of the booking client, or an empty string if no booking is found.
+   */
 
   getBookingLabel(unitId: number, day: Date): string {
     const booking = this.filteredBookings().find(
       (b) =>
-        b.unitId === unitId &&
-        this.dayString(day) >= b.from &&
-        this.dayString(day) < b.to
+        b.unit.id === unitId &&
+        this.dayString(day) >= b.check_in &&
+        this.dayString(day) < b.check_out
     );
-    return booking ? booking.guest : '';
+    return booking ? booking.client.first_name : '';
   }
+
+  /**
+   * Returns the color associated with a booking.
+   *
+   * @returns A string representing the color code for bookings.
+   */
 
   getBookingColor(): string {
     return '#4589FF';
   }
 
+  /**
+   * Gets the name of the booking guest for a given unit and day.
+   *
+   * @param unitId - The ID of the unit.
+   * @param day - The day to look up.
+   *
+   * @returns {string} The name of the guest, or an empty string if no booking exists.
+   */
   getBookingInfo(unitId: number, day: Date): string {
     return this.getBookingLabel(unitId, day);
   }
 
+  /**
+   * The selected property ID as a signal.
+   *
+   * @returns {Signal<number|null>} The ID of the selected property, or null if none is selected.
+   */
   get selectedPropertyIdSignal() {
+    console.log('selectedPropertyIdSignal', this.selectedPropertyId());
     return this.selectedPropertyId();
   }
+  /**
+   * Sets the selected property ID signal.
+   *
+   * @param val - The ID of the property to be selected.
+   */
+
   set selectedPropertyIdSignal(val: number) {
     this.selectedPropertyId.set(val);
   }

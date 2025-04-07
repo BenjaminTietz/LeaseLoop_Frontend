@@ -1,11 +1,11 @@
-<div class="calendar">
+<div class="calendar" appHorizontalDirectives>
     <div class="calendar-title">
         <h2>Availability Calendar</h2>
         <div class="calendar-controls">
             <label>
                 Property:
                 <select [(ngModel)]="selectedPropertyIdSignal">
-                    @for (p of properties; track p.id; let i = $index) {
+                    @for (p of this.propertyService.properties(); track p.id; let i = $index) {
                     <option [ngValue]="p.id">{{ p.name }}</option>
                     }
                 </select>
@@ -30,7 +30,7 @@
             </label>
         </div>
         <div class="calendar-info">
-            <p>Unit availability for the next 30 days. TODO: horizonbtal scroll directive
+            <p>Unit availability for the next 30 days.
             </p>
         </div>
         <div class="calendar-header">
@@ -61,3 +61,4 @@
         </div>
         }
     </div>
+</div>
