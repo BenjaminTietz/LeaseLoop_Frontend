@@ -1,0 +1,85 @@
+<main class="booking-detail">
+    <mat-icon aria-label="Close" class="close-icon"
+        (click)="this.dashboardService.isbookingPopupOpen.set(false)">close</mat-icon>
+    <header class="booking-header">
+        <h1>Booking Details</h1>
+        <div class="booking-status">
+            Status: {{ this.dashboardService.showBooking()?.status }}
+        </div>
+    </header>
+
+    <section class="section">
+        <h3>Guest Information</h3>
+        <ul>
+            <li><strong>Name:</strong> {{ this.dashboardService.showBooking()?.client?.first_name}} {{
+                this.dashboardService.showBooking()?.client?.last_name}}</li>
+            <li><strong>Email:</strong> {{ this.dashboardService.showBooking()?.client?.email}}</li>
+            <li><strong>Address:</strong> {{ this.dashboardService.showBooking()?.client?.adress}}</li>
+        </ul>
+    </section>
+
+    <section class="section">
+        <h3>Booking Info</h3>
+        <ul>
+            <li><strong>Check-in:</strong> {{ this.dashboardService.showBooking()?.check_in}}</li>
+            <li><strong>Check-out:</strong> {{ this.dashboardService.showBooking()?.check_out}}</li>
+            <li><strong>Total Nights:</strong> {{ this.dashboardService.showBooking()?.total_days}}</li>
+            <li><strong>Guests:</strong> {{ this.dashboardService.showBooking()?.guests}}</li>
+        </ul>
+    </section>
+
+    <section class="section">
+        <h3>Unit</h3>
+        <ul>
+            <li><strong>Name:</strong> {{ this.dashboardService.showBooking()?.unit?.name}}</li>
+            <li><strong>Property:</strong> {{ this.dashboardService.showBooking()?.unit?.property?.name}}</li>
+            <li><strong>max Capacity:</strong> {{ this.dashboardService.showBooking()?.unit?.capacity}}</li>
+            <li><strong>Price per Night:</strong> {{ this.dashboardService.showBooking()?.unit?.price_per_night}} €</li>
+        </ul>
+    </section>
+
+    <section class="section">
+        <h3>Extra Services</h3>
+        @if(this.dashboardService.showBooking()?.services != null) {
+        <ul>
+            @for (service of this.dashboardService.showBooking()?.services; track service.id; let index = $index) {
+            <li>
+                {{ service.name }} –
+                {{ service.type === 'per_day' ? 'per Day' : 'One-Time' }} –
+                {{ service.price }} €
+            </li>
+            }
+        </ul>
+        } @else {
+        <p>No extra services selected</p>
+        }
+
+    </section>
+
+    <section class="section">
+        <h3>Promo Code</h3>
+        @if (this.dashboardService.showBooking()?.promo_code != null) {
+        <p>Promo Code: {{ this.dashboardService.showBooking()?.promo_code?.code }}</p>
+        <p>Promo Discount: {{ this.dashboardService.showBooking()?.promo_code?.discount_percent }} %</p>
+        <p>Promo Description : {{ this.dashboardService.showBooking()?.promo_code?.description }}</p>
+        }
+        @else {
+        <p>No promo code applied</p>
+        }
+    </section>
+
+    <section class="section payment-section">
+        <h3>Payment Info</h3>
+        <ul>
+            <li><strong>Total Price:</strong> {{ this.dashboardService.showBooking()?.total_price}} €</li>
+            <li><strong>Deposit Required:</strong> {{ this.dashboardService.showBooking()?.deposit_amount}} €</li>
+            <li><strong>Deposit Paid:</strong> {{ this.dashboardService.showBooking()?.deposit_paid ? 'Yes' : 'No'}}
+            </li>
+        </ul>
+    </section>
+
+    <footer class="actions">
+        <button>Edit</button>
+        <button class="danger">Cancel Booking</button>
+    </footer>
+</main>

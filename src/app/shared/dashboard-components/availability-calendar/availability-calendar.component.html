@@ -5,15 +5,15 @@
             <label>
                 Property:
                 @if(this.propertyService.properties().length > 0) {
-                    <select [value]="selectedPropertyId()" (change)="onSelectChange($event)">
-                      @for (p of this.propertyService.properties(); track p.id) {
-                        <option [value]="p.id">{{ p.name }}</option>
-                      }
-                    </select>
-                  } @else {
-                    <p>No properties found</p>
-                  }
-                
+                <select [value]="selectedPropertyId()" (change)="onSelectChange($event)">
+                    @for (p of this.propertyService.properties(); track p.id) {
+                    <option [value]="p.id">{{ p.name }}</option>
+                    }
+                </select>
+                } @else {
+                <p>No properties found</p>
+                }
+
             </label>
 
             <label>
@@ -56,7 +56,7 @@
           }">
                 <!-- show bookings -->
                 @if (hasBooking(unit.id, day)) {
-                <div class="booking" [style.background-color]="getBookingColor()"
+                <div (click)="onBookingClick(unit.id, day)" class="booking" [style.background-color]="getBookingColor()"
                     [attr.title]="getBookingInfo(unit.id, day)">
                     {{ getBookingLabel(unit.id, day) }}
                 </div>

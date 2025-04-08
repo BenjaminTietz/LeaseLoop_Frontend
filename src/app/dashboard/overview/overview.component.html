@@ -52,5 +52,7 @@
             </div>
         </section>
     </content>
-
+    @if (this.dashboardService.isbookingPopupOpen()) {
+    <app-booking-popup></app-booking-popup>
+    }
 </main>

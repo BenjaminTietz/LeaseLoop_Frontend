@@ -1,0 +1,76 @@
+@use "../../../styles/mixins" as *;
+@use '../../../styles/dashboard-component.scss' as *;
+
+.booking-detail {
+    @include display(flex, column, flex-start, center);
+    height: fit-content;
+    border: solid 2px var(--color-text-base);
+    background: var(--color-bg-surface);
+    border-radius: 16px;
+    width: 90%;
+    height: 90%;
+    position: relative;
+    overflow-y: scroll;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0;
+}
+
+h3 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+}
+
+li {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.close-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    cursor: pointer;
+}
+
+.booking-detail {
+    padding: 16px;
+    color: var(--color-text-base);
+    border-radius: 16px;
+    box-shadow: 0 2px 10px var(--color-border-default);
+
+    .booking-header {
+        @include display(flex, column, space-between, center);
+    }
+
+    .section {
+        margin: 16px 0;
+        padding: 16px;
+        min-width: 320px;
+        max-width: 600px;
+        border-radius: 12px;
+        border-bottom: 1px solid var(--color-btn-text);
+        background: var(--color-bg-surface);
+    }
+
+    .booking-status {
+        padding: 4px 8px;
+        border-radius: 20px;
+        font-weight: bold;
+        text-transform: capitalize;
+    }
+
+    .actions {
+        @include display(flex, row, center, center);
+        gap: 16px;
+        margin-top: 16px;
+
+        .danger {
+            background: var(--color-error-message);
+        }
+    }
+}

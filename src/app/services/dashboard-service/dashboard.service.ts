@@ -2,6 +2,7 @@ import { inject, Injectable, OnInit, signal } from '@angular/core';
 import { DashboardStats } from '../../models/dashboard-stats.model';
 import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
+import { Booking } from '../../models/booking.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,8 @@ import { environment } from '../../../environments/environment';
 export class DashboardService implements OnInit {
   httpService = inject(HttpService);
   dashboardStats = signal<DashboardStats | null>(null);
+  isbookingPopupOpen = signal(false);
+  showBooking = signal<Booking | null>(null);
   ngOnInit(): void {
     this.getDashboardStats();
   }
