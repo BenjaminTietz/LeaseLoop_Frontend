@@ -47,6 +47,12 @@
             color: white;
             font-size: 12px;
             padding: 4px;
+            transition: all 0.175s ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.02);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ import { BookingsService } from '../../../services/bookings-service/bookings.ser
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { UnitsService } from '../../../services/units-service/units.service';
 import { HorizontalDirectivesDirective } from '../../../directives/horizontal-scroll/horizontal-directives.directive';
+import { DashboardService } from '../../../services/dashboard-service/dashboard.service';
 @Component({
   selector: 'app-availability-calendar',
   standalone: true,
@@ -23,7 +24,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   bookingService = inject(BookingsService);
   propertyService = inject(PropertiesService);
   unitService = inject(UnitsService);
-
+  dashboardService = inject(DashboardService);
   months = [
     { value: 0, label: 'January' },
     { value: 1, label: 'February' },
@@ -181,6 +182,21 @@ export class AvailabilityCalendarComponent implements OnInit {
    */
   getBookingInfo(unitId: number, day: Date): string {
     return this.getBookingLabel(unitId, day);
+  }
+
+  onBookingClick(unitId: number, day: Date): void {
+    const booking = this.filteredBookings().find(
+      (b) =>
+        b.unit.id === unitId &&
+        this.dayString(day) >= b.check_in &&
+        this.dayString(day) < b.check_out
+    );
+    if (booking) {
+      console.log('Booking clicked:', booking);
+      this.dashboardService.showBooking.set(booking);
+      console.log('Booking:', this.dashboardService.showBooking());
+      this.dashboardService.isbookingPopupOpen.set(true);
+    }
   }
 
   onSelectChange(event: Event) {

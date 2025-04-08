@@ -90,12 +90,13 @@ button {
   cursor: grab;
 }
 
-.close-icon{
+.close-icon {
   position: absolute;
   top: 20px;
   right: 20px;
   cursor: pointer;
-  &:hover{
+
+  &:hover {
     animation: rotate-and-change-color 2s ease-in-out infinite;
   }
 }
@@ -106,11 +107,13 @@ button {
     transform: rotate(0deg);
     color: var(--color-text-base);
   }
+
   50% {
     scale: 1.5;
     transform: rotate(360deg);
     color: var(--color-icon-focus);
   }
+
   100% {
     scale: 1;
     transform: rotate(0deg);
@@ -118,3 +121,12 @@ button {
   }
 }
 
+app-booking-popup {
+  position: fixed;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  z-index: 9999;
+  @include display(flex, column, center, center);
+}
