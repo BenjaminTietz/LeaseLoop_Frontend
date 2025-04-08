@@ -4,7 +4,7 @@
         <div class="calendar-controls">
             <label>
                 Property:
-                <select [(ngModel)]="selectedPropertyIdSignal">
+                <select [value]="selectedPropertyId()">
                     @for (p of this.propertyService.properties(); track p.id; let i = $index) {
                     <option [ngValue]="p.id">{{ p.name }}</option>
                     }
