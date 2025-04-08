@@ -27,7 +27,7 @@ export class PropertiesService {
   }
 
 
-  createProperty(formData: FormData, images: File[]): void {
+  createProperty(formData: FormData, images: File[], imageDescription: string[]): void {
     this.sending.set(true);
   
     const token = localStorage.getItem('token');
@@ -35,7 +35,7 @@ export class PropertiesService {
   
     this.http.post<Property>(`${environment.apiBaseUrl}/api/properties/`, formData, { headers }).subscribe({
       next: (property) => {
-        this.uploadImages(property.id, images);
+        this.uploadImages(property.id, images, imageDescription);
         this.loadProperties();
         this.sending.set(false);
         this.successful.set(true);
@@ -48,24 +48,25 @@ export class PropertiesService {
     });
   }
 
-  uploadImages(propertyId: number, files: File[]): void {
-  const token = localStorage.getItem('token');
-  const headers = token ? new HttpHeaders().set('Authorization', `Token ${token}`) : undefined;
-
-  files.forEach(file => {
-    const imageForm = new FormData();
-    imageForm.append('property', String(propertyId));
-    imageForm.append('image', file);
-
-    this.http.post(`${environment.apiBaseUrl}/api/property-images/`, imageForm, { headers }).subscribe({
-      next: (res) => console.log('Image uploaded:', res),
-      error: (err) => console.error('Image upload failed:', err)
+  uploadImages(propertyId: number, files: File[], descriptions: string[]): void {
+    const token = localStorage.getItem('token');
+    const headers = token ? new HttpHeaders().set('Authorization', `Token ${token}`) : undefined;
+  
+    files.forEach((file, index) => {
+      const imageForm = new FormData();
+      imageForm.append('property', String(propertyId));
+      imageForm.append('image', file);
+      imageForm.append('alt_text', descriptions[index] ?? '');
+  
+      this.http.post(`${environment.apiBaseUrl}/api/property-images/`, imageForm, { headers }).subscribe({
+        next: (res) => console.log('Image uploaded:', res),
+        error: (err) => console.error('Image upload failed:', err)
+      });
     });
-  });
-}
+  }
 
   
-updateProperty(formData: FormData, newImages: File[], onComplete?: () => void): void {
+updateProperty(formData: FormData, newImages: File[], imageDescription: string[], onComplete?: () => void): void {
   this.sending.set(true);
 
   const token = localStorage.getItem('token');
@@ -82,11 +83,9 @@ updateProperty(formData: FormData, newImages: File[], onComplete?: () => void): 
     next: (property) => {
       console.log('Property updated successfully:', property);
       if (newImages.length > 0) {
-        this.uploadImages(propertyId, newImages);
+        this.uploadImages(propertyId, newImages, imageDescription);
       }
 
-      this.loadProperties();
-      this.selectedProperty.set(null);
       this.successful.set(true);
     },
     error: (error) => {
@@ -115,20 +114,23 @@ updateProperty(formData: FormData, newImages: File[], onComplete?: () => void): 
     })
   }
 
-  deleteImage(id: number) {
-    const property = this.selectedProperty();
-    if (!property) return;
-  
-    property.images = property.images.filter(image => image.id !== id);
-  
+  deleteImage(id: number): Promise<void> {
     const token = localStorage.getItem('token');
     const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
   
-    this.http.delete(`${environment.apiBaseUrl}/api/property-images/${id}/`, { headers }).subscribe({
-      next: () => console.log('Image deleted:', id),
-      error: (err) => console.error('Failed to delete image:', err)
+    return new Promise((resolve, reject) => {
+      this.http.delete(`${environment.apiBaseUrl}/api/property-images/${id}/`, { headers }).subscribe({
+        next: () => {
+          console.log('Image deleted:', id);
+          resolve();
+        },
+        error: (err) => {
+          console.error('Failed to delete image:', err);
+          reject(err);
+        }
+      });
     });
-  }//#endregion
+  }
 
   markImageForDeletion(id: number) {
     const property = this.selectedProperty();
