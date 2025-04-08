@@ -5,14 +5,14 @@
             <label>
                 Property:
                 @if(this.propertyService.properties().length > 0) {
-                    <select [value]="selectedPropertyId()">
-                        @for (p of this.propertyService.properties(); track p.id; let i = $index) {
-                        <option [ngValue]="p.id" (click)="selectedPropertyId.set(p.id)">{{ p.name }}</option>
-                        }
+                    <select [value]="selectedPropertyId()" (change)="onSelectChange($event)">
+                      @for (p of this.propertyService.properties(); track p.id) {
+                        <option [value]="p.id">{{ p.name }}</option>
+                      }
                     </select>
-                }@else {
+                  } @else {
                     <p>No properties found</p>
-                }
+                  }
                 
             </label>
 
