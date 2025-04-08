@@ -94,15 +94,22 @@ export class PropertyFormComponent {
       formData.append(key, value ?? '');
     });
   
-    this.propertyService.updateProperty(formData, this.images);
+    const imageIdsToDelete = [...this.propertyService.deletedImageIds()];
+    this.propertyService.updateProperty(formData, this.images, () => {
+      imageIdsToDelete.forEach(id => this.propertyService.deleteImage(id));
+      this.propertyService.clearDeletedImages();
+    })
   }
 
   closeForm = () => {
     this.close.emit();
+    this.propertyService.loadProperties();
   }
 
   deleteImage(id: number) {
-    this.propertyService.deleteImage(id);
+    this.propertyService.markImageForDeletion(id);
   }
+
+ 
   
 }

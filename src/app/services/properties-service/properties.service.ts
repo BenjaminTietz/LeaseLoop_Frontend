@@ -15,6 +15,7 @@ export class PropertiesService {
   singleProperty = signal<Property | null>(null);
   successful = signal<boolean>(false);
   http = inject(HttpClient)
+  deletedImageIds = signal<number[]>([]);
   
 
 
@@ -64,39 +65,40 @@ export class PropertiesService {
 }
 
   
-  updateProperty(formData: FormData, newImages: File[]): void {
-    this.sending.set(true);
-  
-    const token = localStorage.getItem('token');
-    const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
-  
-    const propertyId = this.selectedProperty()?.id;
-  
-    if (!propertyId) return;
-  
-    this.http.patch<Property>(
-      `${environment.apiBaseUrl}/api/properties/${propertyId}/`,
-      formData,
-      { headers }
-    ).subscribe({
-      next: (property) => {
-        console.log('Property updated successfully:', property);
-        if (newImages.length > 0) {
-          this.uploadImages(propertyId, newImages);
-        }
-  
-        this.loadProperties();
-        this.selectedProperty.set(null);
-        this.sending.set(false);
-        this.successful.set(true);
-      },
-      error: (error) => {
-        console.error('Failed to update property:', error);
-        this.sending.set(false);
-        this.successful.set(false);
+updateProperty(formData: FormData, newImages: File[], onComplete?: () => void): void {
+  this.sending.set(true);
+
+  const token = localStorage.getItem('token');
+  const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
+
+  const propertyId = this.selectedProperty()?.id;
+  if (!propertyId) return;
+
+  this.http.patch<Property>(
+    `${environment.apiBaseUrl}/api/properties/${propertyId}/`,
+    formData,
+    { headers }
+  ).subscribe({
+    next: (property) => {
+      console.log('Property updated successfully:', property);
+      if (newImages.length > 0) {
+        this.uploadImages(propertyId, newImages);
       }
-    });
-  }
+
+      this.loadProperties();
+      this.selectedProperty.set(null);
+      this.successful.set(true);
+    },
+    error: (error) => {
+      console.error('Failed to update property:', error);
+      this.successful.set(false);
+    },
+    complete: () => {
+      this.sending.set(false);
+      if (onComplete) onComplete();
+    }
+  });
+}
 
   deleteProperty() {
     this.httpService.delete<Property>(`${environment.apiBaseUrl}/api/properties/${this.selectedProperty()?.id}/`).subscribe({
@@ -126,5 +128,18 @@ export class PropertiesService {
       next: () => console.log('Image deleted:', id),
       error: (err) => console.error('Failed to delete image:', err)
     });
+  }//#endregion
+
+  markImageForDeletion(id: number) {
+    const property = this.selectedProperty();
+    if (!property) return;
+  
+    property.images = property.images.filter(image => image.id !== id); // Remove from UI
+    const current = this.deletedImageIds();
+    this.deletedImageIds.set([...current, id]);
+  }
+
+  clearDeletedImages() {
+    this.deletedImageIds.set([]);
   }
 }

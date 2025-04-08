@@ -41,9 +41,15 @@ export class AvailabilityCalendarComponent implements OnInit {
 
   years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 1 + i);
 
-  selectedPropertyId = signal<number>(1);
   selectedMonth = signal<number>(new Date().getMonth());
   selectedYear = signal<number>(new Date().getFullYear());
+
+  selectedPropertyId = computed(() => {
+    if(this.propertyService.properties().length > 0){
+      return this.propertyService.properties()[0].id;
+    }
+    return 1;
+  });
 
   dates = signal<Date[]>([]);
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
@@ -56,23 +62,11 @@ export class AvailabilityCalendarComponent implements OnInit {
     this.bookingService.loadBooking();
   }
 
-  setPropertyId = effect(
-    () => {
-      const props = this.propertyService.properties();
-      if (props.length > 0) {
-        this.selectedPropertyId.set(props[0].id);
-      }
-    },
-    { allowSignalWrites: true }
-  );
 
-  calendarEffect = effect(
-    () => {
-      this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
-      this.loadBookings();
-    },
-    { allowSignalWrites: true }
-  );
+  constructor() {
+    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+    this.loadBookings();
+  }
 
   units = computed(() =>
     this.unitService
@@ -214,8 +208,4 @@ export class AvailabilityCalendarComponent implements OnInit {
    *
    * @param val - The ID of the property to be selected.
    */
-
-  set selectedPropertyIdSignal(val: number) {
-    this.selectedPropertyId.set(val);
-  }
 }
