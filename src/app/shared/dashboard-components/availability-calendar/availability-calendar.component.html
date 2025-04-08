@@ -4,11 +4,16 @@
         <div class="calendar-controls">
             <label>
                 Property:
-                <select [(ngModel)]="selectedPropertyIdSignal">
-                    @for (p of this.propertyService.properties(); track p.id; let i = $index) {
-                    <option [ngValue]="p.id">{{ p.name }}</option>
-                    }
-                </select>
+                @if(this.propertyService.properties().length > 0) {
+                    <select [value]="selectedPropertyId()">
+                        @for (p of this.propertyService.properties(); track p.id; let i = $index) {
+                        <option [ngValue]="p.id">{{ p.name }}</option>
+                        }
+                    </select>
+                }@else {
+                    <p>No properties found</p>
+                }
+                
             </label>
 
             <label>

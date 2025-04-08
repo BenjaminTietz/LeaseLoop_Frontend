@@ -44,12 +44,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   selectedMonth = signal<number>(new Date().getMonth());
   selectedYear = signal<number>(new Date().getFullYear());
 
-  selectedPropertyId = computed(() => {
-    if(this.propertyService.properties().length > 0){
-      return this.propertyService.properties()[0].id;
-    }
-    return 1;
-  });
+  selectedPropertyId = signal(0)
 
   dates = signal<Date[]>([]);
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
@@ -194,18 +189,4 @@ export class AvailabilityCalendarComponent implements OnInit {
     return this.getBookingLabel(unitId, day);
   }
 
-  /**
-   * The selected property ID as a signal.
-   *
-   * @returns {Signal<number|null>} The ID of the selected property, or null if none is selected.
-   */
-  get selectedPropertyIdSignal() {
-    console.log('selectedPropertyIdSignal', this.selectedPropertyId());
-    return this.selectedPropertyId();
-  }
-  /**
-   * Sets the selected property ID signal.
-   *
-   * @param val - The ID of the property to be selected.
-   */
 }
