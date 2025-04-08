@@ -29,75 +29,20 @@
       <small>Description is required</small>
       }
     </div>
-    <div class="form-field">
-      <input type="file" id="image" name="image" accept="image/*" multiple hidden (change)="onImageChange($event)">
-      <label for="image" class="upload-button">
-        <mat-icon>drive_folder_upload</mat-icon>
-        <span>Upload images</span>
-      </label>
-    </div>
-    @if(propertyService.selectedProperty() === null && imagePreviews.length > 0) {
-      <div class="image-field">
-        @for(preview of imagePreviews; track $index) {
-          <div class="image">
-            <img [src]="preview" alt="Selected image preview" />
-            <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
-            <textarea
-              type="text"
-              placeholder="Image description"
-              required
-              [value]="newImageDescriptions[$index]"
-              #descInput
-              (input)="newImageDescriptions[$index] = descInput.value" ></textarea>
-          </div>
-        }
-        @if(hasMissingDescriptions()) {
-          <small>Please provide a description for every image before saving.</small>
-        }
-      </div>
-    }
-
-    @if(propertyService.selectedProperty() !== null) {
-      @if(propertyService.selectedProperty()?.images?.length || imagePreviews.length > 0){
-
-     
-    <div class="image-field">
-      @for(image of propertyService.selectedProperty()?.images; track image.id) {
-      <div class="image">
-        <img [src]="'http://localhost:8000' + image.image" alt="property image" />
-        <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
-        <textarea type="text" placeholder="Image description" required [value]="image.alt_text || ''" #descInput
-          (input)="updateExistingImageDescription(image.id, descInput.value)"></textarea>
-      </div>
-      }
-      @if(imagePreviews.length > 0) {
-      @for(preview of imagePreviews; track $index) {
-      <div class="image">
-        <img [src]="preview" alt="Selected image preview" />
-        <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
-        <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]" #previewInput
-          (input)="newImageDescriptions[$index] = previewInput.value" ></textarea>
-      </div>
-      }
-      }
-      @if(hasMissingDescriptions()) {
-        <small>Please provide a description for every image before updating.</small>
-      }
-    </div>
-    }
-    
-    }
+  
+    <app-image-upload></app-image-upload>
+   
     <div class="button-area">
       @if(propertyService.selectedProperty() !== null) {
       <button type="button" (click)="deleteProperty()">Delete</button>
       <button type="submit" (click)="updateProperty()"
-        [disabled]="propertyForm.invalid || propertyService.sending() || hasMissingDescriptions()">
+        [disabled]="propertyForm.invalid || propertyService.sending() || missingDescription">
         Update
       </button>
       }
       @if(propertyService.selectedProperty() === null) {
       <button type="submit" (click)="createProperty()"
-        [disabled]="propertyForm.invalid || propertyService.sending() || hasMissingDescriptions()">
+        [disabled]="propertyForm.invalid || propertyService.sending() || missingDescription">
         Save
       </button>
       }
