@@ -190,5 +190,10 @@ export class AvailabilityCalendarComponent implements OnInit {
   getBookingInfo(unitId: number, day: Date): string {
     return this.getBookingLabel(unitId, day);
   }
-
+  
+  onSelectChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.selectedPropertyId.set(Number(select.value));
+  }
+  
 }
