@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AvailabilityCalendarComponent } from '../../shared/dashboard-components/availability-calendar/availability-calendar.component';
 import { UnitsService } from '../../services/units-service/units.service';
 import { DashboardService } from '../../services/dashboard-service/dashboard.service';
@@ -10,7 +10,11 @@ import { DashboardService } from '../../services/dashboard-service/dashboard.ser
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
   unitService = inject(UnitsService);
   dashboardService = inject(DashboardService);
+
+  ngOnInit(): void {
+    this.dashboardService.getDashboardStats();
+  }
 }

@@ -44,7 +44,7 @@ export class AvailabilityCalendarComponent implements OnInit {
   selectedMonth = signal<number>(new Date().getMonth());
   selectedYear = signal<number>(new Date().getFullYear());
 
-  selectedPropertyId = signal(0)
+  selectedPropertyId = signal(0);
 
   dates = signal<Date[]>([]);
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
@@ -55,14 +55,6 @@ export class AvailabilityCalendarComponent implements OnInit {
     this.propertyService.loadProperties();
     this.unitService.loadUnits();
     this.bookingService.loadBooking();
-    console.log(this.selectedPropertyId());
-    
-  }
-
-
-  constructor() {
-    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
-    this.loadBookings();
   }
 
   units = computed(() =>
@@ -190,10 +182,11 @@ export class AvailabilityCalendarComponent implements OnInit {
   getBookingInfo(unitId: number, day: Date): string {
     return this.getBookingLabel(unitId, day);
   }
-  
+
   onSelectChange(event: Event) {
     const select = event.target as HTMLSelectElement;
     this.selectedPropertyId.set(Number(select.value));
+    this.loadBookings();
+    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
   }
-  
 }

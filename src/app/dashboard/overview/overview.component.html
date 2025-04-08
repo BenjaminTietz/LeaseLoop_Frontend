@@ -6,15 +6,15 @@
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>Guests</h3>
-                        <p>{{this.dashboardService.guestsSignal()}}</p>
+                        <p>{{this.dashboardService.dashboardStats()?.guests_present}}</p>
                     </div>
                     <div class="feature-card">
                         <h3>Occupancy</h3>
-                        <p>{{this.dashboardService.currentOccupancySignal()}} %</p>
+                        <p>{{this.dashboardService.dashboardStats()?.occupancy_today}} %</p>
                     </div>
                     <div class="feature-card">
                         <h3>Monthly Occupancy</h3>
-                        <p>{{this.dashboardService.monthlyOccupancySignal()}} %</p>
+                        <p>{{this.dashboardService.dashboardStats()?.occupancy_month}} %</p>
                     </div>
                 </div>
             </div>
@@ -24,11 +24,11 @@
                 <div class="features-grid">
                     <div class="feature-card">
                         <h3>Next Arrival</h3>
-                        <p>{{this.dashboardService.nextArrivalSignal()}}</p>
+                        <p>{{this.dashboardService.dashboardStats()?.next_arrival}}</p>
                     </div>
                     <div class="feature-card">
                         <h3>Next Departure</h3>
-                        <p>{{this.dashboardService.nextDepartureSignal()}}</p>
+                        <p>{{this.dashboardService.dashboardStats()?.next_departure}}</p>
                     </div>
                 </div>
             </div>
