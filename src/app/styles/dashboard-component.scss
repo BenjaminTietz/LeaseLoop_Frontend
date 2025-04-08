@@ -24,6 +24,7 @@ main {
     border-radius: 12px;
     background: var(--color-bg-surface);
     box-shadow: 0 0 0 1px #ddd;
+    position: relative;
 
     .table {
         width: 100%;
@@ -39,6 +40,7 @@ main {
         th {
             background-color: #f8f8f8;
             color: #647188;
+            text-wrap: nowrap
         }
 
         .btn-container {

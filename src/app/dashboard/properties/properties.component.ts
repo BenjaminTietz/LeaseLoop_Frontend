@@ -2,10 +2,11 @@ import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { PropertiesService } from '../../services/properties-service/properties.service';
 import { PropertyFormComponent } from "./property-form/property-form.component";
 import { MatIcon } from '@angular/material/icon';
+import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 @Component({
   selector: 'app-properties',
   standalone: true,
-  imports: [PropertyFormComponent, MatIcon],
+  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })

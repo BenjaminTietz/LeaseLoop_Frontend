@@ -18,7 +18,7 @@ form {
   border-radius: 12px;
   width: 100%;
   max-width: 600px;
-  gap: 30px;
+  gap: 20px;
   max-height: 90vh;       
   overflow-y: auto;
   position: relative;  
@@ -26,7 +26,7 @@ form {
 
 .form-field {
   background: var(--color-btn-bg);
-  @include display(flex, row, center, center);
+  @include display(flex, column, center, center);
   width: 100%;
   border-radius: 10px;
   padding: 10px;
@@ -133,4 +133,13 @@ small {
   span{
     font-weight: bold;
   }
+}
+
+.wrapper{
+ @include display(flex, column, center, center);
+ gap: 20px;
+}
+
+.input-area{
+  width: 100%;
 }
