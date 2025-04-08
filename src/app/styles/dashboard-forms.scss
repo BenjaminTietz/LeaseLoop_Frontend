@@ -63,38 +63,9 @@ small {
   top: 100%;
 }
 
-.close-icon{
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-  &:hover{
-    animation: rotate-and-change-color 2s ease-in-out infinite;
-  }
-}
-
 .button-area{
   @include display(flex, row, space-between, center);
   width: 100%;
-}
-
-
-@keyframes rotate-and-change-color {
-  0% {
-    scale: 1;
-    transform: rotate(0deg);
-    color: var(--color-text-base);
-  }
-  50% {
-    scale: 1.5;
-    transform: rotate(360deg);
-    color: var(--color-icon-focus);
-  }
-  100% {
-    scale: 1;
-    transform: rotate(0deg);
-    color: var(--color-text-base);
-  }
 }
 
 .image-field{
