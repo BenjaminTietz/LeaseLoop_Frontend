@@ -1,5 +1,6 @@
 <main>
     <content>
+        
         <div class="header">
             <h1>Properties</h1>
             <button (click)="openForm()">
@@ -8,12 +9,18 @@
             </button>
         </div>
         <div class="table-wrapper">
+            @if(propertyService.sending()){
+                <app-progress-bar></app-progress-bar>
+            }
             <table class="table">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Units</th>
-                        <th></th>
+                        <th>Description</th>
+                        <th>Address</th>
+                        <th>Images</th>
+                        <th>Edit property</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,11 +28,11 @@
                     <tr>
                         <td>{{property.name}}</td>
                         <td>{{property.units.length}}</td>
+                        <td>{{property.description}}</td>
+                        <td>{{property.address}}</td>
+                        <td>{{property.images.length}}</td>
                         <td>
-                            <div class="btn-container">
-                                <button (click)="propertyService.selectedProperty.set(property); openEditForm()">Edit</button>
-                                <button>Delete</button>
-                            </div>
+                            <button [disabled]="propertyService.sending()" (click)="propertyService.selectedProperty.set(property); openEditForm()">Edit</button>
                         </td>
                     </tr>
                     }

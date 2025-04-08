@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { MatIcon } from '@angular/material/icon';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-image-upload',
@@ -11,20 +12,24 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class ImageUploadComponent {
     imagePreviews: string[] = [];
-    images: any[] = [];
-    existingImageBase64s: string[] = [];
-    newImageDescriptions: string[] = [];
+    @Output() imagesChange = new EventEmitter<any[]>();
+    @Output() newImageDescriptionsChange = new EventEmitter<string[]>();
+    @Output() missingDescriptionChange = new EventEmitter<boolean>();
     propertyService = inject(PropertiesService)
+    existingImageBase64s:string[] = []
+    images: File[]= []
+    newImageDescriptions :string[] = []
+    missingDescription: boolean = false;
+    mediaUrl = environment.mediaBaseUrl;
+    
 
     ngOnInit(): void {
       this.propertyService.clearDeletedImages();
       const selected = this.propertyService.selectedProperty();
       if (selected) {
-        // Reset and load base64s
         this.existingImageBase64s = [];
-      
         selected.images.forEach((image) => {
-          this.convertImageUrlToBase64('http://localhost:8000' + image.image)
+          this.convertImageUrlToBase64(this.mediaUrl + image.image)
             .then((base64) => this.existingImageBase64s.push(base64));
         });
       }
@@ -47,25 +52,19 @@ export class ImageUploadComponent {
         const files: File[] = Array.from(input.files);
     
         for (const file of files) {
-          // Check for name-based duplicates in current uploads
-          if (this.images.find(f => f.name === file.name)) {
-            console.warn(`Duplicate upload: ${file.name}`);
-            continue;
-          }
-    
+          if (this.images.find(f => f.name === file.name)) continue;
           const reader = new FileReader();
           reader.onload = () => {
             const base64 = reader.result as string;
-    
-            // Check for duplicate content against backend base64s
-            if (this.existingImageBase64s.includes(base64)) {
-              console.warn(`Image already exists in backend: ${file.name}`);
-              return;
-            }
+            if (this.existingImageBase64s.includes(base64)) return;
+        
     
             this.imagePreviews.push(base64);
             this.images.push(file);
             this.newImageDescriptions.push('');
+            this.imagesChange.emit(this.images);
+            this.newImageDescriptionsChange.emit(this.newImageDescriptions);
+            this.missingDescriptionChange.emit(this.hasMissingDescriptions());
           };
     
           reader.readAsDataURL(file);
@@ -81,6 +80,9 @@ export class ImageUploadComponent {
         this.imagePreviews.splice(index, 1);
         this.images.splice(index, 1);
         this.newImageDescriptions.splice(index, 1);
+        this.imagesChange.emit(this.images);
+        this.newImageDescriptionsChange.emit(this.newImageDescriptions);
+        this.missingDescriptionChange.emit(this.hasMissingDescriptions());
       }
     }
 
@@ -90,7 +92,7 @@ export class ImageUploadComponent {
 
     updateExistingImageDescription(imageId: number, desc: string) {
       const property = this.propertyService.selectedProperty();
-      if (!property) return; // prevent errors
+      if (!property) return;
     
       const image = this.propertyService.selectedProperty()!.images.find(img => img.id === imageId);
       if (image) {
@@ -99,13 +101,16 @@ export class ImageUploadComponent {
     }
   
     hasMissingDescriptions(): boolean {
-      // Check backend images
       const existing = this.propertyService.selectedProperty()?.images ?? [];
       const missingInExisting = existing.some(img => !img.alt_text?.trim());
-    
-      // Check new uploaded images
       const missingInNew = this.newImageDescriptions.some(desc => !desc?.trim());
-    
-      return missingInExisting || missingInNew;
+      
+      this.missingDescription = missingInExisting || missingInNew;
+      return this.missingDescription;
+    }
+
+    onDescriptionChange(): void {
+      const result = this.hasMissingDescriptions();
+      this.missingDescriptionChange.emit(result);
     }
 }
