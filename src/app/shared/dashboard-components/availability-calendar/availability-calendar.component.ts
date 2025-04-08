@@ -55,6 +55,8 @@ export class AvailabilityCalendarComponent implements OnInit {
     this.propertyService.loadProperties();
     this.unitService.loadUnits();
     this.bookingService.loadBooking();
+    console.log(this.selectedPropertyId());
+    
   }
 
 
