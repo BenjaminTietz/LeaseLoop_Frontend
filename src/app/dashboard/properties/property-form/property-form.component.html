@@ -38,9 +38,12 @@
         }
       </div>
     </div>
-    <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
-      (missingDescriptionChange)="missingDescription = $event"></app-image-upload>
-
+    <app-image-upload
+    (imagesChange)="images = $event"
+    (newImageDescriptionsChange)="newImageDescriptions = $event"
+    (missingDescriptionChange)="missingDescription = $event"
+    ></app-image-upload>
+    
     <div class="button-area">
       @if(propertyService.selectedProperty() !== null) {
       <button type="button" (click)="deleteProperty()">Delete</button>

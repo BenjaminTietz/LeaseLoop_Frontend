@@ -5,6 +5,12 @@
     <mat-icon>drive_folder_upload</mat-icon>
     <span>Upload images</span>
   </label>
+  @if (imageTooBig()) {
+    <small>Image "{{ imageTooBig() }}" is too big (max. 500KB)</small>
+  }
+  @else if (maxImagesReached()) {
+    <small>Maximum number of 30 images reached</small>
+  }
 </div>
 
 @if(propertyService.selectedProperty() === null && imagePreviews.length > 0) {
