@@ -20,10 +20,10 @@ export class PropertyFormComponent {
   propertyService = inject(PropertiesService);
   auth = inject(AuthService);
   @Output() close = new EventEmitter();
-  @Input () images :any
-  @Input () newImageDescriptions!: string[]
-  @Input () imagePreviews! : any []
-  @Input () missingDescription : boolean = false
+  images :any
+  newImageDescriptions!: string[]
+  imagePreviews! : any []
+  missingDescription : boolean = false
 
 
   propertyForm  = new FormBuilder().nonNullable.group({
@@ -98,12 +98,12 @@ export class PropertyFormComponent {
   }
 
   closeForm = () => {
-    this.close.emit();
     this.propertyService.loadProperties();
     this.propertyService.selectedProperty.set(null);
     this.imagePreviews = [];
     this.images = [];
-
+    this.close.emit();
+    
   }
 
   

@@ -20,112 +20,67 @@ export class PropertiesService {
 
 
   loadProperties() {
-   this.httpService.get<Property[]>(`${environment.apiBaseUrl}/api/properties/`).subscribe({
-     next: (data) => this.properties.set(data),
-     error: (error) => console.error('Failed to load properties', error)
-   })
-  }
-
-
-  createProperty(formData: FormData, images: File[], imageDescription: string[]): void {
-    this.sending.set(true);
-  
-    const token = localStorage.getItem('token');
-    const headers = token ? new HttpHeaders().set('Authorization', `Token ${token}`) : undefined;
-  
-    this.http.post<Property>(`${environment.apiBaseUrl}/api/properties/`, formData, { headers }).subscribe({
-      next: (property) => {
-        this.uploadImages(property.id, images, imageDescription);
-        this.loadProperties();
-        this.sending.set(false);
-        this.successful.set(true);
+    this.setLoading(true);
+    this.httpService.get<Property[]>(`${environment.apiBaseUrl}/api/properties/`).subscribe({
+      next: (data) => {
+        this.properties.set(data);
+        this.setLoading(false);
       },
-      error: (err) => {
-        this.sending.set(false);
-        this.successful.set(false);
-        console.error(err);
-      }
+      error: this.handleError('Failed to load properties')
     });
   }
 
-  uploadImages(propertyId: number, files: File[], descriptions: string[]): void {
-    const token = localStorage.getItem('token');
-    const headers = token ? new HttpHeaders().set('Authorization', `Token ${token}`) : undefined;
-  
-    files.forEach((file, index) => {
-      const imageForm = new FormData();
-      imageForm.append('property', String(propertyId));
-      imageForm.append('image', file);
-      imageForm.append('alt_text', descriptions[index] ?? '');
-  
-      this.http.post(`${environment.apiBaseUrl}/api/property-images/`, imageForm, { headers }).subscribe({
-        next: (res) => console.log('Image uploaded:', res),
-        error: (err) => console.error('Image upload failed:', err)
+  createProperty(formData: FormData, images: File[], descriptions: string[]) {
+    this.setLoading(true);
+    this.http.post<Property>(this.getUrl('properties'), formData, this.getAuthOptions())
+      .subscribe({
+        next: (property) => {
+          this.uploadImages(property.id, images, descriptions);
+          this.onSuccess();
+        },
+        error: this.handleError('Create property failed')
       });
-    });
   }
 
-  
-updateProperty(formData: FormData, newImages: File[], imageDescription: string[], onComplete?: () => void): void {
-  this.sending.set(true);
-
-  const token = localStorage.getItem('token');
-  const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
-
-  const propertyId = this.selectedProperty()?.id;
-  if (!propertyId) return;
-
-  this.http.patch<Property>(
-    `${environment.apiBaseUrl}/api/properties/${propertyId}/`,
-    formData,
-    { headers }
-  ).subscribe({
-    next: (property) => {
-      console.log('Property updated successfully:', property);
-      if (newImages.length > 0) {
-        this.uploadImages(propertyId, newImages, imageDescription);
-      }
-
-      this.successful.set(true);
-    },
-    error: (error) => {
-      console.error('Failed to update property:', error);
-      this.successful.set(false);
-    },
-    complete: () => {
-      this.sending.set(false);
-      if (onComplete) onComplete();
-    }
-  });
-}
+  updateProperty(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
+    const id = this.selectedProperty()?.id;
+    if (!id) return;
+    this.setLoading(true);
+    this.http.patch<Property>(this.getUrl(`properties/${id}`), formData, this.getAuthOptions())
+      .subscribe({
+        next: () => {
+          if (Array.isArray(newImages) && newImages.length > 0) {
+            this.uploadImages(id, newImages, descriptions ?? []);
+          }
+          this.successful.set(true);
+        },
+        error: this.handleError('Update property failed'),
+        complete: () => {
+          this.setLoading(false);
+          onComplete?.();
+        }
+      });
+  }
 
   deleteProperty() {
-    this.httpService.delete<Property>(`${environment.apiBaseUrl}/api/properties/${this.selectedProperty()?.id}/`).subscribe({
-      next: (response) => {
-        console.log('Property deleted successfully:', response);
+    const id = this.selectedProperty()?.id;
+    if (!id) return;
+    this.httpService.delete<Property>(this.getUrl(`properties/${id}`)).subscribe({
+      next: () => {
         this.selectedProperty.set(null);
         this.loadProperties();
-        this.successful.set(true);	
+        this.successful.set(true);
       },
-      error: (error) => {
-        console.error('Failed to delete property:', error);
-        this.successful.set(false);
-      }
-    })
+      error: this.handleError('Delete property failed')
+    });
   }
 
   deleteImage(id: number): Promise<void> {
-    const token = localStorage.getItem('token');
-    const headers = token ? new HttpHeaders({ 'Authorization': `Token ${token}` }) : undefined;
-  
     return new Promise((resolve, reject) => {
-      this.http.delete(`${environment.apiBaseUrl}/api/property-images/${id}/`, { headers }).subscribe({
-        next: () => {
-          console.log('Image deleted:', id);
-          resolve();
-        },
+      this.http.delete(this.getUrl(`property-images/${id}`), this.getAuthOptions()).subscribe({
+        next: () => resolve(),
         error: (err) => {
-          console.error('Failed to delete image:', err);
+          console.error('Failed to delete image', err);
           reject(err);
         }
       });
@@ -135,13 +90,52 @@ updateProperty(formData: FormData, newImages: File[], imageDescription: string[]
   markImageForDeletion(id: number) {
     const property = this.selectedProperty();
     if (!property) return;
-  
-    property.images = property.images.filter(image => image.id !== id); // Remove from UI
-    const current = this.deletedImageIds();
-    this.deletedImageIds.set([...current, id]);
+    property.images = property.images.filter(img => img.id !== id);
+    this.deletedImageIds.set([...this.deletedImageIds(), id]);
   }
 
   clearDeletedImages() {
     this.deletedImageIds.set([]);
+  }
+
+  getUrl(path: string): string {
+    return `${environment.apiBaseUrl}/api/${path}/`;
+  }
+
+  getAuthOptions() {
+    const token = localStorage.getItem('token');
+    return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
+  }
+
+  uploadImages(propertyId: number, files: File[], descriptions: string[] = []) {
+    files.forEach((file, i) => {
+      const form = new FormData();
+      form.append('property', String(propertyId));
+      form.append('image', file);
+      form.append('alt_text', descriptions?.[i]?.trim() || '');
+  
+      this.http.post(this.getUrl('property-images'), form, this.getAuthOptions())
+        .subscribe({
+          error: (err) => console.error('Image upload failed:', err)
+        });
+    });
+  }
+
+  handleError(context: string) {
+    return (error: any) => {
+      console.error(`${context}:`, error);
+      this.successful.set(false);
+      this.setLoading(false);
+    };
+  }
+
+  setLoading(state: boolean) {
+    this.sending.set(state);
+  }
+
+  onSuccess() {
+    this.loadProperties();
+    this.successful.set(true);
+    this.setLoading(false);
   }
 }

@@ -1,2 +1,6 @@
 @use "../../styles/mixins" as *;
 @use '../../styles/dashboard-component.scss' as *;
+
+button{
+  margin-left: 0px;
+}
