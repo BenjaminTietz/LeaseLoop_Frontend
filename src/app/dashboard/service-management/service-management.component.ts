@@ -35,6 +35,7 @@ export class ServiceManagementComponent implements OnInit {
   openEditForm(service: Service) {
     this.sms.selectedService.set(service);
     this.formOpen.set(true);
+    this.sms.successful.set(false);
   }
 
   loadServices() {
@@ -56,7 +57,7 @@ export class ServiceManagementComponent implements OnInit {
     this.http
       .post<Service>(`${environment.apiBaseUrl}/api/services/`, serviceData)
       .subscribe({
-        next: (service) => {
+        next: () => {
           this.loadServices();
           this.sending.set(false);
           this.successful.set(true);

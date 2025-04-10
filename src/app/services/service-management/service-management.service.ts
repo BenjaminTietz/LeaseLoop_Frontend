@@ -4,14 +4,12 @@ import { environment } from '../../../environments/environment';
 import { catchError } from 'rxjs/operators';
 import { throwError, tap } from 'rxjs';
 import { HttpService } from '../httpclient/http.service';
-import { FormService } from '../form-service/form.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceManagementService {
   httpService = inject(HttpService);
-  formService = inject(FormService);
   services = signal<Service[]>([]);
   selectedService = signal<Service | null>(null);
   sending = signal<boolean>(false);

@@ -8,3 +8,10 @@ export interface PromoCode {
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }
+
+export interface PromoDto {
+  code?: string;
+  description?: string;
+  valid_until?: string;
+  discount_percent?: number;
+}
