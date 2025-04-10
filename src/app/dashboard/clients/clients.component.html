@@ -2,7 +2,7 @@
     <content>
         <div class="header">
             <h1>Clients</h1>
-            <button class="btn-add">
+            <button class="btn-add" (click)="this.formOpen.set(true)">
                 <span class="icon">+</span> New Client
             </button>
         </div>
@@ -16,13 +16,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (c of this.cs.clients(); track c.id; let i = $index) {
+                    @for (c of this.clientService.clients(); track c.id; let i = $index) {
                     <tr>
                         <td>{{c.first_name}} {{c.last_name}}</td>
                         <td>24.08.2024</td>
                         <td>
                             <div class="btn-container">
-                                <button>Send Offer</button>
+                                <button (click)="this.openEditForm(c)">Edit</button>
                             </div>
                         </td>
                     </tr>
@@ -31,4 +31,7 @@
             </table>
         </div>
     </content>
+    @if(formOpen()) {
+    <app-client-form (close)="formOpen.set(false)"></app-client-form>
+    }
 </main>
