@@ -73,6 +73,16 @@ export class ServiceFormComponent implements OnInit {
         });
       }
     });
+
+    effect(
+      () => {
+        if (this.serviceManagementService.successful()) {
+          this.formService.resetForm(this.serviceForm);
+          this.closeForm();
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   ngOnInit(): void {
@@ -85,7 +95,6 @@ export class ServiceFormComponent implements OnInit {
    * It resets the form to its initial state and sets the selectedService and formOpen
    * signals back to their initial state.
    */
-  // TODO: Click outside to close the form not working
   closeForm = () => {
     this.close.emit();
     this.serviceManagementService.selectedService.set(null);

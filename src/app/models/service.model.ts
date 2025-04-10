@@ -21,6 +21,5 @@ export interface ServiceDto {
   name?: string;
   type?: ServiceType;
   price?: number;
-  description?: string;
   property?: number;
 }

@@ -2,7 +2,7 @@
     <content>
         <div class="header">
             <h1>Promocodes</h1>
-            <button class="btn-add">
+            <button (click)="this.formOpen.set(true)" class="btn-add">
                 <span class="icon">+</span> New Promocode
             </button>
         </div>
@@ -26,8 +26,7 @@
                         <td>{{pc.discount_percent}}</td>
                         <td>
                             <div class="btn-container">
-                                <button>Edit</button>
-                                <button>Delete</button>
+                                <button (click)="this.openEditForm(pc)">Edit</button>
                             </div>
                         </td>
                     </tr>
@@ -36,4 +35,7 @@
             </table>
         </div>
     </content>
+    @if(this.formOpen()) {
+    <app-promocodes-form (close)="this.formOpen.set(false)"></app-promocodes-form>
+    }
 </main>

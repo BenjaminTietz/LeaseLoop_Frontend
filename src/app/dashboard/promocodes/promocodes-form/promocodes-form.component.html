@@ -1,0 +1,59 @@
+<main>
+    <form [formGroup]="promocodeForm" [appClickOutside]="closeForm">
+        @if(promocodeService.sending()) {
+        <app-progress-bar aria-label="Loading"></app-progress-bar>
+        }
+        <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+        @if(promocodeService.selectedPromocode() === null) {
+        <h1>New Promocode</h1>
+        }
+        @if(promocodeService.selectedPromocode() !== null) {
+        <h1>Edit Promocode</h1>
+        }
+        <div class="form-field">
+            <input type="text" id="code" name="code" required placeholder="Code" formControlName="code">
+            @if(formService.getFormErrors(promocodeForm, 'name')?.['required']) {
+            <small>Name is required</small>
+            }
+        </div>
+        <div class="form-field">
+            <textarea id="description" name="description" required placeholder="Description"
+                formControlName="description"></textarea>
+            @if(formService.getFormErrors(promocodeForm, 'description')?.['required']) {
+            <small>Description is required</small>
+            }
+        </div>
+        <div class="form-field">
+            <input type="date" id="valid_until" name="valid_until" required placeholder="valid until"
+                formControlName="valid_until" [min]="today">
+            @if(formService.getFormErrors(promocodeForm, 'valid_until')?.['invalidDecimal']) {
+            <small>Please enter a valid Date</small>
+            }
+        </div>
+        <div class="form-field">
+            <input type="number" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]{0,2}" id="discount_percent"
+                name="discount_percent" required placeholder="Discount percent" formControlName="discount_percent">
+            @if(formService.getFormErrors(promocodeForm, 'discount_percent')?.['invalidDecimal']) {
+            <small>Max. 2 decimal places allowed</small>
+            }
+        </div>
+        <div class="button-area">
+            @if(promocodeService.selectedPromocode() !== null) {
+
+            <button type="button" (click)="this.promocodeService.deleteService(
+                this.promocodeService.selectedPromocode()!.id
+              )">Delete</button>
+            <button type="submit" (click)="updatePromocode()"
+                [disabled]="promocodeForm.invalid || promocodeService.sending() ">
+                Update
+            </button>
+            }
+            @if(promocodeService.selectedPromocode() === null) {
+            <button type="submit" (click)="createPromocode()"
+                [disabled]="promocodeForm.invalid || promocodeService.sending()">
+                Save
+            </button>
+            }
+        </div>
+    </form>
+</main>
