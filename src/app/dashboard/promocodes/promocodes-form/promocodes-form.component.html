@@ -14,8 +14,8 @@
             <label for="name">Code</label>
             <div class="form-field">
                 <input type="text" id="code" name="code" required placeholder="Code" formControlName="code">
-                @if(formService.getFormErrors(promocodeForm, 'name')?.['required']) {
-                <small>Name is required</small>
+                @if(formService.getFormErrors(promocodeForm, 'code')?.['required']) {
+                <small>Code is required</small>
                 }
             </div>
         </div>

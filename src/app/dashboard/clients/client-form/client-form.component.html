@@ -40,14 +40,56 @@
             </div>
         </div>
         <div class="input-area">
-            <label for="name">Adress</label>
-            <div class="form-field">
-                <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
-                @if(formService.getFormErrors(serviceForm, 'address')?.['required']) {
-                <small>Address is required</small>
-                }
+            <label for="address">Address</label>
+
+            <div formGroupName="address">
+                <div class="form-field">
+                    <input type="text" id="street" placeholder="Street" formControlName="street" required />
+                    @if(getFormErrors(serviceForm.get('address.street'))) {
+                    <small>Street is required</small>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <input type="text" id="house_number" placeholder="House Number" formControlName="house_number"
+                        required />
+                    @if(getFormErrors(serviceForm.get('address.house_number'))) {
+                    <small>House number is required</small>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <input type="text" id="postal_code" placeholder="Postal Code" formControlName="postal_code"
+                        required />
+                    @if(getFormErrors(serviceForm.get('address..postal_code')))
+                    {
+                    <small>Postal code is required</small>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <input type="text" id="city" placeholder="City" formControlName="city" required />
+                    @if(getFormErrors(serviceForm.get('address.city'))) {
+                    <small>City is required</small>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <input type="text" id="country" placeholder="Country" formControlName="country" required />
+                    @if(getFormErrors(serviceForm.get('address..country'))) {
+                    <small>Country is required</small>
+                    }
+                </div>
+
+                <div class="form-field">
+                    <input type="text" id="phone" placeholder="Phone" formControlName="phone" required />
+                    @if(getFormErrors(serviceForm.get('address..phone'))) {
+                    <small>Phone is required</small>
+                    }
+                </div>
             </div>
         </div>
+
         <div class="button-area">
             @if(clientService.selectedClient() !== null) {
 
