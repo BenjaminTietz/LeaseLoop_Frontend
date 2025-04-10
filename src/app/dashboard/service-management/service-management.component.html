@@ -2,7 +2,7 @@
     <content>
         <div class="header">
             <h1>Services</h1>
-            <button class="btn-add" (click)="this.sms.formOpen.set(true)">+ Add Service</button>
+            <button class="btn-add" (click)="this.formOpen.set(true)">+ Add Service</button>
         </div>
         <div class="table-wrapper">
             <table class="table">
@@ -24,7 +24,7 @@
                         <td>{{ s.type === 'one_time' ? 'One-time' : 'Per day' }}</td>
                         <td>
                             <div class="btn-container">
-                                <button (click)="this.sms.openEdiForm(s)">Edit</button>
+                                <button (click)="this.openEditForm(s)">Edit</button>
                             </div>
                         </td>
                     </tr>
@@ -33,7 +33,7 @@
             </table>
         </div>
     </content>
-    @if(this.sms.formOpen()) {
-    <app-service-form (close)="this.sms.formOpen.set(false)"></app-service-form>
+    @if(this.formOpen()) {
+    <app-service-form (close)="this.formOpen.set(false)"></app-service-form>
     }
 </main>

@@ -1,4 +1,11 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  effect,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormService } from '../../../services/form-service/form.service';
 import { ServiceManagementService } from '../../../services/service-management/service-management.service';
 import {
@@ -32,7 +39,7 @@ export class ServiceFormComponent implements OnInit {
   formService = inject(FormService);
   serviceManagementService = inject(ServiceManagementService);
   propertyService = inject(PropertiesService);
-
+  @Output() close = new EventEmitter();
   serviceForm = new FormBuilder().nonNullable.group({
     name: ['', Validators.required],
     type: ['', Validators.required],
@@ -44,6 +51,8 @@ export class ServiceFormComponent implements OnInit {
     { label: 'Per Day', value: 'per_day' },
     { label: 'One Time', value: 'one_time' },
   ];
+
+  // TODO: refactor price field to use a custom validator to allow only numbers and commas and set type to text instead of number
 
   /**
    * Constructor for the ServiceFormComponent.
@@ -77,11 +86,10 @@ export class ServiceFormComponent implements OnInit {
    * signals back to their initial state.
    */
   // TODO: Click outside to close the form not working
-  closeForm() {
-    this.formService.resetForm(this.serviceForm);
+  closeForm = () => {
+    this.close.emit();
     this.serviceManagementService.selectedService.set(null);
-    this.serviceManagementService.formOpen.set(false);
-  }
+  };
 
   /**
    * Creates a new service from the form data and sends it to the server

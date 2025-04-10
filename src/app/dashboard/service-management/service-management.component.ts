@@ -20,9 +20,21 @@ export class ServiceManagementComponent implements OnInit {
   successful = signal<boolean>(false);
   httpService = inject(HttpService);
   http = inject(HttpService);
+  formOpen = signal<boolean>(false);
 
   ngOnInit(): void {
     this.loadServices();
+  }
+
+  /**
+   * Opens the service form with the given service data pre-filled.
+   *
+   * This function sets the reactive state of the selected service and the form open state.
+   * @param service The service to be edited.
+   */
+  openEditForm(service: Service) {
+    this.sms.selectedService.set(service);
+    this.formOpen.set(true);
   }
 
   loadServices() {
