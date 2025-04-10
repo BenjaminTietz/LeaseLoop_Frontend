@@ -1,0 +1,62 @@
+<main>
+    <form [formGroup]="serviceForm" [appClickOutside]="closeForm">
+        @if(serviceManagementService.sending()) {
+        <app-progress-bar aria-label="Loading"></app-progress-bar>
+        }
+        <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+        @if(serviceManagementService.selectedService() === null) {
+        <h1>New Service</h1>
+        }
+        @if(serviceManagementService.selectedService() !== null) {
+        <h1>Edit Service</h1>
+        }
+        <div class="form-field">
+            <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
+            @if(formService.getFormErrors(serviceForm, 'name')?.['required']) {
+            <small>Name is required</small>
+            }
+        </div>
+        <div class="form-field">
+            <select id="type" name="type" required formControlName="type" placeholder="Type">
+                <option value="" disabled selected hidden>Choose Type</option>
+                @for (type of this.serviceTypes; track type.value; let index = $index) {
+                <option [ngValue]="type.value">{{type.label}}</option>
+                }
+            </select>
+        </div>
+        <div class="form-field">
+            <select id="property" name="property" required formControlName="property">
+                <option value="" disabled selected hidden>Choose Property</option>
+                @for (prop of this.propertyService.properties(); track prop.id; let index = $index) {
+                <option [ngValue]="prop.id">{{prop.name}}</option>
+                }
+            </select>
+        </div>
+        <div class="form-field">
+            <input type="number" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]{0,2}" id="price" name="price" required
+                placeholder="Price" formControlName="price">
+            @if(formService.getFormErrors(serviceForm, 'price')?.['invalidDecimal']) {
+            <small>Max. 2 decimal places allowed</small>
+            }
+        </div>
+
+        <div class="button-area">
+            @if(serviceManagementService.selectedService() !== null) {
+
+            <button type="button" (click)="this.serviceManagementService.deleteService(
+                this.serviceManagementService.selectedService()!.id
+              )">Delete</button>
+            <button type="submit" (click)="updateService()"
+                [disabled]="serviceForm.invalid || serviceManagementService.sending() ">
+                Update
+            </button>
+            }
+            @if(serviceManagementService.selectedService() === null) {
+            <button type="submit" (click)="createService()"
+                [disabled]="serviceForm.invalid || serviceManagementService.sending()">
+                Save
+            </button>
+            }
+        </div>
+    </form>
+</main>
