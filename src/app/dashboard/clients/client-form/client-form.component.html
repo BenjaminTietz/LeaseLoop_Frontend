@@ -10,33 +10,44 @@
         @if(clientService.selectedClient() !== null) {
         <h1>Edit Client</h1>
         }
-        <div class="form-field">
-            <input type="text" id="first_name" name="first_name" required placeholder="First Name"
-                formControlName="first_name">
-            @if(formService.getFormErrors(serviceForm, 'first_name')?.['required']) {
-            <small>First Name is required</small>
-            }
+        <div class="input-area">
+            <label for="name">First Name</label>
+            <div class="form-field">
+                <input type="text" id="first_name" name="first_name" required placeholder="First Name"
+                    formControlName="first_name">
+                @if(formService.getFormErrors(serviceForm, 'first_name')?.['required']) {
+                <small>First Name is required</small>
+                }
+            </div>
         </div>
-        <div class="form-field">
-            <input type="text" id="last_name" name="last_name" required placeholder="Last Name"
-                formControlName="last_name">
-            @if(formService.getFormErrors(serviceForm, 'last_name')?.['required']) {
-            <small>Last Name is required</small>
-            }
+        <div class="input-area">
+            <label for="name">Last Name</label>
+            <div class="form-field">
+                <input type="text" id="last_name" name="last_name" required placeholder="Last Name"
+                    formControlName="last_name">
+                @if(formService.getFormErrors(serviceForm, 'last_name')?.['required']) {
+                <small>Last Name is required</small>
+                }
+            </div>
         </div>
-        <div class="form-field">
-            <input type="email" id="email" name="email" required placeholder="Email" formControlName="email">
-            @if(formService.getFormErrors(serviceForm, 'email')?.['required']) {
-            <small>Email is required</small>
-            }
+        <div class="input-area">
+            <label for="name">Email</label>
+            <div class="form-field">
+                <input type="email" id="email" name="email" required placeholder="Email" formControlName="email">
+                @if(formService.getFormErrors(serviceForm, 'email')?.['required']) {
+                <small>Email is required</small>
+                }
+            </div>
         </div>
-        <div class="form-field">
-            <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
-            @if(formService.getFormErrors(serviceForm, 'address')?.['required']) {
-            <small>Address is required</small>
-            }
+        <div class="input-area">
+            <label for="name">Adress</label>
+            <div class="form-field">
+                <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
+                @if(formService.getFormErrors(serviceForm, 'address')?.['required']) {
+                <small>Address is required</small>
+                }
+            </div>
         </div>
-
         <div class="button-area">
             @if(clientService.selectedClient() !== null) {
 
