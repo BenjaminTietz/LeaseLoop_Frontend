@@ -16,18 +16,6 @@ export class ServiceManagementService {
   selectedService = signal<Service | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
-  formOpen = signal<boolean>(false);
-
-  /**
-   * Opens the service form with the given service data pre-filled.
-   *
-   * This function sets the reactive state of the selected service and the form open state.
-   * @param service The service to be edited.
-   */
-  openEdiForm(service: Service) {
-    this.selectedService.set(service);
-    this.formOpen.set(true);
-  }
 
   /**
    * Load all services from the server.
@@ -73,7 +61,6 @@ export class ServiceManagementService {
           this.sending.set(false);
           this.successful.set(true);
           this.selectedService.set(null);
-          this.formOpen.set(false);
         },
         error: (err) => {
           console.error('Failed to create service:', err);
@@ -106,7 +93,6 @@ export class ServiceManagementService {
           this.sending.set(false);
           this.successful.set(true);
           this.selectedService.set(null);
-          this.formOpen.set(false);
         },
         error: (err) => {
           console.error('Failed to create service:', err);
@@ -138,7 +124,6 @@ export class ServiceManagementService {
           this.sending.set(false);
           this.successful.set(true);
           this.selectedService.set(null);
-          this.formOpen.set(false);
         },
         error: (err) => {
           console.error('Failed to create service:', err);
