@@ -1,20 +1,44 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Service } from '../../models/service.model';
+import { Service, ServiceDto } from '../../models/service.model';
 import { environment } from '../../../environments/environment';
 import { catchError } from 'rxjs/operators';
 import { throwError, tap } from 'rxjs';
 import { HttpService } from '../httpclient/http.service';
+import { FormService } from '../form-service/form.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceManagementService {
   httpService = inject(HttpService);
-
-  // Signals to hold reactive state
+  formService = inject(FormService);
   services = signal<Service[]>([]);
+  selectedService = signal<Service | null>(null);
+  sending = signal<boolean>(false);
+  successful = signal<boolean>(false);
+  formOpen = signal<boolean>(false);
 
-  /** Load all services assoziated to current user / property */
+  /**
+   * Opens the service form with the given service data pre-filled.
+   *
+   * This function sets the reactive state of the selected service and the form open state.
+   * @param service The service to be edited.
+   */
+  openEdiForm(service: Service) {
+    this.selectedService.set(service);
+    this.formOpen.set(true);
+  }
+
+  /**
+   * Load all services from the server.
+   *
+   * This function sends a GET request to the server to retrieve all services.
+   * It updates the local services list by setting the services signal to the
+   * received data. It also logs any errors to the console and rethrows them
+   * as an RxJS error.
+   *
+   * @returns An observable that emits the received services.
+   */
   loadService() {
     return this.httpService
       .get<Service[]>(`${environment.apiBaseUrl}/api/services/`)
@@ -27,33 +51,100 @@ export class ServiceManagementService {
       );
   }
 
-  /** Load a single Service by its ID */
-  getService(id: number) {
-    return this.httpService.get<Service>(
-      `${environment.apiBaseUrl}/api/service/${id}/`
-    );
+  /**
+   * Creates a new service with the given data.
+   *
+   * This function sends a POST request to the server to create the specified
+   * service. It adds the new service to the local service list. It also manages
+   * the UI state by setting the sending and successful signals, and resetting
+   * the selectedService and formOpen signals.
+   *
+   * @param data - The data to be used to create the new service.
+   */
+  createService(data: ServiceDto) {
+    this.sending.set(true);
+    this.httpService
+      .post<Service>(`${environment.apiBaseUrl}/api/services/`, data)
+      .subscribe({
+        next: (service) => {
+          const current = this.services();
+          this.services.set([...current, service]);
+
+          this.sending.set(false);
+          this.successful.set(true);
+          this.selectedService.set(null);
+          this.formOpen.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to create service:', err);
+          this.sending.set(false);
+          this.successful.set(false);
+        },
+      });
   }
 
-  /** Create a new Service */
-  createService(data: Partial<Service>) {
-    return this.httpService.post<Service>(
-      `${environment.apiBaseUrl}/api/services/`,
-      data
-    );
+  /**
+   * Updates an existing service with the given data.
+   *
+   * This function sends a PATCH request to the server to update the specified
+   * service. It updates the local service list by replacing the existing
+   * service with the updated one. It also manages the UI state by setting the
+   * sending and successful signals, and resetting the selectedService and
+   * formOpen signals.
+   *
+   * @param id - The ID of the service to be updated.
+   * @param data - The data to be used for the update.
+   */
+  updateService(id: number, data: ServiceDto) {
+    this.sending.set(true);
+    this.httpService
+      .patch<Service>(`${environment.apiBaseUrl}/api/service/${id}/`, data)
+      .subscribe({
+        next: (service) => {
+          const current = this.services();
+          this.services.set(current.map((s) => (s.id === id ? service : s)));
+          this.sending.set(false);
+          this.successful.set(true);
+          this.selectedService.set(null);
+          this.formOpen.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to create service:', err);
+          this.sending.set(false);
+          this.successful.set(false);
+        },
+      });
   }
 
-  /** Update an existing Service */
-  updateService(id: number, data: Partial<Service>) {
-    return this.httpService.patch<Service>(
-      `${environment.apiBaseUrl}/api/service/${id}/`,
-      data
-    );
-  }
+  /**
+   * Deletes a service by its ID.
+   *
+   * This function sends a DELETE request to the server to remove the specified
+   * service. It updates the local service list by filtering out the deleted
+   * service. It also manages the UI state by setting the sending and successful
+   * signals, and resetting the selectedService and formOpen signals.
+   *
+   * @param id - The ID of the service to be deleted.
+   */
 
-  /** Delete a Service */
   deleteService(id: number) {
-    return this.httpService.delete(
-      `${environment.apiBaseUrl}/api/service/${id}/`
-    );
+    console.log('deleteService', id);
+    this.httpService
+      .delete(`${environment.apiBaseUrl}/api/service/${id}/`)
+      .subscribe({
+        next: (service) => {
+          const current = this.services();
+          this.services.set(current.filter((s) => s.id !== id));
+          this.sending.set(false);
+          this.successful.set(true);
+          this.selectedService.set(null);
+          this.formOpen.set(false);
+        },
+        error: (err) => {
+          console.error('Failed to create service:', err);
+          this.sending.set(false);
+          this.successful.set(false);
+        },
+      });
   }
 }
