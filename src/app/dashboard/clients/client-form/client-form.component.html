@@ -1,0 +1,57 @@
+<main>
+    <form [formGroup]="serviceForm" [appClickOutside]="closeForm">
+        @if(clientService.sending()) {
+        <app-progress-bar aria-label="Loading"></app-progress-bar>
+        }
+        <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+        @if(clientService.selectedClient() === null) {
+        <h1>New Client</h1>
+        }
+        @if(clientService.selectedClient() !== null) {
+        <h1>Edit Client</h1>
+        }
+        <div class="form-field">
+            <input type="text" id="first_name" name="first_name" required placeholder="First Name"
+                formControlName="first_name">
+            @if(formService.getFormErrors(serviceForm, 'first_name')?.['required']) {
+            <small>First Name is required</small>
+            }
+        </div>
+        <div class="form-field">
+            <input type="text" id="last_name" name="last_name" required placeholder="Last Name"
+                formControlName="last_name">
+            @if(formService.getFormErrors(serviceForm, 'last_name')?.['required']) {
+            <small>Last Name is required</small>
+            }
+        </div>
+        <div class="form-field">
+            <input type="email" id="email" name="email" required placeholder="Email" formControlName="email">
+            @if(formService.getFormErrors(serviceForm, 'email')?.['required']) {
+            <small>Email is required</small>
+            }
+        </div>
+        <div class="form-field">
+            <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
+            @if(formService.getFormErrors(serviceForm, 'address')?.['required']) {
+            <small>Address is required</small>
+            }
+        </div>
+
+        <div class="button-area">
+            @if(clientService.selectedClient() !== null) {
+
+            <button type="button" (click)="this.clientService.deleteClient(
+                this.clientService.selectedClient()!.id
+              )">Delete</button>
+            <button type="submit" (click)="updateClient()" [disabled]="serviceForm.invalid || clientService.sending() ">
+                Update
+            </button>
+            }
+            @if(clientService.selectedClient() === null) {
+            <button type="submit" (click)="createClient()" [disabled]="serviceForm.invalid || clientService.sending()">
+                Save
+            </button>
+            }
+        </div>
+    </form>
+</main>

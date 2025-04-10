@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpService } from '../httpclient/http.service';
-import { Clients } from '../../models/clients.model';
+import { ClientDto, Clients } from '../../models/clients.model';
 import { environment } from '../../../environments/environment';
 import { catchError, tap, throwError } from 'rxjs';
 
@@ -12,6 +12,9 @@ export class ClientsService {
 
   // Signals to hold reactive state
   clients = signal<Clients[]>([]);
+  selectedClient = signal<Clients | null>(null);
+  sending = signal<boolean>(false);
+  successful = signal<boolean>(false);
 
   /** Load all Clients assosiated tothe current user */
   loadClients() {
@@ -26,33 +29,70 @@ export class ClientsService {
       );
   }
 
-  /** Load a single Client by its ID */
-  getClient(id: number) {
-    return this.httpService.get<Clients>(
-      `${environment.apiBaseUrl}/api/clients/${id}/`
-    );
-  }
-
-  /** Create a new Client */
-  createClient(data: Partial<Clients>) {
-    return this.httpService.post<Clients>(
-      `${environment.apiBaseUrl}/api/clients/`,
-      data
-    );
-  }
-
-  /** Update an existing Client */
-  updateClient(id: number, data: Partial<Clients>) {
-    return this.httpService.patch<Clients>(
-      `${environment.apiBaseUrl}/api/clients/${id}/`,
-      data
-    );
-  }
-
-  /** Delete a Client */
   deleteClient(id: number) {
-    return this.httpService.delete(
-      `${environment.apiBaseUrl}/api/clients/${id}/`
-    );
+    console.log('deleteClient', id);
+    this.httpService
+      .delete(`${environment.apiBaseUrl}/api/client/${id}/`)
+      .subscribe({
+        next: () => {
+          const current = this.clients();
+          this.clients.set(current.filter((promo) => promo.id !== id));
+
+          this.selectedClient.set(null);
+          this.sending.set(false);
+          this.successful.set(true);
+        },
+        error: (err) => {
+          console.error('Failed to delete promocode:', err);
+          this.sending.set(false);
+          this.successful.set(false);
+        },
+      });
+  }
+
+  createClient(data: ClientDto) {
+    this.sending.set(true);
+    this.httpService
+      .post<Clients>(`${environment.apiBaseUrl}/api/clients/`, data)
+      .subscribe({
+        next: (service) => {
+          const current = this.clients();
+          this.clients.set([...current, service]);
+
+          this.sending.set(false);
+          this.successful.set(true);
+          this.selectedClient.set(null);
+        },
+        error: (err) => {
+          console.error('Failed to create Client:', err);
+          this.sending.set(false);
+          this.successful.set(false);
+        },
+      });
+  }
+
+  updateClient(data: ClientDto) {
+    this.sending.set(true);
+    this.httpService
+      .patch<Clients>(
+        `${environment.apiBaseUrl}/api/client/${this.selectedClient()?.id}/`,
+        data
+      )
+      .subscribe({
+        next: (service) => {
+          const current = this.clients();
+          this.clients.set(
+            current.map((s) => (s.id === service.id ? service : s))
+          );
+          this.sending.set(false);
+          this.successful.set(true);
+          this.selectedClient.set(null);
+        },
+        error: (err) => {
+          console.error('Failed to create client:', err);
+          this.sending.set(false);
+          this.successful.set(false);
+        },
+      });
   }
 }
