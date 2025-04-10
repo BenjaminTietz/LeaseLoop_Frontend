@@ -1,10 +1,11 @@
+import { Address } from './adress.model';
 export interface Clients {
   id: number;
   first_name: string;
   last_name: string;
   email: string;
-  address: string;
-  userId: number; // Refers to auth user
+  address: Address;
+  user_id: number; // Refers to auth user
   created_at: string; // ISO date
   updated_at: string; // ISO date
 }
@@ -15,6 +16,6 @@ export interface ClientDto {
   first_name?: string;
   last_name?: string;
   email?: string;
-  address?: string;
-  userId?: number; // Refers to auth user
+  address?: Address;
+  user_id?: number; // Refers to auth user
 }

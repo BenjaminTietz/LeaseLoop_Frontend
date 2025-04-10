@@ -6,13 +6,21 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
 import { ProgressBarComponent } from '../../../shared/global/progress-bar/progress-bar.component';
 import { MatIcon } from '@angular/material/icon';
 import { FormService } from '../../../services/form-service/form.service';
 import { ClientsService } from '../../../services/clients-service/clients.service';
 import { ClientDto } from '../../../models/clients.model';
+import { Address } from '../../../models/adress.model';
+
 @Component({
   selector: 'app-client-form',
   standalone: true,
@@ -33,19 +41,32 @@ export class ClientFormComponent implements OnInit {
     first_name: ['', Validators.required],
     last_name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    address: ['', Validators.required],
+    address: new FormBuilder().nonNullable.group({
+      street: ['', Validators.required],
+      house_number: ['', Validators.required],
+      postal_code: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      phone: ['', Validators.required],
+    }),
   });
 
   constructor() {
     effect(() => {
       const selected = this.clientService.selectedClient();
-      const clients = this.clientService.clients();
       if (selected !== null) {
         this.serviceForm.patchValue({
           first_name: selected.first_name,
           last_name: selected.last_name,
           email: selected.email,
-          address: selected.address,
+          address: {
+            street: selected.address.street,
+            house_number: selected.address.house_number,
+            postal_code: selected.address.postal_code,
+            city: selected.address.city,
+            country: selected.address.country,
+            phone: selected.address.phone,
+          } as Address,
         });
       }
     });
@@ -76,7 +97,14 @@ export class ClientFormComponent implements OnInit {
       first_name: raw.first_name,
       last_name: raw.last_name,
       email: raw.email,
-      address: raw.address,
+      address: {
+        street: raw.address?.street,
+        house_number: raw.address?.house_number,
+        postal_code: raw.address?.postal_code,
+        city: raw.address?.city,
+        country: raw.address?.country,
+        phone: raw.address?.phone,
+      } as Address,
     };
 
     this.clientService.createClient(clientData);
@@ -88,9 +116,22 @@ export class ClientFormComponent implements OnInit {
       first_name: raw.first_name,
       last_name: raw.last_name,
       email: raw.email,
-      address: raw.address,
+      address: {
+        street: raw.address?.street,
+        house_number: raw.address?.house_number,
+        postal_code: raw.address?.postal_code,
+        city: raw.address?.city,
+        country: raw.address?.country,
+        phone: raw.address?.phone,
+      } as Address,
     };
     const id = this.clientService.selectedClient()?.id as number;
     this.clientService.updateClient(clientData);
+  }
+
+  getFormErrors(control: AbstractControl | null): ValidationErrors | null {
+    return control && control.invalid && (control.dirty || control.touched)
+      ? control.errors
+      : null;
   }
 }
