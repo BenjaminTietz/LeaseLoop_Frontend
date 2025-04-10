@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { MatIcon } from '@angular/material/icon';
 import { environment } from '../../../../environments/environment';
@@ -21,6 +21,8 @@ export class ImageUploadComponent {
     newImageDescriptions :string[] = []
     missingDescription: boolean = false;
     mediaUrl = environment.mediaBaseUrl;
+    imageTooBig = signal('');
+    maxImagesReached = signal(false);
     
 
     ngOnInit(): void {
@@ -47,21 +49,34 @@ export class ImageUploadComponent {
     }
 
     onImageChange(event: Event): void {
+      this.imageTooBig.set('');
+      this.maxImagesReached.set(false);
       const input = event.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
         const files: File[] = Array.from(input.files);
     
         for (const file of files) {
+          if (this.images.length >= 30) {
+            this.maxImagesReached.set(true);
+            break;
+          }
+    
+          if (file.size > 500 * 1024) {
+            this.imageTooBig.set(file.name);
+            continue;
+          }
           if (this.images.find(f => f.name === file.name)) continue;
+    
           const reader = new FileReader();
           reader.onload = () => {
             const base64 = reader.result as string;
+    
             if (this.existingImageBase64s.includes(base64)) return;
-        
     
             this.imagePreviews.push(base64);
             this.images.push(file);
             this.newImageDescriptions.push('');
+    
             this.imagesChange.emit(this.images);
             this.newImageDescriptionsChange.emit(this.newImageDescriptions);
             this.missingDescriptionChange.emit(this.hasMissingDescriptions());
@@ -70,7 +85,7 @@ export class ImageUploadComponent {
           reader.readAsDataURL(file);
         }
     
-        input.value = '';
+        input.value = ''; // Reset file input
       }
     }
   
