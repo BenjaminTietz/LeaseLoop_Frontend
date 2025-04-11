@@ -131,6 +131,37 @@ app-booking-popup {
   @include display(flex, column, center, center);
 }
 
-.no-scroll{
+.no-scroll {
   overflow: hidden;
+}
+
+// address fields styles
+.width-100 {
+  width: 100% !important;
+}
+
+.width-75 {
+  width: 75% !important;
+}
+
+.width-50 {
+  width: 50% !important;
+}
+
+.width-25 {
+  width: 25% !important;
+}
+
+.address-form {
+  width: 100%;
+  max-width: 100%;
+  @include display(flex, column, center, center);
+  gap: 32px;
+}
+
+.form-input-wrapper {
+  width: 100%;
+  max-width: 100%;
+  @include display(flex, row, space-between, center);
+  gap: 16px;
 }
