@@ -101,7 +101,7 @@ export class PropertiesService {
   }
 
   getAuthOptions() {
-    const token = localStorage.getItem('token');
+    const token = this.httpService.getToken();
     return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
   }
 
@@ -116,6 +116,21 @@ export class PropertiesService {
         .subscribe({
           error: (err) => console.error('Image upload failed:', err)
         });
+    });
+  }
+
+  updateImageDescription(id: number, desc: string): Promise<void> {
+    const formData = new FormData();
+    formData.append('alt_text', desc);
+  
+    return new Promise((resolve, reject) => {
+      this.http.patch(this.getUrl(`property-image/${id}`), formData, this.getAuthOptions()).subscribe({
+        next: () => resolve(),
+        error: (err) => {
+          console.error('Failed to update image description', err);
+          reject(err);
+        }
+      });
     });
   }
 

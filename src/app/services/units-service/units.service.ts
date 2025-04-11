@@ -7,19 +7,23 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class UnitsService {
+  httpService = inject(HttpService)
   http = inject(HttpClient)
   units = signal<Unit[]>([]);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
   selectedUnit = signal<Unit | null>(null);
+  deletedImageIds = signal<number[]>([]);
 
   /** Load all units (admin or general fetch) */
   loadUnits() {
-    this.http
-      .get<Unit[]>(`${environment.apiBaseUrl}/api/units/`)
-      .subscribe({
-        next: (data) => this.units.set(data),
-        error: (error) => console.error('Failed to load units', error),
+    this.setLoading(true);
+        this.httpService.get<Unit[]>(`${environment.apiBaseUrl}/api/units/`).subscribe({
+          next: (data) => {
+            this.units.set(data);
+            this.setLoading(false);
+          },
+          error: this.handleError('Failed to load Ünits')
       });
   }
 
@@ -45,18 +49,54 @@ export class UnitsService {
     }
 
   /** Update a unit */
-  updateUnit(id: number, data: Partial<Unit>) {
-    return this.http.patch<Unit>(
-      `${environment.apiBaseUrl}/api/units/${id}/`,
-      data
-    );
-  }
+  updateUnit(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
+    console.log('Uploading with:', this.selectedUnit()?.id);
+    
+      const id = this.selectedUnit()?.id;
+      if (!id) return;
+      this.setLoading(true);
+      this.http.patch<Unit>(this.getUrl(`units/${id}`), formData, this.getAuthOptions())
+        .subscribe({
+          next: () => {
+            if (Array.isArray(newImages) && newImages.length > 0) {
+              this.uploadImages(id, newImages, descriptions ?? []);
+            }
+            this.successful.set(true);
+          },
+          error: this.handleError('Update unit failed'),
+          complete: () => {
+            this.setLoading(false);
+            onComplete?.();
+          }
+        });
+    }
 
   /** Delete a unit */
-  deleteUnit(id: number) {
-    return this.http.delete(
-      `${environment.apiBaseUrl}/api/units/${id}/`
-    );
+
+  deleteUnit() {
+    const id = this.selectedUnit()?.id;
+    if (!id) return;
+    this.httpService.delete<Unit>(this.getUrl(`units/${id}`)).subscribe({
+      next: () => {
+        this.selectedUnit.set(null);
+        this.loadUnits();
+        this.successful.set(true);
+      },
+      error: this.handleError('Delete property failed')
+    });
+  }
+
+
+  deleteImage(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.http.delete(this.getUrl(`unit-image/${id}`), this.getAuthOptions()).subscribe({
+        next: () => resolve(),
+        error: (err) => {
+          console.error('Failed to delete image', err);
+          reject(err);
+        }
+      });
+    });
   }
 
   getUrl(path: string): string {
@@ -97,7 +137,21 @@ export class UnitsService {
   }
 
   getAuthOptions() {
-      const token = localStorage.getItem('token');
+      const token = this.httpService.getToken();
       return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
+  }
+
+  updateImageDescription(id: number, desc: string): Promise<void> {
+    const formData = new FormData();
+    formData.append('alt_text', desc);
+    return new Promise((resolve, reject) => {
+      this.http.patch(this.getUrl(`unit-image/${id}`), formData, this.getAuthOptions()).subscribe({
+        next: () => resolve(),
+        error: (err) => {
+          console.error('Failed to update unit image description', err);
+          reject(err);
+        }
+      });
+    });
   }
 }

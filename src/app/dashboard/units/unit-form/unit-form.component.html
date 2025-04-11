@@ -80,7 +80,12 @@
       <label for="property">Property</label>
       <div class="form-field">
         <select id="property" name="property" formControlName="property">
+          @if(unitService.selectedUnit() === null){
           <option [ngValue]="null" disabled>Select Property</option>
+          }
+          @if(unitService.selectedUnit() !== null){
+          <option [ngValue]="unitService.selectedUnit()?.property">{{unitService.selectedUnit()?.property?.name}}</option>
+          }
           @for(property of propertyService.properties(); track property.id){
           <option [ngValue]="property">{{property.name}}</option>
           }
@@ -90,8 +95,6 @@
         }
       </div>
     </div>
-
-
 
     <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
       (missingDescriptionChange)="missingDescription = $event"></app-image-upload>

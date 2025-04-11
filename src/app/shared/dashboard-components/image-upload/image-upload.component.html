@@ -13,7 +13,7 @@
   }
 </div>
 
-@if(propertyService.selectedProperty() === null && imagePreviews.length > 0) {
+@if(isCreateMode() && imagePreviews.length > 0) {
   <div class="image-field">
     @for(preview of imagePreviews; track $index) {
       <div class="image">
@@ -34,34 +34,30 @@
   </div>
 }
 
-@if(propertyService.selectedProperty() !== null) {
-  @if(propertyService.selectedProperty()?.images?.length || imagePreviews.length > 0){
 
- 
-<div class="image-field">
-  @for(image of propertyService.selectedProperty()?.images; track image.id) {
-  <div class="image">
-    <img [src]="mediaUrl + image.image" alt="property image" />
-    <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
-    <textarea type="text" placeholder="Image description" required [value]="image.alt_text || ''" #descInput
-    (input)="updateExistingImageDescription(image.id, descInput.value); onDescriptionChange()"></textarea>
+@if (!isCreateMode() && (hasExistingImages() || imagePreviews.length > 0)) {
+  <div class="image-field">
+    @for(image of propertyService.selectedProperty()?.images || unitService.selectedUnit()?.images; track image.id) {
+    <div class="image">
+      <img [src]="mediaUrl + image.image" alt="property image" />
+      <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
+      <textarea type="text" placeholder="Image description" required [value]="image.alt_text || ''" #descInput
+      (input)="updateExistingImageDescription(image.id, descInput.value); onDescriptionChange()"></textarea>
+    </div>
+    }
+    @if(imagePreviews.length > 0) {
+    @for(preview of imagePreviews; track $index) {
+    <div class="image">
+      <img [src]="preview" alt="Selected image preview" />
+      <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
+      <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]" #previewInput
+      (input)="newImageDescriptions[$index] = previewInput.value; onDescriptionChange()" ></textarea>
+    </div>
+    }
+    }
+    @if(missingDescription) {
+      <small>Please provide a description for every image before updating.</small>
+    }
   </div>
-  }
-  @if(imagePreviews.length > 0) {
-  @for(preview of imagePreviews; track $index) {
-  <div class="image">
-    <img [src]="preview" alt="Selected image preview" />
-    <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
-    <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]" #previewInput
-    (input)="newImageDescriptions[$index] = previewInput.value; onDescriptionChange()" ></textarea>
-  </div>
-  }
-  }
-  @if(missingDescription) {
-    <small>Please provide a description for every image before updating.</small>
-  }
-</div>
-}
-
 }
 </div>
