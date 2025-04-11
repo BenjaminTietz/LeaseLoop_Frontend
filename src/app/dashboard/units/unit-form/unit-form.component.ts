@@ -57,6 +57,8 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     disableBackgroundScroll();
     this.propertyService.loadProperties();
     const selected = this.unitService.selectedUnit();
+    console.log('Selected unit:', selected);
+    
 
     if (selected) {
       this.unitForm.patchValue({
@@ -64,7 +66,9 @@ export class UnitFormComponent implements OnInit, OnDestroy {
         description: selected.description,
         capacity: selected.capacity,
         price_per_night: selected.price_per_night,
-        property: selected.property
+        property: selected.property,
+        price_per_extra_person: selected.price_per_extra_person,
+        max_capacity: selected.max_capacity
       });
     }    
   }
@@ -72,27 +76,51 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   createUnit() {
     const { property, ...rest } = this.unitForm.value;
     const formData = new FormData();
+    Object.entries(rest).forEach(([key, value]) => {
+      formData.append(key, String(value ?? ''));
+    });
+    formData.append('property_id', (property as PropertyShort).id.toString());
+    formData.append('property', JSON.stringify(property));
+    this.unitService.createUnit(formData, this.images, this.newImageDescriptions);
+  }
+
+  updateUnit() { 
+    const { property, ...rest } = this.unitForm.value;
+    const formData = new FormData();
   
-    // Restliche Felder anhängen
     Object.entries(rest).forEach(([key, value]) => {
       formData.append(key, String(value ?? ''));
     });
   
-    // Property-ID für Backend-Relation
     formData.append('property_id', (property as PropertyShort).id.toString());
+    formData.append('unit', JSON.stringify(property));
   
-    // Optional: Property als JSON (damit es ankommt als ganzer Datensatz)
-    formData.append('property', JSON.stringify(property));
+    const imageIdsToDelete = [...this.unitService.deletedImageIds()];
   
-    this.unitService.createUnit(formData, this.images, this.newImageDescriptions);
+    const updateExistingDescriptions = (this.unitService.selectedUnit()?.images || []).map(img =>
+      this.unitService.updateImageDescription(img.id, img.alt_text)
+    );
+  
+    this.unitService.updateUnit(formData, this.images, this.newImageDescriptions, () => {
+      Promise.all([
+        Promise.all(imageIdsToDelete.map(id => this.unitService.deleteImage(id))),
+        Promise.all(updateExistingDescriptions)
+      ]).then(() => {
+        this.unitService.deletedImageIds.set([]);
+        this.unitService.selectedUnit.set(null);
+        this.unitService.loadUnits();
+        this.closeForm();
+      });
+    });
   }
 
-  updateUnit() { }
 
-
-  deleteUnit() { }
+  deleteUnit() { 
+    this.unitService.deleteUnit();
+  }
 
   ngOnDestroy(): void {
     enableBackgroundScroll();
+    this.unitService.selectedUnit.set(null);
   }
 }

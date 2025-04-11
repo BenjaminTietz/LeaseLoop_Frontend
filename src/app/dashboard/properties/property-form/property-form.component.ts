@@ -81,18 +81,19 @@ export class PropertyFormComponent {
     const imageIdsToDelete = [...this.propertyService.deletedImageIds()];
   
     this.propertyService.updateProperty(formData, this.images, this.newImageDescriptions, () => {
-      // Step 1: delete images
-      const deleteRequests = imageIdsToDelete.map(id =>
-        this.propertyService.deleteImage(id)
+      const deletedImageIds = [...this.propertyService.deletedImageIds()];
+      const updateExistingDescriptions = (this.propertyService.selectedProperty()?.images || []).map(img =>
+        this.propertyService.updateImageDescription(img.id, img.alt_text)
       );
-  
-      // Wait until all deletions are done (wrap in Promise.all)
-      Promise.all(deleteRequests).then(() => {
+    
+      Promise.all([
+        Promise.all(deletedImageIds.map(id => this.propertyService.deleteImage(id))),
+        Promise.all(updateExistingDescriptions)
+      ]).then(() => {
         this.propertyService.clearDeletedImages();
         this.propertyService.selectedProperty.set(null);
         this.propertyService.loadProperties();
         this.closeForm();
-        this.propertyService.deletedImageIds.set([]);
       });
     });
   }

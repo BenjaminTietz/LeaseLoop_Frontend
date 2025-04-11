@@ -1,7 +1,8 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Output, signal } from '@angular/core';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { MatIcon } from '@angular/material/icon';
 import { environment } from '../../../../environments/environment';
+import { UnitsService } from '../../../services/units-service/units.service';
 
 @Component({
   selector: 'app-image-upload',
@@ -16,6 +17,7 @@ export class ImageUploadComponent {
     @Output() newImageDescriptionsChange = new EventEmitter<string[]>();
     @Output() missingDescriptionChange = new EventEmitter<boolean>();
     propertyService = inject(PropertiesService)
+    unitService = inject(UnitsService)
     existingImageBase64s:string[] = []
     images: File[]= []
     newImageDescriptions :string[] = []
@@ -23,18 +25,26 @@ export class ImageUploadComponent {
     mediaUrl = environment.mediaBaseUrl;
     imageTooBig = signal('');
     maxImagesReached = signal(false);
-    
+    isCreateMode = computed(() => !this.propertyService.selectedProperty() && !this.unitService.selectedUnit())
+    hasExistingImages = computed(() =>
+      (this.propertyService.selectedProperty()?.images?.length || 0) > 0 ||
+      (this.unitService.selectedUnit()?.images?.length || 0) > 0
+    );
 
     ngOnInit(): void {
       this.propertyService.clearDeletedImages();
-      const selected = this.propertyService.selectedProperty();
-      if (selected) {
-        this.existingImageBase64s = [];
-        selected.images.forEach((image) => {
-          this.convertImageUrlToBase64(this.mediaUrl + image.image)
-            .then((base64) => this.existingImageBase64s.push(base64));
-        });
-      }
+      //this.unitService.clearDeletedImages();
+      const property = this.propertyService.selectedProperty();
+      const unit = this.unitService.selectedUnit();
+    
+      this.existingImageBase64s = [];
+    
+      const imagesToConvert = property?.images || unit?.images || [];
+    
+      imagesToConvert.forEach((image) => {
+        this.convertImageUrlToBase64(this.mediaUrl + image.image)
+          .then((base64) => this.existingImageBase64s.push(base64));
+      });
     }
 
     convertImageUrlToBase64(url: string): Promise<string> {
@@ -107,11 +117,19 @@ export class ImageUploadComponent {
 
     updateExistingImageDescription(imageId: number, desc: string) {
       const property = this.propertyService.selectedProperty();
-      if (!property) return;
+      const unit = this.unitService.selectedUnit();
     
-      const image = this.propertyService.selectedProperty()!.images.find(img => img.id === imageId);
-      if (image) {
-        image.alt_text = desc;
+      if (property) {
+        const image = property.images.find(img => img.id === imageId);
+        if (image) {
+          image.alt_text = desc;
+        }
+      }
+      if (unit) {
+        const image = unit.images.find(img => img.id === imageId);
+        if (image) {
+          image.alt_text = desc;
+        }
       }
     }
   

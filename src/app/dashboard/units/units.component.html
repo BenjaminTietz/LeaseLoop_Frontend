@@ -16,7 +16,7 @@
                         <th>Capacity</th>
                         <th>Price</th>
                         <th>Status</th>
-                        <th>Edit Unit</th>
+                        <th>Edit unit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +29,7 @@
                         <td>{{unit.status}}</td>
                         <td>
                             <div class="btn-container">
-                                <button>Edit</button>
+                                <button (click)="openEditForm(); unitsService.selectedUnit.set(unit)">Edit</button>
                             </div>
                         </td>
                     </tr>
