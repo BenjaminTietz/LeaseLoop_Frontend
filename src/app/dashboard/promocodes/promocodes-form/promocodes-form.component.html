@@ -17,15 +17,28 @@
                 @if(formService.getFormErrors(promocodeForm, 'code')?.['required']) {
                 <small>Code is required</small>
                 }
+                @if(formService.getFormErrors(promocodeForm, 'code')?.['minlength']) {
+                <small>Code must be at least 3 characters long</small>
+                }
+                @if(formService.getFormErrors(promocodeForm, 'code')?.['maxlength']) {
+                <small>Code must be at most 10 characters long</small>
+                }
             </div>
         </div>
         <div class="input-area">
-            <label for="name">Description</label>
+            <label for="description">Description</label>
             <div class="form-field">
-                <textarea id="description" name="description" required placeholder="Description"
-                    formControlName="description"></textarea>
-                @if(formService.getFormErrors(promocodeForm, 'description')?.['required']) {
+                <textarea id="description" name="description" placeholder="Description" formControlName="description"
+                    required></textarea>
+
+                @if (formService.getFormErrors(promocodeForm, 'description')?.['required']) {
                 <small>Description is required</small>
+                }
+                @if (formService.getFormErrors(promocodeForm, 'description')?.['minlength']) {
+                <small>Description must be at least 10 characters long</small>
+                }
+                @if (formService.getFormErrors(promocodeForm, 'description')?.['maxlength']) {
+                <small>Description must be at most 50 characters long</small>
                 }
             </div>
         </div>
@@ -34,7 +47,7 @@
             <div class="form-field">
                 <input type="date" id="valid_until" name="valid_until" required placeholder="valid until"
                     formControlName="valid_until" [min]="today">
-                @if(formService.getFormErrors(promocodeForm, 'valid_until')?.['invalidDecimal']) {
+                @if(formService.getFormErrors(promocodeForm, 'valid_until')?.['required']) {
                 <small>Please enter a valid Date</small>
                 }
             </div>
@@ -42,10 +55,16 @@
         <div class="input-area">
             <label for="name">Discount percent</label>
             <div class="form-field">
-                <input type="number" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]{0,2}" id="discount_percent"
-                    name="discount_percent" required placeholder="Discount percent" formControlName="discount_percent">
-                @if(formService.getFormErrors(promocodeForm, 'discount_percent')?.['invalidDecimal']) {
-                <small>Max. 2 decimal places allowed</small>
+                <input type="number" step="1" min="0" max="100" inputmode="numeric" id="discount_percent"
+                    name="discount_percent" placeholder="Discount percent" formControlName="discount_percent" />
+                @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['required']) {
+                <small>Discount is required</small>
+                }
+                @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['notInteger']) {
+                <small>Only whole numbers are allowed</small>
+                }
+                @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['outOfRange']) {
+                <small>Only values between 0 and 100 are allowed</small>
                 }
             </div>
         </div>

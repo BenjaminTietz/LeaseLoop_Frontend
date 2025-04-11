@@ -19,6 +19,7 @@ import { ProgressBarComponent } from '../../../shared/global/progress-bar/progre
 import { MatIcon } from '@angular/material/icon';
 import { PromocodeService } from '../../../services/promocode-service/promocode.service';
 import { PromoDto } from '../../../models/promocode.model';
+import { max } from 'rxjs';
 
 @Component({
   selector: 'app-promocodes-form',
@@ -38,11 +39,34 @@ export class PromocodesFormComponent {
   @Output() close = new EventEmitter();
   today: string = new Date().toISOString().split('T')[0];
   promocodeForm = new FormBuilder().nonNullable.group({
-    code: ['', Validators.required],
-    description: ['', Validators.required],
+    code: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
+    ],
+    description: [
+      '',
+      [Validators.required, Validators.minLength(10), Validators.maxLength(50)],
+    ],
     valid_until: [this.today, Validators.required],
-    discount_percent: [null as number | null, Validators.required],
+    discount_percent: [
+      null as number | null,
+      [Validators.required, this.integerValidator],
+    ],
   });
+
+  integerValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (value === null || value === undefined || value === '') {
+      return null;
+    }
+    if (!Number.isInteger(value)) {
+      return { notInteger: true };
+    }
+    if (value < 0 || value > 100) {
+      return { outOfRange: true };
+    }
+    return null;
+  }
 
   ngOnInit(): void {
     this.promocodeService.loadPromocodes();
