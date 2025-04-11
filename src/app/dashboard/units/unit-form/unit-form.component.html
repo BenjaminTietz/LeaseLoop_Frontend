@@ -1,0 +1,114 @@
+<main>
+  <form [appClickOutside]="closeForm" [formGroup]="unitForm">
+    @if(unitService.sending()) {
+    <app-progress-bar aria-label="Loading"></app-progress-bar>
+    }
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    @if(unitService.selectedUnit() === null) {
+    <h1>New Unit</h1>
+    }
+    @if(unitService.selectedUnit() !== null) {
+    <h1>Edit Unit</h1>
+    }
+
+    <div class="input-area">
+      <label for="name">Name</label>
+      <div class="form-field">
+        <input type="text" id="name" name="name" required placeholder="Name" formControlName="name">
+        @if(formService.getFormErrors(unitForm, 'name')?.['required']) {
+        <small>Name is required</small>
+        }
+      </div>
+    </div>
+
+    <div class="input-area">
+      <label for="description">Description</label>
+      <div class="textarea-field">
+        <textarea type="text" id="description" name="description" required placeholder="Description"
+          formControlName="description"></textarea>
+        @if(formService.getFormErrors(unitForm, 'description')?.['required']) {
+        <small>Description is required</small>
+        }
+      </div>
+    </div>
+    <div class="side-by-side-area">
+      <div class="input-area">
+        <label for="capacity">Base Capacity</label>
+        <div class="form-field">
+          <input type="number" id="capacity" name="capacity" required placeholder="Capacity" formControlName="capacity">
+          @if(formService.getFormErrors(unitForm, 'capacity')?.['required']) {
+          <small>Capacity is required</small>
+          }
+        </div>
+      </div>
+
+      <div class="input-area">
+        <label for="max_capacity">Max Capacity</label>
+        <div class="form-field">
+          <input type="number" id="max_capacity" name="max_capacity" required placeholder="Max capacity"
+            formControlName="max_capacity">
+          @if(formService.getFormErrors(unitForm, 'capacity')?.['required']) {
+          <small>Capacity is required</small>
+          }
+        </div>
+      </div>
+
+      <div class="input-area">
+        <label for="price">Price per night</label>
+        <div class="form-field">
+          <input type="number" id="price" name="price" required placeholder="Price per Night"
+            formControlName="price_per_night">
+          @if(formService.getFormErrors(unitForm, 'price')?.['required']) {
+          <small>Price is required</small>
+          }
+        </div>
+      </div>
+
+      <div class="input-area">
+        <label for="price_extra_person">Price per extra Person</label>
+        <div class="form-field">
+          <input type="number" id="price_extra_person" name="price_extra_person" required
+            placeholder="Price per extra Person" formControlName="price_per_extra_person">
+          @if(formService.getFormErrors(unitForm, 'price_per_extra_person')?.['required']) {
+          <small>Price is required</small>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <label for="property">Property</label>
+      <div class="form-field">
+        <select id="property" name="property" formControlName="property">
+          <option [ngValue]="null" disabled>Select Property</option>
+          @for(property of propertyService.properties(); track property.id){
+          <option [ngValue]="property">{{property.name}}</option>
+          }
+        </select>
+        @if(formService.getFormErrors(unitForm, 'property_id')?.['required']) {
+        <small>Property is required</small>
+        }
+      </div>
+    </div>
+
+
+
+    <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
+      (missingDescriptionChange)="missingDescription = $event"></app-image-upload>
+    <div class="button-area">
+      @if(unitService.selectedUnit() !== null) {
+      <button type="button" (click)="deleteUnit()">Delete</button>
+      <button type="submit" (click)="updateUnit()"
+        [disabled]="unitForm.invalid || unitService.sending() || missingDescription">
+        Update
+      </button>
+      }
+      @if(unitService.selectedUnit() === null) {
+      <button type="submit" (click)="createUnit()"
+        [disabled]="unitForm.invalid || unitService.sending() || missingDescription">
+        Save
+      </button>
+      }
+    </div>
+  </form>
+</main>

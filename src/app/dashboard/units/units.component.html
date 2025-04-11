@@ -2,8 +2,9 @@
     <content>
         <div class="header">
             <h1>Units</h1>
-            <button class="btn-add">
-                <span class="icon">+</span> New Unit
+            <button class="btn-add" (click)="openForm()">
+                <mat-icon>add</mat-icon>
+                <span>New Unit</span>
             </button>
         </div>
         <div class="table-wrapper">
@@ -15,17 +16,17 @@
                         <th>Capacity</th>
                         <th>Price</th>
                         <th>Status</th>
-                        <th></th>
+                        <th>Edit Unit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (u of this.us.units(); track u.id; let i = $index) {
+                    @for (unit of this.unitsService.units(); track unit) {
                     <tr>
-                        <td>{{u.property.name}}</td>
-                        <td>{{u.name}}</td>
-                        <td>{{u.capacity}}</td>
-                        <td>{{u.price_per_night}}</td>
-                        <td>{{u.status}}</td>
+                        <td>{{unit.property.name}}</td>
+                        <td>{{unit.name}}</td>
+                        <td>{{unit.capacity}}</td>
+                        <td>{{unit.price_per_night}}</td>
+                        <td>{{unit.status}}</td>
                         <td>
                             <div class="btn-container">
                                 <button>Edit</button>
@@ -37,5 +38,8 @@
                 </tbody>
             </table>
         </div>
+        @if(formOpen()){
+            <app-unit-form (close)="formOpen.set(false)"></app-unit-form>
+        }
     </content>
 </main>

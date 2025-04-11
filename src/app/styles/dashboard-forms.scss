@@ -17,7 +17,7 @@ form {
   padding: 25px;
   border-radius: 12px;
   width: 100%;
-  max-width: 600px;
+  max-width: 1000px;
   gap: 30px;
   max-height: 90vh;      
   overflow-y: auto;
@@ -154,4 +154,10 @@ small {
 
 .input-area{
   width: 100%;
+}
+
+.side-by-side-area{
+  @include display(flex, row, space-between, center);
+  width: 100%;
+  gap: 20px;
 }

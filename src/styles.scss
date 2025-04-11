@@ -130,3 +130,7 @@ app-booking-popup {
   z-index: 9999;
   @include display(flex, column, center, center);
 }
+
+.no-scroll{
+  overflow: hidden;
+}

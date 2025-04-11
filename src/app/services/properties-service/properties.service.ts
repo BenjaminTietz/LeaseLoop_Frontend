@@ -2,8 +2,6 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpService } from '../httpclient/http.service';
 import { Property } from '../../models/property.model';
 import { environment } from '../../../environments/environment';
-import { catchError } from 'rxjs/operators';
-import { throwError, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
@@ -77,7 +75,7 @@ export class PropertiesService {
 
   deleteImage(id: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.http.delete(this.getUrl(`property-images/${id}`), this.getAuthOptions()).subscribe({
+      this.http.delete(this.getUrl(`property-image/${id}`), this.getAuthOptions()).subscribe({
         next: () => resolve(),
         error: (err) => {
           console.error('Failed to delete image', err);
