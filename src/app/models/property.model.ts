@@ -1,3 +1,4 @@
+import { Address } from './adress.model';
 import { PropertyImage } from './property-image.model';
 import { Unit } from './unit.model';
 
@@ -5,7 +6,7 @@ export interface Property {
   id: number;
   ownerId: number;
   name: string;
-  address: string;
+  address: Address
   description: string;
   images: PropertyImage[];
   units: Unit[];

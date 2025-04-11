@@ -33,34 +33,28 @@
     </div>
     <div class="side-by-side-area">
       <div class="input-area">
-        <label for="capacity">Base Capacity</label>
-        <div class="form-field">
-          <input type="number" id="capacity" name="capacity" required placeholder="Capacity" formControlName="capacity">
-          @if(formService.getFormErrors(unitForm, 'capacity')?.['required']) {
-          <small>Capacity is required</small>
-          }
-        </div>
-      </div>
-
-      <div class="input-area">
         <label for="max_capacity">Max Capacity</label>
         <div class="form-field">
           <input type="number" id="max_capacity" name="max_capacity" required placeholder="Max capacity"
             formControlName="max_capacity">
-          @if(formService.getFormErrors(unitForm, 'capacity')?.['required']) {
-          <small>Capacity is required</small>
-          }
+
         </div>
       </div>
+      <div class="input-area">
+        <label for="capacity">Base Capacity</label>
+        <div class="form-field">
+          <input type="number" id="capacity" name="capacity" required placeholder="Capacity" formControlName="capacity">
+        </div>
+      </div>
+
+
 
       <div class="input-area">
         <label for="price">Price per night</label>
         <div class="form-field">
           <input type="number" id="price" name="price" required placeholder="Price per Night"
             formControlName="price_per_night">
-          @if(formService.getFormErrors(unitForm, 'price')?.['required']) {
-          <small>Price is required</small>
-          }
+
         </div>
       </div>
 
@@ -69,11 +63,12 @@
         <div class="form-field">
           <input type="number" id="price_extra_person" name="price_extra_person" required
             placeholder="Price per extra Person" formControlName="price_per_extra_person">
-          @if(formService.getFormErrors(unitForm, 'price_per_extra_person')?.['required']) {
-          <small>Price is required</small>
-          }
+
         </div>
       </div>
+      @if(getCapacityPriceError() !== null) {
+      <small>{{getCapacityPriceError()}}</small>
+      }
     </div>
 
     <div class="input-area">
@@ -84,14 +79,15 @@
           <option [ngValue]="null" disabled>Select Property</option>
           }
           @if(unitService.selectedUnit() !== null){
-          <option [ngValue]="unitService.selectedUnit()?.property">{{unitService.selectedUnit()?.property?.name}}</option>
+          <option [ngValue]="unitService.selectedUnit()?.property">{{unitService.selectedUnit()?.property?.name}}
+          </option>
           }
           @for(property of propertyService.properties(); track property.id){
           <option [ngValue]="property">{{property.name}}</option>
           }
         </select>
-        @if(formService.getFormErrors(unitForm, 'property_id')?.['required']) {
-        <small>Property is required</small>
+        @if(formService.getFormErrors(unitForm, 'property')?.['required']) {
+          <small>Property is required.</small>
         }
       </div>
     </div>
@@ -102,13 +98,15 @@
       @if(unitService.selectedUnit() !== null) {
       <button type="button" (click)="deleteUnit()">Delete</button>
       <button type="submit" (click)="updateUnit()"
-        [disabled]="unitForm.invalid || unitService.sending() || missingDescription">
+        [disabled]="unitForm.invalid || unitService.sending() || missingDescription"
+        (mouseenter)="formService.markAllAsTouched(unitForm)" (mouseleave)="formService.unmarkAllAsTouched(unitForm)">
         Update
       </button>
       }
       @if(unitService.selectedUnit() === null) {
       <button type="submit" (click)="createUnit()"
-        [disabled]="unitForm.invalid || unitService.sending() || missingDescription">
+        [disabled]="unitForm.invalid || unitService.sending() || missingDescription"
+        (mouseenter)="formService.markAllAsTouched(unitForm)" (mouseleave)="formService.unmarkAllAsTouched(unitForm)">
         Save
       </button>
       }

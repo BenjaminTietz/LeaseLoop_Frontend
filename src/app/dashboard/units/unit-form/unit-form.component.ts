@@ -4,16 +4,17 @@ import { MatIcon } from '@angular/material/icon';
 import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
 import { UnitsService } from '../../../services/units-service/units.service';
 import { FormService } from '../../../services/form-service/form.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ImageUploadComponent } from "../../../shared/dashboard-components/image-upload/image-upload.component";
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { PropertyShort } from '../../../models/service.model';
 import { disableBackgroundScroll, enableBackgroundScroll } from '../../../utils/scroll.utils';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-unit-form',
   standalone: true,
-  imports: [ClickOutsideDirective, MatIcon, ProgressBarComponent, ReactiveFormsModule, ImageUploadComponent],
+  imports: [ClickOutsideDirective, MatIcon, ProgressBarComponent, ReactiveFormsModule, ImageUploadComponent, CommonModule],
   templateUrl: './unit-form.component.html',
   styleUrl: './unit-form.component.scss'
 })
@@ -27,15 +28,31 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   imagePreviews!: any[]
   missingDescription: boolean = false
 
+
+  unitCapacityValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const capacity = control.get('capacity')?.value;
+    const maxCapacity = control.get('max_capacity')?.value;
+    const pricePerExtraPerson = control.get('price_per_extra_person')?.value;
+    const errors: any = {};
+    if (capacity > maxCapacity) {
+      errors.capacityExceedsMax = true;
+    }
+    if (capacity === maxCapacity && pricePerExtraPerson > 0) {
+      errors.extraPriceNotAllowed = true;
+    }
+  
+    return Object.keys(errors).length ? errors : null;
+  };
+
   unitForm = new FormBuilder().nonNullable.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
-    capacity: [0, Validators.required],
-    max_capacity: [0, Validators.required],
-    price_per_night: [0, Validators.required],
-    price_per_extra_person: [0, Validators.required],
-    property: [null as PropertyShort | null, Validators.required]  // <- allow null
-  });
+    capacity: [0, [Validators.required, Validators.min(1)]],
+    max_capacity: [0, [Validators.required, Validators.min(1)]], 
+    price_per_night: [0, [Validators.required, Validators.min(0)]], 
+    price_per_extra_person: [0, [Validators.required, Validators.min(0)]], 
+    property: [null as PropertyShort | null, Validators.required]
+  }, { validators: this.unitCapacityValidator });
 
   constructor() {
     effect(() => {
@@ -123,4 +140,20 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     enableBackgroundScroll();
     this.unitService.selectedUnit.set(null);
   }
+
+  getCapacityPriceError(): string | null {
+    if (this.unitForm.errors?.['capacityExceedsMax']) { return 'Base Capacity cannot be greater than Max Capacity.'; }
+    if (this.unitForm.errors?.['extraPriceNotAllowed']) {return 'If Base and Max Capacity are equal, Price per Extra Person is not allowed.';}
+    if (this.formService.getFormErrors(this.unitForm, 'max_capacity')?.['required']) { return 'Max Capacity is required.';}
+    if (this.formService.getFormErrors(this.unitForm, 'max_capacity')?.['min']) {return 'Max Capacity must be at least 1.';}
+    if (this.formService.getFormErrors(this.unitForm, 'capacity')?.['required']) {return 'Base capacity is required.';}
+    if (this.formService.getFormErrors(this.unitForm, 'capacity')?.['min']) { return 'Base capacity must be at least 1.';}
+    if (this.formService.getFormErrors(this.unitForm, 'price_per_night')?.['required']) {return 'Price per Night is required.';}
+    if (this.formService.getFormErrors(this.unitForm, 'price_per_night')?.['min']) {return 'Price per Night must be 0 or higher.';}
+    if (this.formService.getFormErrors(this.unitForm, 'price_per_extra_person')?.['required']) { return 'Price per Extra Person is required.';}
+    if (this.formService.getFormErrors(this.unitForm, 'price_per_extra_person')?.['min']) {return 'Price per Extra Person must be 0 or higher.';}
+    return null;
+  }
+  
+  
 }

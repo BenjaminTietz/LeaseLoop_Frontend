@@ -19,13 +19,67 @@
         }
       </div>
     </div>
-    <div class="input-area">
-      <label for="address">Address</label>
-      <div class="form-field">
-        <input type="text" id="address" name="address" required placeholder="Address" formControlName="address">
-        @if(formService.getFormErrors(propertyForm, 'address')?.['required']) {
-        <small>Address is required</small>
-        }
+    <div formGroupName="address" class="address-form">
+      <div class="form-input-wrapper">
+        <div class="input-area width-75">
+          <label for="street">Street</label>
+          <div class="form-field">
+            <input type="text" id="street" placeholder="Street" formControlName="street" required />
+            @if(formService.getFormErrors(propertyForm, 'address.street')) {
+            <small>Street is required</small>
+            }
+          </div>
+        </div>
+        <div class="input-area width-25">
+          <label for="house_number">House Number</label>
+          <div class="form-field">
+            <input type="text" id="house_number" placeholder="House Number" formControlName="house_number" required />
+            @if(formService.getFormErrors(propertyForm, 'address.house_number')) {
+            <small>House number is required</small>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="form-input-wrapper">
+        <div class="input-area  width-75">
+          <label for="city">City</label>
+          <div class="form-field">
+            <input type="text" id="city" placeholder="City" formControlName="city" required />
+            @if(formService.getFormErrors(propertyForm, 'address.city')) {
+            <small>City is required</small>
+            }
+          </div>
+        </div>
+        <div class="input-area width-25">
+          <label for="postal_code">Postal Code</label>
+          <div class="form-field">
+            <input type="text" id="postal_code" placeholder="Postal Code" formControlName="postal_code" required />
+            @if(formService.getFormErrors(propertyForm, 'address.postal_code'))
+            {
+            <small>Postal code is required</small>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="form-input-wrapper">
+        <div class="input-area width-50">
+          <label for="country">Country</label>
+          <div class="form-field">
+            <input type="text" id="country" placeholder="Country" formControlName="country" required />
+            @if(formService.getFormErrors(propertyForm, 'address.country')) {
+            <small>Country is required</small>
+            }
+          </div>
+        </div>
+        <div class="input-area width-50">
+          <label for="phone">Phone</label>
+          <div class="form-field">
+            <input type="text" id="phone" placeholder="Phone" formControlName="phone" required />
+            @if(formService.getFormErrors(propertyForm, 'address.phone')) {
+            <small>Phone is required</small>
+            }
+          </div>
+        </div>
       </div>
     </div>
     <div class="input-area">

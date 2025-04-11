@@ -28,8 +28,15 @@ export class PropertyFormComponent {
 
   propertyForm  = new FormBuilder().nonNullable.group({
     name: ['' , Validators.required],
-    address: [ '', Validators.required],
     description: ['', Validators.required],
+    address: new FormBuilder().nonNullable.group({
+      street: ['', Validators.required],
+      house_number: ['', Validators.required],
+      postal_code: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      phone: ['', Validators.required],
+    }),
   })
 
   constructor() {
@@ -61,9 +68,17 @@ export class PropertyFormComponent {
   createProperty() {
     const raw = this.propertyForm.value;
     const formData = new FormData();
+  
     Object.entries(raw).forEach(([key, value]) => {
-      formData.append(key, value ?? '');
+      if (typeof value === 'object' && value !== null) {
+        Object.entries(value).forEach(([subKey, subValue]) => {
+          formData.append(`${key}.${subKey}`, String(subValue ?? ''));
+        });
+      } else {
+        formData.append(key, String(value ?? ''));
+      }
     });
+  
     this.propertyService.createProperty(formData, this.images, this.newImageDescriptions);
   }
 
@@ -75,10 +90,14 @@ export class PropertyFormComponent {
     const raw = this.propertyForm.value;
     const formData = new FormData();
     Object.entries(raw).forEach(([key, value]) => {
-      formData.append(key, value ?? '');
+      if (typeof value === 'object' && value !== null) {
+        Object.entries(value).forEach(([subKey, subValue]) => {
+          formData.append(`${key}.${subKey}`, String(subValue ?? ''));
+        });
+      } else {
+        formData.append(key, String(value ?? ''));
+      }
     });
-  
-    const imageIdsToDelete = [...this.propertyService.deletedImageIds()];
   
     this.propertyService.updateProperty(formData, this.images, this.newImageDescriptions, () => {
       const deletedImageIds = [...this.propertyService.deletedImageIds()];
