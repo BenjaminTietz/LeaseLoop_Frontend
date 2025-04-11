@@ -41,7 +41,10 @@ export class ServiceFormComponent implements OnInit {
   propertyService = inject(PropertiesService);
   @Output() close = new EventEmitter();
   serviceForm = new FormBuilder().nonNullable.group({
-    name: ['', Validators.required],
+    name: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
+    ],
     type: ['', Validators.required],
     price: [null as number | null, Validators.required],
     property: [null as number | null, Validators.required],
