@@ -47,7 +47,7 @@ export class ClientFormComponent implements OnInit {
       postal_code: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{6,15}$')]],
     }),
   });
 
@@ -129,9 +129,39 @@ export class ClientFormComponent implements OnInit {
     this.clientService.updateClient(clientData);
   }
 
-  getFormErrors(control: AbstractControl | null): ValidationErrors | null {
-    return control && control.invalid && (control.dirty || control.touched)
-      ? control.errors
-      : null;
+  getStreetErrors() {
+    let street = this.serviceForm.get('address')?.get('street');
+    let houseNumber = this.serviceForm.get('address')?.get('house_number');
+    const streetInvalid = street?.errors?.['required'] && (street?.touched || street?.dirty);
+    let houseNumberInvalid = houseNumber?.errors?.['required'] && (houseNumber?.touched || houseNumber?.dirty);
+    if (streetInvalid || houseNumberInvalid) {
+      return 'Street and House Number are required';
+    }
+    return null;
   }
+
+  getCityErrors() {
+    let city = this.serviceForm.get('address')?.get('city');
+    let postalCode = this.serviceForm.get('address')?.get('postal_code');
+    const cityInvalid = city?.errors?.['required'] && (city?.touched || city?.dirty);
+    let postalCodeInvalid = postalCode?.errors?.['required'] && (postalCode?.touched || postalCode?.dirty);
+    if (cityInvalid || postalCodeInvalid) {
+      return 'City and Postal Code are required';
+    }
+    return null;
+  }
+
+  getPhoneCountryErrors() {
+    let phone = this.serviceForm.get('address')?.get('phone');
+    let country = this.serviceForm.get('address')?.get('country');
+    const phoneInvalid = phone?.errors?.['required'] && (phone?.touched || phone?.dirty);
+    const phonePattern = phone?.errors?.['pattern'] && (phone?.touched || phone?.dirty);
+    const countryInvalid = country?.errors?.['required'] && (country?.touched || country?.dirty);
+    if (countryInvalid) { return 'Country is required'; }
+    if (phoneInvalid ) { return 'Phone is required'; }
+    if (phonePattern) { return 'Wrong phone format'; }
+    return null;
+  }
+
+
 }

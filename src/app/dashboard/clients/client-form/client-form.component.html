@@ -48,9 +48,7 @@
                     <label for="street">Street</label>
                     <div class="form-field">
                         <input type="text" id="street" formControlName="street" placeholder="Street" />
-                        @if(getFormErrors(serviceForm.get('address.street'))) {
-                        <small>Street is required</small>
-                        }
+
                     </div>
                 </div>
                 <div class="input-area width-25">
@@ -58,52 +56,52 @@
                     <div class="form-field">
                         <input type="text" id="house_number" formControlName="house_number"
                             placeholder="House Number" />
-                        @if(getFormErrors(serviceForm.get('address.house_number'))) {
-                        <small>House Number is required</small>
-                        }
                     </div>
                 </div>
+                @if(getStreetErrors()){
+                <small>{{getStreetErrors()}}</small>
+                }
             </div>
 
             <div class="form-input-wrapper">
-                <div class="input-area width-25">
-                    <label for="postal_code">Postal Code</label>
-                    <div class="form-field">
-                        <input type="text" id="postal_code" formControlName="postal_code" placeholder="Postal Code" />
-                        @if(getFormErrors(serviceForm.get('address.postal_code'))) {
-                        <small>Postal Code is required</small>
-                        }
-                    </div>
-                </div>
+
                 <div class="input-area width-75">
                     <label for="city">City</label>
                     <div class="form-field">
                         <input type="text" id="city" formControlName="city" placeholder="City" />
-                        @if(getFormErrors(serviceForm.get('address.city'))) {
-                        <small>City is required</small>
-                        }
                     </div>
                 </div>
-            </div>
 
-            <div class="input-area">
-                <label for="country">Country</label>
-                <div class="form-field">
-                    <input type="text" id="country" formControlName="country" placeholder="Country" />
-                    @if(getFormErrors(serviceForm.get('address.country'))) {
-                    <small>Country is required</small>
-                    }
+                <div class="input-area width-25">
+                    <label for="postal_code">Postal Code</label>
+                    <div class="form-field">
+                        <input type="text" id="postal_code" formControlName="postal_code" placeholder="Postal Code" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="input-area">
-                <label for="phone">Phone</label>
-                <div class="form-field">
-                    <input type="text" id="phone" formControlName="phone" placeholder="Phone" />
-                    @if(getFormErrors(serviceForm.get('address.phone'))) {
-                    <small>Phone is required</small>
-                    }
+                @if(getCityErrors()){
+                <small>{{getCityErrors()}}</small>
+                }
+            </div>
+            <div class="form-input-wrapper">
+                <div class="input-area width-50">
+                    <label for="country">Country</label>
+                    <div class="form-field">
+                        <input type="text" id="country" formControlName="country" placeholder="Country" />
+                    </div>
+
                 </div>
+
+                <div class="input-area width-50">
+                    <label for="phone">Phone</label>
+                    <div class="form-field">
+                        <input type="text" id="phone" formControlName="phone" placeholder="Phone" />
+                    </div>
+
+                </div>
+                @if(getPhoneCountryErrors()){
+                <small>{{getPhoneCountryErrors()}}</small>
+                }
             </div>
         </div>
 
@@ -113,12 +111,16 @@
             <button type="button" (click)="this.clientService.deleteClient(
                 this.clientService.selectedClient()!.id
               )">Delete</button>
-            <button type="submit" (click)="updateClient()" [disabled]="serviceForm.invalid || clientService.sending() ">
+            <button type="submit" (click)="updateClient()" [disabled]="serviceForm.invalid || clientService.sending() "
+                (mouseenter)="formService.markAllAsTouched(serviceForm)"
+                (mouseleave)="formService.unmarkAllAsTouched(serviceForm)">
                 Update
             </button>
             }
             @if(clientService.selectedClient() === null) {
-            <button type="submit" (click)="createClient()" [disabled]="serviceForm.invalid || clientService.sending()">
+            <button type="submit" (click)="createClient()" [disabled]="serviceForm.invalid || clientService.sending()"
+                (mouseenter)="formService.markAllAsTouched(serviceForm)"
+                (mouseleave)="formService.unmarkAllAsTouched(serviceForm)">
                 Save
             </button>
             }
