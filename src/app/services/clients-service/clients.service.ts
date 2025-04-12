@@ -18,15 +18,11 @@ export class ClientsService {
 
   /** Load all Clients assosiated tothe current user */
   loadClients() {
-    return this.httpService
+    this.httpService
       .get<Clients[]>(`${environment.apiBaseUrl}/api/clients/`)
-      .pipe(
-        tap((data) => this.clients.set(data)),
-        catchError((error) => {
-          console.error('Failed to load clients', error);
-          return throwError(() => error);
-        })
-      );
+      .subscribe((clients) => {
+        this.clients.set(clients);
+      });
   }
 
   deleteClient(id: number) {

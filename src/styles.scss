@@ -164,4 +164,5 @@ app-booking-popup {
   max-width: 100%;
   @include display(flex, row, space-between, center);
   gap: 16px;
+  position: relative;
 }

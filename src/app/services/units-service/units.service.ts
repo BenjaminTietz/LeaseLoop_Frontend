@@ -117,6 +117,7 @@ export class UnitsService {
 
   onSuccess() {
     this.successful.set(true);
+    this.loadUnits();
     this.setLoading(false);
   }
 
