@@ -19,7 +19,7 @@ export interface Booking {
   discount_amount: number;
   status: 'pending' | 'confirmed' | 'cancelled';
   services: Service[];
-  promo_code?: number | PromoCode;
+  promo_code?: PromoCode;
   created_at: string;
   updated_at: string;
 }
