@@ -39,15 +39,7 @@ export class ServiceManagementComponent implements OnInit {
   }
 
   loadServices() {
-    this.sms.loadService().subscribe({
-      next: (data) => {
-        this.sms.services.set(data);
-      },
-      error: (error) => {
-        console.error('Failed to load services', error);
-        // TODO: Handle error appropriately, e.g., show a notification to the user
-      },
-    });
+    this.sms.loadService()
   }
 
   // TODO: Ask Team about using AuthInterceptor for token management

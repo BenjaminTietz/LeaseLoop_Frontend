@@ -19,15 +19,7 @@ export class PromocodesComponent implements OnInit {
   }
 
   loadPromocodes() {
-    this.pcs.loadPromocodes().subscribe({
-      next: (data) => {
-        this.pcs.promocodes.set(data);
-      },
-      error: (error) => {
-        console.error('Failed to load promocodes', error);
-        // TODO: Handle error appropriately, e.g., show a notification to the user
-      },
-    });
+    this.pcs.loadPromocodes();
   }
 
   openEditForm(code: PromoCode) {
