@@ -15,15 +15,12 @@ export class PromocodeService {
 
   /** Load all promocodes assoziated to current user / property */
   loadPromocodes() {
-    return this.httpService
+     this.httpService
       .get<PromoCode[]>(`${environment.apiBaseUrl}/api/promocodes/`)
-      .pipe(
-        tap((data) => this.promocodes.set(data)),
-        catchError((error) => {
-          console.error('Failed to load promocodes', error);
-          return throwError(() => error);
-        })
-      );
+      .subscribe({
+        next: (data) => this.promocodes.set(data),
+        error: (error) => console.error('Failed to load promocodes', error),
+      });
   }
 
   deleteService(id: number) {

@@ -26,15 +26,12 @@ export class ServiceManagementService {
    * @returns An observable that emits the received services.
    */
   loadService() {
-    return this.httpService
+   this.httpService
       .get<Service[]>(`${environment.apiBaseUrl}/api/services/`)
-      .pipe(
-        tap((data) => this.services.set(data)),
-        catchError((error) => {
-          console.error('Failed to load services', error);
-          return throwError(() => error);
-        })
-      );
+      .subscribe({
+        next: (data) => this.services.set(data),
+        error: (error) => console.error('Failed to load services', error),
+      });
   }
 
   /**

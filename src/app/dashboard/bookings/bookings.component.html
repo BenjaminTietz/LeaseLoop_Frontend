@@ -2,7 +2,10 @@
   <content>
     <div class="header">
       <h1>Bookings</h1>
-      <button class="btn-add"><span class="icon">+</span> New Booking</button>
+      <button (click)="openForm()">
+        <mat-icon>add</mat-icon>
+        <span>New Booking</span>
+      </button>
     </div>
     <div class="table-wrapper">
       <table class="table">
@@ -25,12 +28,12 @@
         <tbody>
           @for (booking of this.bs.bookings(); track booking.id; let index = $index) {
           <tr>
-            <td>{{booking.client.first_name}} {{booking.client.last_name}}</td>
-            <td>{{ booking.guests_count }}</td>
-            <td>{{booking.unit}}</td>
-            <td>{{booking.unit}}</td>
-            <td>{{ booking.check_in }}</td>
-            <td>{{ booking.check_out }}</td>
+            <!-- <td>{{b.client.first_name}} {{b.client.last_name}}</td>
+            <td>{{ b.guests }}</td>
+            <td>{{b.unit.property.name}}</td>
+            <td>{{b.unit.name}}</td>
+            <td>{{ b.check_in }}</td>
+            <td>{{ b.check_out }}</td> -->
             <td>
               @for (service of booking.services; track service.id; let i = $index) {
               {{ service?.name }}@if (i < ((booking.services.length) - 1)) {, } } </td>
@@ -52,5 +55,9 @@
   </content>
   @if (this.dashboardService.isbookingPopupOpen()) {
   <app-booking-popup></app-booking-popup>
+  }
+
+  @if(this.formOpen()) {
+  <app-booking-form (close)="closeForm()"></app-booking-form>
   }
 </main>

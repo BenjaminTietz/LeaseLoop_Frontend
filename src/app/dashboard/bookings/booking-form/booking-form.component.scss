@@ -1,0 +1,26 @@
+@use '../../../styles/dashboard-forms.scss' as *;
+@use '../../../styles/checkbox.scss' as *;
+@use '../../../styles/mixins.scss' as *;
+
+.checkbox-list{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  input , span{
+    margin: 0 0 0 0;
+  }
+
+  span{
+    background-color: white;
+    color: black;
+    padding: 5px 8px;
+    border-radius: 4px;
+    width: calc(100% - 40px)
+  };
+}
+

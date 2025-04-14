@@ -8,6 +8,9 @@ import { Booking } from '../../models/booking.model';
 })
 export class BookingsService {
   httpService = inject(HttpService);
+  selectedBooking = signal<Booking | null>(null);
+  sending = signal<boolean>(false);
+  successful = signal<boolean>(false);
 
   // Signals to hold reactive state
   bookings = signal<Booking[]>([]);
