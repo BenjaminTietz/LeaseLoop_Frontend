@@ -1,5 +1,5 @@
 <main>
-  <form [formGroup]="bookingForm" [appClickOutside]="closeForm">
+  <form [formGroup]="bookingForm" [appClickOutside]="closeForm" (ngSubmit)="submitForm()">
     @if(bookingService.sending()) {
     <app-progress-bar aria-label="Loading"></app-progress-bar>
     }
@@ -12,6 +12,40 @@
     }
 
     <div class="input-area">
+      <label for="check_in">Check In</label>
+      <div class="form-field">
+        <input type="date" min="{{minCheckInDate}}" id="check_in" name="check_in" formControlName="check_in"
+          (change)="setMinCheckOutDate($any($event.target).value)" required>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <label for="check_out">Check Out</label>
+      <div class="form-field">
+        <input type="date" min="{{minCheckOutDate}}" id="check_out" name="check_out" formControlName="check_out"
+          required>
+      </div>
+    </div>
+    @if(showGuestInput()) {
+    <div class="input-area">
+      <label for="guests_amount">Guests amount</label>
+      <div class="form-field">
+        <input 
+          type="number" 
+          min="1" 
+          id="guests_amount"  
+          name="guests_amount" 
+          required 
+          placeholder="Guests amount"
+          formControlName="guests_amount">
+      </div>
+    </div>
+  }@else {
+    <div>No available units</div>
+  }
+    @if(hasUnitWithEnoughGuests() ) {
+      
+    <div class="input-area">
       <label for="property">Property</label>
       <div class="form-field">
         <select id="property" name="property" formControlName="property">
@@ -23,8 +57,8 @@
             {{bookingService.selectedBooking()?.unit?.property?.name}}
           </option>
           }
-          @for(property of propertyService.properties(); track property.id){
-          <option [ngValue]="property">{{property.name}}</option>
+          @for(property of availableProperties(); track  $index) {
+            <option [ngValue]="property">{{ property.name }}</option>
           }
         </select>
       </div>
@@ -34,8 +68,8 @@
       <div class="form-field">
         <select id="unit" name="unit" formControlName="unit">
           <option [ngValue]="null" disabled>Select Unit</option>
-          @for(unit of units; track unit.id) {
-          <option [ngValue]="unit">{{unit.name}}</option>
+          @for(unit of availableUnits(); track  $index) {
+            <option [ngValue]="unit">{{ unit.name }}</option>
           }
         </select>
       </div>
@@ -54,36 +88,13 @@
             {{bookingService.selectedBooking()?.client?.last_name}}
           </option>
           }
-          @for(client of clientService.clients(); track client.id) {
+          @for(client of clientService.clients(); track  $index) {
           <option [ngValue]="client">{{client.first_name}} {{client.last_name}}</option>
           }
         </select>
       </div>
     </div>
 
-    <div class="input-area">
-      <label for="guests_amount">Guests amount</label>
-      <div class="form-field">
-        <input type="number" min="1" id="guests_amount" name="guests_amount" required placeholder="Guests amount"
-          formControlName="guests_amount">
-      </div>
-    </div>
-
-    <div class="input-area">
-      <label for="check_in">Check In</label>
-      <div class="form-field">
-        <input type="date" min="{{minCheckInDate}}" id="check_in" name="check_in" formControlName="check_in"
-          (change)="setMinCheckOutDate($any($event.target).value)" required>
-      </div>
-    </div>
-
-    <div class="input-area">
-      <label for="check_out">Check Out</label>
-      <div class="form-field">
-        <input type="date" min="{{minCheckOutDate}}" id="check_out" name="check_out" formControlName="check_out"
-          required>
-      </div>
-    </div>
 
     <div class="input-area">
       <label for="deposit_paid">Deposit Paid</label>
@@ -106,6 +117,16 @@
     }
 
     <div class="input-area">
+      <label for="status">Status</label>
+      <div class="form-field">
+        <select name="status" id="status" formControlName="status">
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-area">
       <label for="promo_code">Promo code</label>
       <div class="form-field">
         <select name="promo_code" id="promo_code" formControlName="promocode">
@@ -115,7 +136,7 @@
           @if(bookingService.selectedBooking() !== null){
           <option [ngValue]="bookingService.selectedBooking()?.promo_code"></option>
           }
-          @for(promocode of promoService.promocodes(); track promocode.id) {
+          @for(promocode of promoService.promocodes(); track  $index) {
           <option [ngValue]="promocode">{{promocode.description}} {{promocode.discount_percent}}%</option>
           }
         </select>
@@ -123,12 +144,16 @@
     </div>
 
     <div class="input-area ">
-      <label for="service">Service</label>
-
-      @for(service of serviceService.services(); track service.id) {
+      <label for="service">Services</label>
+      @for(service of serviceService.services(); track  $index) {
       <div class="form-field">
         <div class="checkbox-list">
-          <input type="checkbox" id="service" name="service" value="{{service.id}}" formControlName="services">
+          <input 
+          type="checkbox"
+          [value]="service"
+          [checked]="selectedServices.includes(service)"
+          (change)="onServiceChange($event, service)"
+        >
           <span>{{service.name}}</span>
         </div>
       </div>
@@ -137,7 +162,7 @@
 
 
 
-
-
+    <button type="submit" [disabled]="!bookingForm.valid">Test</button>
+  }
   </form>
 </main>
