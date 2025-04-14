@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (b of this.bs.bookings(); track $index; let index = $index) {
+          @for (booking of this.bs.bookings(); track booking.id; let index = $index) {
           <tr>
             <!-- <td>{{b.client.first_name}} {{b.client.last_name}}</td>
             <td>{{ b.guests }}</td>
@@ -35,7 +35,7 @@
             <td>{{ b.check_in }}</td>
             <td>{{ b.check_out }}</td> -->
             <td>
-              @for (s of b.services; track $index; let i = $index) {
+              @for (s of b.services; track s.id; let i = $index) {
               {{ s?.name }}@if (i < ((b.services?.length || 0) - 1)) {, } } </td>
             <td>{{ b.total_price }} €</td>
             <td>@if (b.deposit_paid) {✔ {{ b.deposit_amount }} €} @else {X}</td>
@@ -43,7 +43,7 @@
             <td>
               <div class="btn-container">
                 <button>Edit</button>
-                <button (click)="this.dashboardService.showBooking.set(b);
+                <button (click)="this.dashboardService.showBooking.set(booking);
                 this.dashboardService.isbookingPopupOpen.set(true);">Details</button>
               </div>
             </td>

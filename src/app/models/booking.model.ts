@@ -9,14 +9,17 @@ export interface Booking {
   client: Clients;
   check_in: string; // ISO date
   check_out: string; // ISO date
-  total_days: number; // <-- TODO: include into backend
-  guests: number;
+  total_days: number;
+  guests_count: number;
   total_price: number;
   deposit_paid: boolean;
   deposit_amount: number;
-  status: string; // e.g., 'pending', 'confirmed', 'cancelled'
-  services?: Service[];
+  base_renting_price: number;
+  total_services_price: number;
+  discount_amount: number;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  services: Service[];
   promo_code?: PromoCode;
-  created_at: string; // ISO date
-  updated_at: string; // ISO date
+  created_at: string;
+  updated_at: string;
 }
