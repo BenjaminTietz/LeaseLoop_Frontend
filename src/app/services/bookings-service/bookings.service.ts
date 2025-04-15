@@ -33,11 +33,13 @@ export class BookingsService {
   }
 
   /** Create a new Booking */
-  createBooking(data: Partial<Booking>) {
-    return this.httpService.post<Booking>(
-      `${environment.apiBaseUrl}/api/booking/`,
-      data
-    );
+  createBooking(data:any) {
+    this.httpService
+      .post<Booking>(`${environment.apiBaseUrl}/api/bookings/`, data)
+      .subscribe({
+        next: (data) => this.bookings.set([...this.bookings(), data]),
+        error: (error) => console.error('Failed to create Booking', error),
+      });
   }
 
   /** Update an existing Booking */
