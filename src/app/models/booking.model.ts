@@ -2,6 +2,7 @@ import { Service } from './service.model';
 import { PromoCode } from './promocode.model';
 import { Clients } from './clients.model';
 import { Unit } from './unit.model';
+import { Property } from './property.model';
 
 export interface Booking {
   id: number;
@@ -22,4 +23,5 @@ export interface Booking {
   promo_code?: PromoCode;
   created_at: string;
   updated_at: string;
+  property: Property;
 }

@@ -33,15 +33,139 @@ export class BookingFormComponent {
   serviceService = inject(ServiceManagementService)
   unitService = inject(UnitsService);
 
-  units: Unit[] = [];
   minCheckInDate = new Date().toISOString().split('T')[0];
   minCheckOutDate = new Date().toISOString().split('T')[0];
 
+  availableProperties = signal<Property[]>([]);
+  availableUnits = signal<Unit[]>([]);
+
+  showCheckOutInput = signal(false);
+  showPropertyInput = signal(false);
+  showUnitInput = signal(false);
+  showGuestsInput = signal(false);
+  showRestOfForm = signal(false);
+
   
   setMinCheckOutDate(checkInDate: string) {
-    const date = new Date(checkInDate);
-    date.setDate(date.getDate() + 1);
-    this.minCheckOutDate = date.toISOString().split('T')[0];
+    this.minCheckOutDate = new Date(new Date(checkInDate).setDate(new Date(checkInDate).getDate() + 1)).toISOString().split('T')[0];
+  
+    this.bookingForm.patchValue({
+      check_out: null,
+      property: null,
+      unit: null,
+      guests_count: null
+    });
+  
+    this.showCheckOutInput.set(true);
+    this.showPropertyInput.set(false);
+    this.showUnitInput.set(false);
+    this.showGuestsInput.set(false);
+    this.showRestOfForm.set(false);
+  }
+
+  onCheckOutChange(checkOutDate: string) {
+    const checkInDate = this.checkIn();
+    if (!checkInDate) return;
+  
+    this.filterAvailableProperties(checkInDate, checkOutDate);
+  
+    this.bookingForm.patchValue({
+      property: null,
+      unit: null,
+      guests_count: null
+    });
+  
+    this.showPropertyInput.set(true);
+    this.showUnitInput.set(false);
+    this.showGuestsInput.set(false);
+    this.showRestOfForm.set(false);
+  }
+
+  onPropertyChange(propertyId: number | null | undefined) {
+    if (propertyId == null) return;
+  
+    this.bookingForm.patchValue({
+      unit: null,
+      guests_count: null
+    });
+  
+    const checkInDate = this.checkIn();
+    const checkOutDate = this.checkOut();
+  
+    if (!checkInDate || !checkOutDate) return;
+  
+    const allBookings = this.bookingService.bookings() || [];
+  
+    const availableUnits = this.unitService.units().filter(unit =>
+      unit.property.id === propertyId &&
+      !allBookings.some(booking =>
+        booking.unit.id === unit.id &&
+        new Date(booking.check_in) < new Date(checkOutDate) &&
+        new Date(booking.check_out) > new Date(checkInDate)
+      )
+    );
+  
+    console.log('Available Units for Property:', availableUnits);
+  
+    this.availableUnits.set(availableUnits);
+    this.showUnitInput.set(availableUnits.length > 0);
+    this.showGuestsInput.set(false);
+    this.showRestOfForm.set(false);
+  }
+
+  onUnitChange(unitId: number) {
+    this.bookingForm.patchValue({
+      guests_count: null
+    });
+  
+    this.showGuestsInput.set(true);
+    this.showRestOfForm.set(false);
+  }
+
+  onGuestsCountChange(guestsCount: number) {
+    const unitId = this.bookingForm.value.unit;
+    if (unitId == null) return;
+  
+    const selectedUnit = this.unitService.units().find(u => u.id === unitId);
+  
+    if (selectedUnit && guestsCount <= selectedUnit.max_capacity) {
+      this.showRestOfForm.set(true);
+    } else {
+      this.showRestOfForm.set(false);
+    }
+  }
+
+  filterAvailableProperties(checkIn: string, checkOut: string) {
+    const availableUnitsInRange = this.unitService.units().filter(unit => {
+      const overlapping = this.bookingService.bookings().find(b =>
+        b.unit.id === unit.id &&
+        new Date(b.check_in) < new Date(checkOut) &&
+        new Date(b.check_out) > new Date(checkIn)
+      );
+      return !overlapping;
+    });
+  
+    const propertyIds = [...new Set(availableUnitsInRange.map(u => u.property.id))];
+  
+    const matchingProperties = this.propertyService.properties().filter(p =>
+      propertyIds.includes(p.id)
+    );
+  
+    this.availableProperties.set(matchingProperties);
+    this.showPropertyInput.set(matchingProperties.length > 0);
+  }
+
+  filterUnitsForGuests(propertyId: number, guests: number, checkIn: string, checkOut: string) {
+    const units = this.unitService.units().filter(unit =>
+      unit.property.id === propertyId &&
+      unit.max_capacity >= guests &&
+      !this.bookingService.bookings().some(b =>
+        b.unit.id === unit.id &&
+        new Date(b.check_in) < new Date(checkOut) &&
+        new Date(b.check_out) > new Date(checkIn)
+      )
+    );
+    this.availableUnits.set(units);
   }
 
   closeForm = () => this.close.emit();
@@ -53,158 +177,49 @@ export class BookingFormComponent {
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
-    this.setUnitBasedOnProperty();
   }
 
-  setUnitBasedOnProperty(){
-    this.bookingForm.get('property')?.valueChanges.subscribe((property: Property | null) => {
-      if (property) {
-        this.units = property.units;
-      } else {
-        this.units = [];
-      }
-      this.bookingForm.get('unit')?.setValue(null);
-    });
-  }
 
   bookingForm = new FormBuilder().nonNullable.group({
-    property: [null as Property | null, Validators.required],
-    unit: [null as Unit | null, Validators.required],
-    client: [null, Validators.required],
-    guests_amount: [null as number | null, Validators.required],
+    property: [null,  Validators.required],
+    unit: [null , Validators.required],
+    client: [null],
+    guests_count: [null as number | null, Validators.required],
     check_in: [null, Validators.required],
     check_out: [null, Validators.required],
     deposit_paid : [false, Validators.required],
     deposit_amount: [0],
-    promocode: [null as PromoCode | null, Validators.required],
-    services: [[] as Service[]],
+    promo_code: [null, Validators.required],
+    services: [[] as number[]],
     status: ['pending'],
   });
 
   checkIn = toSignal(this.bookingForm.get('check_in')!.valueChanges, { initialValue: null });
   checkOut = toSignal(this.bookingForm.get('check_out')!.valueChanges, { initialValue: null });
-
   selectedProperty = toSignal(this.bookingForm.get('property')!.valueChanges, { initialValue: null });
 
-
-  availableProperties = computed(() => {
-    const checkIn = this.checkIn();
-    const checkOut = this.checkOut();
-    const bookings = this.bookingService.bookings();
-    const properties = this.propertyService.properties();
   
-    if (!checkIn || !checkOut) {
-      return properties;
-    }
-  
-    return properties.filter(property => {
-      const hasFreeUnit = property.units.some(unit =>
-        !bookings.some(booking =>
-          booking.unit.id === unit.id &&
-          this.datesOverlap(checkIn, checkOut, booking.check_in, booking.check_out)
-        )
-      );
-      return hasFreeUnit;
-    });
-  });
-
-  availableUnits = computed(() => {
-    const checkIn = this.checkIn();
-    const checkOut = this.checkOut();
-    const bookings = this.bookingService.bookings();
-    const property = this.selectedProperty();
-  
-    if (!property) {
-      return [];
-    }
-  
-    if (!checkIn || !checkOut) {
-      return property.units;
-    }
-  
-    const freeUnits = property.units.filter(unit =>
-      !bookings.some(booking =>
-        booking.unit.id === unit.id &&
-        this.datesOverlap(checkIn, checkOut, booking.check_in, booking.check_out)
-      )
-    );
-
-    const selectedUnit = this.bookingForm.get('unit')?.value;
-    if (selectedUnit && !freeUnits.find(u => u.id === selectedUnit.id)) {
-      this.bookingForm.get('unit')?.setValue(null);
-    }
-  
-    return freeUnits;
-  });
 
 
-  onServiceChange(event: Event, service: Service) {
-    const checkbox = event.target as HTMLInputElement;
-    const selectedServices = this.bookingForm.get('services')?.value || [];
+  onServiceChange(event: Event, serviceId: number) {
+    const checked = (event.target as HTMLInputElement).checked;
+    const services = this.bookingForm.value.services || [];
   
-    if (checkbox.checked) {
-      this.bookingForm.get('services')?.setValue([...selectedServices, service]);
+    if (checked) {
+      this.bookingForm.get('services')?.setValue([...services, serviceId]);
     } else {
-      this.bookingForm.get('services')?.setValue(
-        selectedServices.filter((s: Service) => s.id !== service.id)
-      );
+      this.bookingForm.get('services')?.setValue(services.filter((id: number) => id !== serviceId));
     }
   }
 
-  get selectedServices(): Service[] {
-    return this.bookingForm.get('services')?.value || [];
-  }
+ 
+  
 
   submitForm() {
-      console.log(this.bookingForm.value)
+      this.bookingService.createBooking(this.bookingForm.value);
   }
 
-
-  guestsAmount = toSignal(this.bookingForm.get('guests_amount')!.valueChanges, { initialValue: null });
-
-  hasUnitWithEnoughGuests = computed(() => {
-    const guests = this.guestsAmount();
-    const units = this.unitService.units();
   
-    if (!guests || !units.length) {
-      return false;
-    }
-  
-    return units.some(unit => unit.max_capacity >= guests);
-  });
 
 
-
-  datesOverlap(checkInA: string, checkOutA: string, checkInB: string, checkOutB: string) {
-    return checkInA < checkOutB && checkOutA > checkInB;
-  }
-
-  showGuestInput = computed(() => {
-    const checkIn = this.checkIn();
-    const checkOut = this.checkOut();
-    const bookings = this.bookingService.bookings();
-    const units = this.unitService.units();
-  
-    if (!checkIn || !units.length) {
-      return false;
-    }
-  
-    // if checkOut is not selected yet --> Check for free units on checkIn day only
-    if (!checkOut) {
-      return units.some(unit =>
-        !bookings.some(booking =>
-          booking.unit.id === unit.id &&
-          this.datesOverlap(checkIn, checkIn, booking.check_in, booking.check_out)
-        )
-      );
-    }
-  
-    // if both checkIn & checkOut are selected --> Check for units free in the whole range
-    return units.some(unit =>
-      !bookings.some(booking =>
-        booking.unit.id === unit.id &&
-        this.datesOverlap(checkIn, checkOut, booking.check_in, booking.check_out)
-      )
-    );
-  });
 }
