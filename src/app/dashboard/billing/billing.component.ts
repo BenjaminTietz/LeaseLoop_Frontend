@@ -10,9 +10,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './billing.component.scss',
 })
 export class BillingComponent implements OnInit {
-  invoiceServie = inject(InvoiceService);
+  invoiceService = inject(InvoiceService);
 
   ngOnInit(): void {
-    this.invoiceServie.getInvoices();
+    this.invoiceService.getInvoices();
   }
 }

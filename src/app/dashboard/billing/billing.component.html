@@ -2,14 +2,12 @@
     <content>
         <div class="header">
             <h1>Invoices</h1>
-            <button class="btn-add">
-                <span class="icon">+</span> New Invoice
-            </button>
         </div>
         <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Booking Number</th>
                         <th>Name</th>
                         <th>Date</th>
                         <th>Amount</th>
@@ -18,22 +16,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (invoice of this.invoiceServie.invoiceStats(); track invoice.id) {
+                    @for (invoice of this.invoiceService.invoiceStats(); track invoice.id; let i = $index) {
                     <tr>
-                        <td>{{invoice.booking.client.first_name}} {{invoice.booking.client.last_name}}</td>
-                        <td>{{invoice.created_at}}</td>
+                        <td>{{ invoice.invoice_number }}</td>
+                        <td>{{ invoice.booking.client.first_name }} {{ invoice.booking.client.last_name }}</td>
+                        <td>{{invoice.created_at | date: 'dd.MM.yyyy'}}</td>
                         <td>{{invoice.total_price}}</td>
                         <td>
                             <div class="btn-container">
-                                <button>Resend</button>
+                                <a [href]="invoice.pdf_file" download target="_blank">
+                                    <button>Download</button>
+                                </a>
+                                <button>TODO: implement Send again</button>
                             </div>
                         </td>
                     </tr>
                     }
-
                 </tbody>
             </table>
         </div>
     </content>
-
 </main>
