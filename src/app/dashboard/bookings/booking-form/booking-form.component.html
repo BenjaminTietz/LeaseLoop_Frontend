@@ -18,6 +18,9 @@
           (change)="setMinCheckOutDate($any($event.target).value)" required>
       </div>
     </div>
+    @if(!showCheckOutInput()) {
+      <p class="info-text">Please select a check-in date.</p>
+    }
     @if(showCheckOutInput()) {
 
     <div class="input-area">
@@ -28,8 +31,14 @@
       </div>
     </div>
     }
+    @if(checkIn()) {
+      @if(!bookingForm.get('check_out')?.value) {
+        <p class="info-text">Now select a check-out date to see available properties.</p>
+      }
+    }
+    
 
-    @if(showPropertyInput()){
+    @if(showPropertyInput()) {
     <div class="input-area">
       <label for="property">Property</label>
       <div class="form-field">
@@ -43,12 +52,14 @@
       </div>
     </div>
     }
+    @if(checkIn() && checkOut() && availableProperties().length === 0) {
+      <p class="info-text">No available properties for the selected dates.</p>
+      <button routerLink="/dashboard">Check availability calendar</button>
+    }
     
 
 
-    @if(showUnitInput()){
-
-
+    @if(showUnitInput()) {
     <div class="input-area">
       <label for="unit">Unit</label>
       <div class="form-field">
@@ -62,32 +73,37 @@
     </div>
     }
 
+    @if(showUnitInput() && bookingForm.get('unit')?.value === null && availableUnits().length > 0) {
+      <p class="info-text">Please select a unit.</p>
+    }
+
     @if(showGuestsInput()) {
       <div class="input-area">
         <label for="guests_count">Guests count</label>
         <div class="form-field">
           <input type="number" min="1" id="guests_count" name="guests_count" required placeholder="Guests conunt"
-            (change)="onGuestsCountChange($any($event.target).value)" formControlName="guests_count">
+            (change)="onGuestsCountChange($any($event.target).value)" formControlName="guests_count"
+            (input)="onGuestsCountChange($any($event.target).value)">
         </div>
       </div>
+      @if(showGuestsInput() && !bookingForm.get('guests_count')?.value) {
+        <small>Please enter the number of guests.</small>
       }
       
-    @if(showRestOfForm()){
+      @if(guestCountExceedsCapacity()) {
+        <small>Selected unit cannot accommodate this number of guests.</small>
+      }
+    }
+   
+      
+    @if(showRestOfForm()) {
 
 
     <div class="input-area">
       <label for="client">Client</label>
       <div class="form-field">
         <select id="client" name="client" formControlName="client">
-          @if(bookingService.selectedBooking() === null){
           <option [ngValue]="null" disabled>Select Customer</option>
-          }
-          @if(bookingService.selectedBooking() !== null){
-          <option [ngValue]="bookingService.selectedBooking()?.client?.id">
-            {{bookingService.selectedBooking()?.client?.first_name}}
-            {{bookingService.selectedBooking()?.client?.last_name}}
-          </option>
-          }
           @for(client of clientService.clients(); track $index) {
           <option [ngValue]="client.id">{{client.first_name}} {{client.last_name}}</option>
           }
@@ -131,12 +147,7 @@
       <label for="promo_code">Promo code</label>
       <div class="form-field">
         <select name="promo_code" id="promo_code" formControlName="promo_code">
-          @if(bookingService.selectedBooking() === null){
           <option [ngValue]="null" disabled>Select Promo Code</option>
-          }
-          @if(bookingService.selectedBooking() !== null){
-          <option [ngValue]="bookingService.selectedBooking()?.promo_code?.id"></option>
-          }
           @for(promocode of promoService.promocodes(); track $index) {
           <option [ngValue]="promocode.id">{{promocode.description}} {{promocode.discount_percent}}%</option>
           }
