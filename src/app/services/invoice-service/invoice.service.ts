@@ -9,17 +9,16 @@ export class InvoiceService {
   httpService = inject(HttpService);
   invoiceStats = signal<Invoice[] | null>(null);
 
-  ngOnInit(): void {
+  constructor() {
     this.getInvoices();
   }
 
   getInvoices() {
     this.httpService
-      .get<Invoice>(`${environment.apiBaseUrl}/api/invoices/owner/`)
+      .get<Invoice[]>(`${environment.apiBaseUrl}/api/invoices/owner/`)
       .subscribe({
-        next: (data) => this.invoiceStats.set([data] as Invoice[]),
+        next: (data) => this.invoiceStats.set(data),
         error: (error) => console.error('Failed to load invoices', error),
       });
-    console.log('InvoiceStats', this.invoiceStats());
   }
 }

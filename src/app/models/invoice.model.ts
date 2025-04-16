@@ -3,6 +3,7 @@ import { PromoCode } from './promocode.model';
 import { Service } from './service.model';
 export interface Invoice {
   id: number;
+  invoice_number: string;
   booking: Booking;
   pdf_file: string;
   deposit_paid: boolean;
