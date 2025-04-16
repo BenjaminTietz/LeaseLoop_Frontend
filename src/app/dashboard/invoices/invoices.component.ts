@@ -3,13 +3,13 @@ import { InvoiceService } from '../../services/invoice-service/invoice.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-billing',
+  selector: 'app-invoices',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './billing.component.html',
-  styleUrl: './billing.component.scss',
+  templateUrl: './invoices.component.html',
+  styleUrl: './invoices.component.scss',
 })
-export class BillingComponent implements OnInit {
+export class InvoicesComponent implements OnInit {
   invoiceService = inject(InvoiceService);
 
   ngOnInit(): void {
