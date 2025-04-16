@@ -21,7 +21,7 @@ import { LegalNoticeComponent } from './legal/legal-notice/legal-notice.componen
 import { PrivacyPolicyComponent } from './legal/privacy-policy/privacy-policy.component';
 import { PropertiesComponent } from './dashboard/properties/properties.component';
 import { UnitsComponent } from './dashboard/units/units.component';
-import { BillingComponent } from './dashboard/billing/billing.component';
+import { InvoicesComponent } from './dashboard/invoices/invoices.component';
 import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
 import { SettingsComponent } from './dashboard/settings/settings.component';
 import { HelpPageComponent } from './dashboard/help-page/help-page.component';
@@ -56,7 +56,7 @@ export const routes: Routes = [
       { path: 'bookings', component: BookingsComponent },
       { path: 'services', component: ServiceManagementComponent },
       { path: 'promocodes', component: PromocodesComponent },
-      { path: 'billing', component: BillingComponent },
+      { path: 'invoices', component: InvoicesComponent },
       { path: 'analytics', component: AnalyticsComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'help', component: HelpPageComponent },
