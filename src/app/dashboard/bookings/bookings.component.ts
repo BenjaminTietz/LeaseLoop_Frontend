@@ -4,6 +4,7 @@ import { BookingPopupComponent } from '../overview/booking-popup/booking-popup.c
 import { DashboardService } from '../../services/dashboard-service/dashboard.service';
 import { MatIcon } from '@angular/material/icon';
 import { BookingFormComponent } from "./booking-form/booking-form.component";
+import { Booking } from '../../models/booking.model';
 
 @Component({
   selector: 'app-bookings',
@@ -22,9 +23,10 @@ export class BookingsComponent implements OnInit {
     this.bs.loadBooking();
   }
 
-  openForm() {
+  openForm(booking: Booking | null = null) {
     this.formOpen.set(true);
     this.bs.selectedBooking.set(null);
+    if(booking) this.bs.selectedBooking.set(booking);
   }
 
   closeForm() {

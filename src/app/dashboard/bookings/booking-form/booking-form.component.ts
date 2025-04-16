@@ -16,10 +16,12 @@ import { Service } from '../../../models/service.model';
 import { PromoCode } from '../../../models/promocode.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UnitsService } from '../../../services/units-service/units.service';
+import { Booking } from '../../../models/booking.model';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-booking-form',
   standalone: true,
-  imports: [ProgressBarComponent, MatIcon, ClickOutsideDirective, CommonModule, ReactiveFormsModule],
+  imports: [ProgressBarComponent, MatIcon, ClickOutsideDirective, CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './booking-form.component.html',
   styleUrl: './booking-form.component.scss'
 })
@@ -50,7 +52,7 @@ export class BookingFormComponent {
     this.minCheckOutDate = new Date(new Date(checkInDate).setDate(new Date(checkInDate).getDate() + 1)).toISOString().split('T')[0];
   
     this.bookingForm.patchValue({
-      check_out: null,
+      check_out: '',
       property: null,
       unit: null,
       guests_count: null
@@ -96,9 +98,12 @@ export class BookingFormComponent {
   
     const allBookings = this.bookingService.bookings() || [];
   
+    const selectedBookingId = this.bookingService.selectedBooking()?.id;
+
     const availableUnits = this.unitService.units().filter(unit =>
       unit.property.id === propertyId &&
       !allBookings.some(booking =>
+        booking.id !== selectedBookingId && // 👈 Exclude current booking
         booking.unit.id === unit.id &&
         new Date(booking.check_in) < new Date(checkOutDate) &&
         new Date(booking.check_out) > new Date(checkInDate)
@@ -136,8 +141,11 @@ export class BookingFormComponent {
   }
 
   filterAvailableProperties(checkIn: string, checkOut: string) {
+    const selectedBookingId = this.bookingService.selectedBooking()?.id;
+
     const availableUnitsInRange = this.unitService.units().filter(unit => {
       const overlapping = this.bookingService.bookings().find(b =>
+        b.id !== selectedBookingId &&
         b.unit.id === unit.id &&
         new Date(b.check_in) < new Date(checkOut) &&
         new Date(b.check_out) > new Date(checkIn)
@@ -177,27 +185,70 @@ export class BookingFormComponent {
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
+    console.log('Booking:', this.bookingService.selectedBooking());
+    this.setDataBooking()
   }
 
 
   bookingForm = new FormBuilder().nonNullable.group({
-    property: [null,  Validators.required],
-    unit: [null , Validators.required],
-    client: [null],
+    property: [null as number | null ,  Validators.required],
+    unit: [null as number |null , Validators.required],
+    client: [null as number | null],
     guests_count: [null as number | null, Validators.required],
-    check_in: [null, Validators.required],
-    check_out: [null, Validators.required],
+    check_in: ['', Validators.required],
+    check_out: ['', Validators.required],
     deposit_paid : [false, Validators.required],
     deposit_amount: [0],
-    promo_code: [null, Validators.required],
+    promo_code: [null as number| null, Validators.required],
     services: [[] as number[]],
     status: ['pending'],
   });
 
-  checkIn = toSignal(this.bookingForm.get('check_in')!.valueChanges, { initialValue: null });
-  checkOut = toSignal(this.bookingForm.get('check_out')!.valueChanges, { initialValue: null });
+  checkIn = toSignal<string | null>(this.bookingForm.get('check_in')!.valueChanges, { initialValue: null });
+  checkOut = toSignal<string | null>(this.bookingForm.get('check_out')!.valueChanges, { initialValue: null });
+
   selectedProperty = toSignal(this.bookingForm.get('property')!.valueChanges, { initialValue: null });
 
+
+  setDataBooking() {
+    const booking = this.bookingService.selectedBooking();
+    if (booking) {
+      this.bookingForm.patchValue({
+        property: booking.property.id,
+        unit: booking.unit.id,
+        client: booking.client.id,
+        guests_count: booking.guests_count,
+        check_in: booking.check_in,
+        check_out: booking.check_out,
+        deposit_paid: booking.deposit_paid,
+        deposit_amount: booking.deposit_amount,
+        promo_code: booking.promo_code?.id,
+        services: booking.services.map(s => s.id),
+        status: booking.status
+      });
+  
+      const properties = this.propertyService.properties();
+      if (!properties.some(p => p.id === booking.property.id)) {
+        this.availableProperties.set([...properties, booking.property]);
+      } else {
+        this.availableProperties.set(properties);
+      }
+  
+      
+      const units = this.unitService.units();
+      if (!units.some(u => u.id === booking.unit.id)) {
+        this.availableUnits.set([...units, booking.unit]);
+      } else {
+        this.availableUnits.set(units);
+      }
+  
+      this.showCheckOutInput.set(true);
+      this.showPropertyInput.set(true);
+      this.showUnitInput.set(true);
+      this.showGuestsInput.set(true);
+      this.showRestOfForm.set(true);
+    }
+  }
   
 
 
@@ -219,7 +270,17 @@ export class BookingFormComponent {
       this.bookingService.createBooking(this.bookingForm.value);
   }
 
-  
 
+  get selectedUnitMaxCapacity(): number | null {
+    const unitId = this.bookingForm.value.unit;
+    const unit = this.unitService.units().find(u => u.id === unitId);
+    return unit?.max_capacity ?? null;
+  }
 
+  guestCountExceedsCapacity = computed(() => {
+    const guests = this.bookingForm.get('guests_count')?.value;
+    const unitId = this.bookingForm.get('unit')?.value;
+    const unit = this.unitService.units().find(u => u.id === unitId);
+    return unit != null && guests != null && Number(guests) > unit.max_capacity;
+  });
 }

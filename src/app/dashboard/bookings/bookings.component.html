@@ -28,12 +28,12 @@
         <tbody>
           @for (booking of this.bs.bookings(); track booking.id; let index = $index) {
           <tr>
-            <!-- <td>{{b.client.first_name}} {{b.client.last_name}}</td>
-            <td>{{ b.guests }}</td>
-            <td>{{b.unit.property.name}}</td>
-            <td>{{b.unit.name}}</td>
-            <td>{{ b.check_in }}</td>
-            <td>{{ b.check_out }}</td> -->
+            <td>{{booking.client.first_name}} {{booking.client.last_name}}</td>
+            <td>{{ booking.guests_count }}</td>
+            <td>{{booking.property.name}}</td>
+            <td>{{booking.unit.name}}</td>
+            <td>{{ booking.check_in }}</td>
+            <td>{{ booking.check_out }}</td>
             <td>
               @for (service of booking.services; track service.id; let i = $index) {
               {{ service?.name }}@if (i < ((booking.services.length) - 1)) {, } } </td>
@@ -42,7 +42,7 @@
             <td>{{ booking.status }}</td>
             <td>
               <div class="btn-container">
-                <button>Edit</button>
+                <button (click)="openForm(booking)">Edit</button>
                 <button (click)="this.dashboardService.showBooking.set(booking);
                 this.dashboardService.isbookingPopupOpen.set(true);">Details</button>
               </div>
