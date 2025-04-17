@@ -21,7 +21,7 @@ import { timeout } from 'rxjs';
   templateUrl: './availability-calendar.component.html',
   styleUrl: './availability-calendar.component.scss',
 })
-export class AvailabilityCalendarComponent implements OnInit {
+export class AvailabilityCalendarComponent {
   bookingService = inject(BookingsService);
   propertyService = inject(PropertiesService);
   unitService = inject(UnitsService);
@@ -52,35 +52,30 @@ export class AvailabilityCalendarComponent implements OnInit {
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
   sortedBookings = signal<any[]>([]);
 
+  allDataLoaded = computed(() =>
+    this.propertyService.properties().length > 0 &&
+    this.unitService.units().length > 0 &&
+    this.bookingService.bookings().length > 0
+  );
+
   constructor() {
     this.propertyService.loadProperties();
     this.unitService.loadUnits();
     this.bookingService.loadBooking();
-    setTimeout(() => {
-      this.selectedPropertyId.set(this.propertyService.properties()[0].id);
-      this.loadBookings();
-      this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
-    }, 1000);
-
-
-    
-  }
-
-  ngOnInit(): void {
-    
+    effect(() => {
+      if (this.allDataLoaded()) {
+        this.selectedPropertyId.set(this.propertyService.properties()[0].id);
+        this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+      }
+    }, { allowSignalWrites: true });
   
-  }
-
- onMonthChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
     
   }
 
-  onYearChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
-  }
+
+ onDateChange(){
+  this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+ }
 
   units = computed(() =>
     this.unitService

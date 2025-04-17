@@ -75,13 +75,16 @@
                 this.promocodeService.selectedPromocode()!.id
               )">Delete</button>
             <button type="submit" (click)="updatePromocode()"
-                [disabled]="promocodeForm.invalid || promocodeService.sending() ">
+                [disabled]="promocodeForm.invalid || promocodeService.sending() "
+                (mouseenter)="formService.markAllAsTouched(promocodeForm)" (mouseleave)="formService.unmarkAllAsTouched(promocodeForm)">
                 Update
             </button>
             }
             @if(promocodeService.selectedPromocode() === null) {
             <button type="submit" (click)="createPromocode()"
-                [disabled]="promocodeForm.invalid || promocodeService.sending()">
+                [disabled]="promocodeForm.invalid || promocodeService.sending()"
+                (mouseenter)="formService.markAllAsTouched(promocodeForm)" (mouseleave)="formService.unmarkAllAsTouched(promocodeForm)"
+                >
                 Save
             </button>
             }
