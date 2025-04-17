@@ -33,6 +33,14 @@ jobs:
           mkdir -p src/environments
           echo "export const environment = { production: false };" > src/environments/environment.ts
 
+      - name: 📦 Install dependencies apex-charts
+        run: |
+          npm install --save apexcharts ng-apexcharts --legacy-peer-deps
+
+      - name: 📦 Install dependencies date-fns
+        run: |
+          npm install --save date-fns --legacy-peer-deps
+
       - name: 🛠️ Build Angular app
         run: npm run build -- --configuration=production
 
