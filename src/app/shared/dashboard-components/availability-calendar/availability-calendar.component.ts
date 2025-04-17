@@ -52,30 +52,31 @@ export class AvailabilityCalendarComponent {
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
   sortedBookings = signal<any[]>([]);
 
-  allDataLoaded = computed(() =>
-    this.propertyService.properties().length > 0 &&
-    this.unitService.units().length > 0 &&
-    this.bookingService.bookings().length > 0
+  allDataLoaded = computed(
+    () =>
+      this.propertyService.properties().length > 0 &&
+      this.unitService.units().length > 0 &&
+      this.bookingService.bookings().length > 0
   );
 
   constructor() {
     this.propertyService.loadProperties();
     this.unitService.loadUnits();
     this.bookingService.loadBooking();
-    effect(() => {
-      if (this.allDataLoaded()) {
-        this.selectedPropertyId.set(this.propertyService.properties()[0].id);
-        this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
-      }
-    }, { allowSignalWrites: true });
-  
-    
+    effect(
+      () => {
+        if (this.allDataLoaded()) {
+          this.selectedPropertyId.set(this.propertyService.properties()[0].id);
+          this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+        }
+      },
+      { allowSignalWrites: true }
+    );
   }
 
-
- onDateChange(){
-  this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
- }
+  onDateChange() {
+    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+  }
 
   units = computed(() =>
     this.unitService
@@ -101,9 +102,11 @@ export class AvailabilityCalendarComponent {
     const dates: Date[] = [];
     const first = new Date(year, month, 1);
     const last = new Date(year, month + 1, 0);
+
     for (let d = new Date(first); d <= last; d.setDate(d.getDate() + 1)) {
-      dates.push(new Date(d));
+      dates.push(new Date(d.getFullYear(), d.getMonth(), d.getDate()));
     }
+
     this.dates.set(dates);
   }
 
@@ -156,11 +159,16 @@ export class AvailabilityCalendarComponent {
    * @returns {boolean} true if a booking exists, false if not.
    */
   hasBooking(unitId: number, day: Date): boolean {
-    const dateStr = this.dayString(day);
-    return this.filteredBookings().some(
-      (b) =>
-        b.unit.id === unitId && dateStr >= b.check_in && dateStr < b.check_out
-    );
+    const dayTime = day.getTime();
+    return this.filteredBookings().some((b) => {
+      const checkIn = this.normalizeDate(b.check_in);
+      const checkOut = this.normalizeDate(b.check_out);
+      return (
+        b.unit.id === unitId &&
+        dayTime >= checkIn.getTime() &&
+        dayTime < checkOut.getTime()
+      );
+    });
   }
 
   /**
@@ -172,12 +180,16 @@ export class AvailabilityCalendarComponent {
    */
 
   getBookingLabel(unitId: number, day: Date): string {
-    const booking = this.filteredBookings().find(
-      (b) =>
+    const dayTime = day.getTime();
+    const booking = this.filteredBookings().find((b) => {
+      const checkIn = this.normalizeDate(b.check_in);
+      const checkOut = this.normalizeDate(b.check_out);
+      return (
         b.unit.id === unitId &&
-        this.dayString(day) >= b.check_in &&
-        this.dayString(day) < b.check_out
-    );
+        dayTime >= checkIn.getTime() &&
+        dayTime < checkOut.getTime()
+      );
+    });
     return booking ? booking.client.first_name : '';
   }
 
@@ -203,6 +215,10 @@ export class AvailabilityCalendarComponent {
     return this.getBookingLabel(unitId, day);
   }
 
+  normalizeDate(dateString: string): Date {
+    return new Date(dateString + 'T00:00:00');
+  }
+
   onBookingClick(unitId: number, day: Date): void {
     const booking = this.filteredBookings().find(
       (b) =>
@@ -219,8 +235,11 @@ export class AvailabilityCalendarComponent {
   }
 
   onSelectChange(event: Event) {
-    console.log('Selected property:', (event.target as HTMLSelectElement).value);
-    
+    console.log(
+      'Selected property:',
+      (event.target as HTMLSelectElement).value
+    );
+
     const select = event.target as HTMLSelectElement;
     this.selectedPropertyId.set(Number(select.value));
     this.loadBookings();
