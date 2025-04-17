@@ -75,7 +75,7 @@ export class BookingFormComponent {
     this.bookingForm.patchValue({
       property: null,
       unit: null,
-      guests_count: null
+      guests_count: null,
     });
   
     this.showPropertyInput.set(true);
@@ -133,11 +133,12 @@ export class BookingFormComponent {
   onGuestsCountChange(guestsCount: number) {
     const unitId = this.bookingForm.value.unit;
     if (unitId == null) return;
-  
     const selectedUnit = this.unitService.units().find(u => u.id === unitId);
-  
     if (selectedUnit && guestsCount <= selectedUnit.max_capacity) {
       this.showClient.set(true);
+      this.bookingForm.patchValue({
+        client: null
+      })
     } else {
       this.showClient.set(false);
     }
