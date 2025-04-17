@@ -21,15 +21,7 @@ jobs:
           node-version: 18
 
       - name: 📦 Install dependencies
-        run: npm install
-
-      - name: 📦 Install dependencies apex-charts
-        run: |
-          npm install --save apexcharts ng-apexcharts --legacy-peer-deps
-
-      - name: 📦 Install dependencies date-fns
-        run: |
-          npm install --save date-fns --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Create environment.prod.ts from secret
         run: |
