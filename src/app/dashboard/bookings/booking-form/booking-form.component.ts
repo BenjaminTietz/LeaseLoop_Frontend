@@ -45,6 +45,7 @@ export class BookingFormComponent {
   showPropertyInput = signal(false);
   showUnitInput = signal(false);
   showGuestsInput = signal(false);
+  showClient = signal(false);
   showRestOfForm = signal(false);
 
   
@@ -103,14 +104,12 @@ export class BookingFormComponent {
     const availableUnits = this.unitService.units().filter(unit =>
       unit.property.id === propertyId &&
       !allBookings.some(booking =>
-        booking.id !== selectedBookingId && // 👈 Exclude current booking
+        booking.id !== selectedBookingId && 
         booking.unit.id === unit.id &&
         new Date(booking.check_in) < new Date(checkOutDate) &&
         new Date(booking.check_out) > new Date(checkInDate)
       )
     );
-  
-    console.log('Available Units for Property:', availableUnits);
   
     this.availableUnits.set(availableUnits);
     this.showUnitInput.set(availableUnits.length > 0);
@@ -127,6 +126,10 @@ export class BookingFormComponent {
     this.showRestOfForm.set(false);
   }
 
+  onClientChange(clientId: number) {
+    this.showRestOfForm.set(true);
+  }
+
   onGuestsCountChange(guestsCount: number) {
     const unitId = this.bookingForm.value.unit;
     if (unitId == null) return;
@@ -134,9 +137,9 @@ export class BookingFormComponent {
     const selectedUnit = this.unitService.units().find(u => u.id === unitId);
   
     if (selectedUnit && guestsCount <= selectedUnit.max_capacity) {
-      this.showRestOfForm.set(true);
+      this.showClient.set(true);
     } else {
-      this.showRestOfForm.set(false);
+      this.showClient.set(false);
     }
   }
 
@@ -263,24 +266,14 @@ export class BookingFormComponent {
     }
   }
 
- 
-  
-
   submitForm() {
       this.bookingService.createBooking(this.bookingForm.value);
   }
 
-
-  get selectedUnitMaxCapacity(): number | null {
-    const unitId = this.bookingForm.value.unit;
-    const unit = this.unitService.units().find(u => u.id === unitId);
-    return unit?.max_capacity ?? null;
-  }
-
-  guestCountExceedsCapacity = computed(() => {
+  guestCountExceedsCapacity() {
     const guests = this.bookingForm.get('guests_count')?.value;
     const unitId = this.bookingForm.get('unit')?.value;
     const unit = this.unitService.units().find(u => u.id === unitId);
     return unit != null && guests != null && Number(guests) > unit.max_capacity;
-  });
+  }
 }
