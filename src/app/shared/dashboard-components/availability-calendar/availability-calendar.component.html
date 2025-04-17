@@ -1,6 +1,7 @@
 <div class="calendar" appHorizontalDirectives>
     <div class="calendar-title">
         <h2>Availability Calendar</h2>
+        @if(allDataLoaded()){
         <div class="calendar-controls">
             <label>
                 Property:
@@ -18,7 +19,7 @@
  
             <label>
                 Month:
-                <select [(ngModel)]="selectedMonth" (change)="onMonthChange($event)">
+                <select [(ngModel)]="selectedMonth" (change)="onDateChange()">
                     @for (m of months; track m.value; let i = $index) {
                     <option [ngValue]="m.value" >{{ m.label }}</option>
                     }
@@ -27,7 +28,7 @@
 
             <label>
                 Year:
-                <select [(ngModel)]="selectedYear" (change)="onYearChange($event)">
+                <select [(ngModel)]="selectedYear" (change)="onDateChange()">
                     @for (y of years; track y; let i = $index) {
                     <option [ngValue]="y">{{ y }}</option>
                     }
@@ -67,5 +68,6 @@
             }
         </div>
         }
+    }
     </div>
 </div>

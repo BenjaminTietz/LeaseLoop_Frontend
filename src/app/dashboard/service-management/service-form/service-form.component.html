@@ -70,10 +70,13 @@
         <div class="input-area">
             <label for="name">Price</label>
             <div class="form-field">
-                <input type="number" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]{0,2}" id="price" name="price"
+                <input type="number" inputmode="decimal"  id="price" name="price"
                     required placeholder="Price" formControlName="price">
-                @if(formService.getFormErrors(serviceForm, 'price')?.['invalidDecimal']) {
+                @if(formService.getFormErrors(serviceForm, 'price')?.['pattern']) {
                 <small>Max. 2 decimal places allowed</small>
+                }
+                @if(formService.getFormErrors(serviceForm, 'price')?.['required']) {
+                <small>Price is required</small>
                 }
             </div>
         </div>
@@ -84,13 +87,15 @@
                 this.serviceManagementService.selectedService()!.id
               )">Delete</button>
             <button type="submit" (click)="updateService()"
-                [disabled]="serviceForm.invalid || serviceManagementService.sending() ">
+                [disabled]="serviceForm.invalid || serviceManagementService.sending() "
+                (mouseenter)="formService.markAllAsTouched(serviceForm)" (mouseleave)="formService.unmarkAllAsTouched(serviceForm)">
                 Update
             </button>
             }
             @if(serviceManagementService.selectedService() === null) {
             <button type="submit" (click)="createService()"
-                [disabled]="serviceForm.invalid || serviceManagementService.sending()">
+                [disabled]="serviceForm.invalid || serviceManagementService.sending()"
+                (mouseenter)="formService.markAllAsTouched(serviceForm)" (mouseleave)="formService.unmarkAllAsTouched(serviceForm)">
                 Save
             </button>
             }
