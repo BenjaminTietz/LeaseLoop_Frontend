@@ -104,9 +104,10 @@
       <p class="info-text">No clients available.</p>
       <button routerLink="/dashboard/clients">Add Client</button>
     }
+
     
       @if(showClient() && clientService.clients().length > 0){
-
+      
       <div class="input-area">
         <label for="client">Client</label>
         <div class="form-field">
