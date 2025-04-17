@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AnalyticsService } from '../../../../services/analytics-service/analytics.service';
 import type {
@@ -18,6 +25,8 @@ import type {
   styleUrl: './service-chart.component.scss',
 })
 export class ServiceChartComponent implements OnInit {
+  private analyticsService = inject(AnalyticsService);
+
   chartOptions = signal<{
     series: ApexAxisChartSeries;
     chart: ApexChart;
@@ -26,35 +35,43 @@ export class ServiceChartComponent implements OnInit {
     title: ApexTitleSubtitle;
   } | null>(null);
 
-  constructor(private analyticsService: AnalyticsService) {}
+  constructor() {
+    effect(
+      () => {
+        const data = this.analyticsService.serviceData();
+
+        this.chartOptions.set({
+          series: [
+            {
+              name: 'Sales',
+              data: data.map((s) => s.sales),
+            },
+          ],
+          chart: {
+            type: 'bar',
+            height: 350,
+          },
+          title: {
+            text: 'Top Services by Sales',
+          },
+          xaxis: {
+            categories: data.map((s) => s.name),
+          },
+          dataLabels: {
+            enabled: true,
+          },
+        });
+      },
+      { allowSignalWrites: true }
+    );
+  }
 
   ngOnInit(): void {
-    const from = '2025-01-01';
-    const to = '2025-03-31';
-    this.analyticsService.getServiceData(from, to);
+    const from = this.analyticsService.dateFrom();
+    const to = this.analyticsService.dateTo();
+    const property = this.analyticsService.selectedProperty();
+    const unit = this.analyticsService.selectedUnit();
 
-    const data = this.analyticsService.serviceData();
-
-    this.chartOptions.set({
-      series: [
-        {
-          name: 'Revenue',
-          data: data.map((s) => s.revenue),
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 350,
-      },
-      title: {
-        text: 'Top Services by Revenue',
-      },
-      xaxis: {
-        categories: data.map((s) => s.service_name),
-      },
-      dataLabels: {
-        enabled: true,
-      },
-    });
+    this.analyticsService.getServiceData(from, to, property, unit);
   }
 }
