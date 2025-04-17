@@ -45,9 +45,10 @@ export class ServiceFormComponent implements OnInit {
       '',
       [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
     ],
-    type: ['', Validators.required],
-    price: [null as number | null,[ Validators.required, Validators.pattern('^[0-9]*[.,]?[0-9]{0,2}$')]],
-    property: [null as number | null, Validators.required],
+    type: ['' as ServiceType, Validators.required],
+    price: [0,[ Validators.required, Validators.pattern('^[0-9]*[.,]?[0-9]{0,2}$')]],
+    property: [0 as number  | undefined, Validators.required],
+    active: [true, Validators.required],
   });
 
   serviceTypes: { label: string; value: ServiceType }[] = [
@@ -73,6 +74,7 @@ export class ServiceFormComponent implements OnInit {
           type: selected.type,
           price: selected.price,
           property: selected.property,
+          active: selected.active,
         });
       }
     });
@@ -112,15 +114,7 @@ export class ServiceFormComponent implements OnInit {
    * ServiceManagementService.createService method.
    */
   createService() {
-    const raw = this.serviceForm.value;
-    const serviceData: ServiceDto = {
-      name: raw.name,
-      type: raw.type as ServiceType,
-      price: parseFloat(String(raw.price).replace(',', '.')),
-      property: raw.property ?? undefined,
-    };
-
-    this.serviceManagementService.createService(serviceData);
+    this.serviceManagementService.createService(this.serviceForm.value);
   }
 
   /**
@@ -128,17 +122,10 @@ export class ServiceFormComponent implements OnInit {
    * and saves it to the server.
    */
   updateService() {
-    const raw = this.serviceForm.value;
-    const serviceData: ServiceDto = {
-      name: raw.name,
-      type: raw.type as ServiceType,
-      price: parseFloat(String(raw.price).replace(',', '.')),
-      property: raw.property ?? undefined,
-    };
+    
 
     this.serviceManagementService.updateService(
-      this.serviceManagementService.selectedService()!.id,
-      serviceData
+      this.serviceForm.value
     );
   }
 }

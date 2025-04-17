@@ -1,5 +1,5 @@
 <main>
-  <form [formGroup]="bookingForm" [appClickOutside]="closeForm" (ngSubmit)="submitForm()">
+  <form [formGroup]="bookingForm" [appClickOutside]="closeForm">
     @if(bookingService.sending()) {
     <app-progress-bar aria-label="Loading"></app-progress-bar>
     }
@@ -186,9 +186,28 @@
       }
     </div>
 
-
-
-    <button type="submit" [disabled]="!bookingForm.valid">Test</button>
+    <div class="button-area">
+      @if(bookingService.selectedBooking() !== null) {
+      <button type="button" (click)="deleteBooking()">Delete</button>
+      <button type="submit" (click)="updateBooking()"
+        [disabled]="bookingForm.invalid || unitService.sending() || bookingService.sending() || nochangesMade()"
+        (mouseenter)="formService.markAllAsTouched(bookingForm)" (mouseleave)="formService.unmarkAllAsTouched(bookingForm)">
+        @if(nochangesMade()) {
+          No changes
+        }@else{
+          Update
+        }
+      </button>
+      }
+      @if(bookingService.selectedBooking() === null) {
+      <button type="submit" (click)="createBooking()"
+        [disabled]="bookingForm.invalid || unitService.sending() || bookingService.sending()"
+        (mouseenter)="formService.markAllAsTouched(bookingForm)" (mouseleave)="formService.unmarkAllAsTouched(bookingForm)">
+        Save
+      </button>
+      }
+      
+    </div>
     }
   </form>
 </main>

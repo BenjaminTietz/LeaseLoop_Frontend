@@ -13,7 +13,7 @@
         <div class="form-input-wrapper">
 
             <div class="input-area width-50">
-                <label for="name">First Name</label>
+                <label for="first_name">First Name</label>
                 <div class="form-field">
                     <input type="text" id="first_name" name="first_name" required placeholder="First Name"
                         formControlName="first_name">
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="input-area width-50">
-                <label for="name">Last Name</label>
+                <label for="last_name">Last Name</label>
                 <div class="form-field">
                     <input type="text" id="last_name" name="last_name" required placeholder="Last Name"
                         formControlName="last_name">
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="input-area">
-            <label for="name">Email</label>
+            <label for="email">Email</label>
             <div class="form-field">
                 <input type="email" id="email" name="email" required placeholder="Email" formControlName="email">
                 @if(formService.getFormErrors(serviceForm, 'email')?.['required']) {
@@ -102,6 +102,15 @@
                 @if(getPhoneCountryErrors()){
                 <small>{{getPhoneCountryErrors()}}</small>
                 }
+            </div>
+        </div>
+        <div class="input-area">
+            <label for="active">Active</label>
+            <div class="form-field">
+                <select name="" id="active" formControlName="active">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
             </div>
         </div>
 

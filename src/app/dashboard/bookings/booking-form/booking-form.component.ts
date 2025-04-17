@@ -47,6 +47,7 @@ export class BookingFormComponent {
   showGuestsInput = signal(false);
   showClient = signal(false);
   showRestOfForm = signal(false);
+  nochangesMade = signal(true);
 
   
   setMinCheckOutDate(checkInDate: string) {
@@ -64,6 +65,7 @@ export class BookingFormComponent {
     this.showUnitInput.set(false);
     this.showGuestsInput.set(false);
     this.showRestOfForm.set(false);
+    this.nochangesMade.set(false);
   }
 
   onCheckOutChange(checkOutDate: string) {
@@ -82,6 +84,7 @@ export class BookingFormComponent {
     this.showUnitInput.set(false);
     this.showGuestsInput.set(false);
     this.showRestOfForm.set(false);
+    this.nochangesMade.set(false);
   }
 
   onPropertyChange(propertyId: number | null | undefined) {
@@ -115,6 +118,7 @@ export class BookingFormComponent {
     this.showUnitInput.set(availableUnits.length > 0);
     this.showGuestsInput.set(false);
     this.showRestOfForm.set(false);
+    this.nochangesMade.set(false);
   }
 
   onUnitChange(unitId: number) {
@@ -124,10 +128,12 @@ export class BookingFormComponent {
   
     this.showGuestsInput.set(true);
     this.showRestOfForm.set(false);
+    this.nochangesMade.set(false);
   }
 
   onClientChange(clientId: number) {
     this.showRestOfForm.set(true);
+    this.nochangesMade.set(false);
   }
 
   onGuestsCountChange(guestsCount: number) {
@@ -142,6 +148,7 @@ export class BookingFormComponent {
     } else {
       this.showClient.set(false);
     }
+    this.nochangesMade.set(false);
   }
 
   filterAvailableProperties(checkIn: string, checkOut: string) {
@@ -259,6 +266,7 @@ export class BookingFormComponent {
   onServiceChange(event: Event, serviceId: number) {
     const checked = (event.target as HTMLInputElement).checked;
     const services = this.bookingForm.value.services || [];
+    this.nochangesMade.set(false);
   
     if (checked) {
       this.bookingForm.get('services')?.setValue([...services, serviceId]);
@@ -267,14 +275,24 @@ export class BookingFormComponent {
     }
   }
 
-  submitForm() {
-      this.bookingService.createBooking(this.bookingForm.value);
-  }
-
   guestCountExceedsCapacity() {
     const guests = this.bookingForm.get('guests_count')?.value;
     const unitId = this.bookingForm.get('unit')?.value;
     const unit = this.unitService.units().find(u => u.id === unitId);
     return unit != null && guests != null && Number(guests) > unit.max_capacity;
+  }
+
+
+
+  createBooking() {
+    this.bookingService.createBooking(this.bookingForm.value);
+  } 
+
+  deleteBooking() {
+   
+  }
+
+  updateBooking() {
+    
   }
 }

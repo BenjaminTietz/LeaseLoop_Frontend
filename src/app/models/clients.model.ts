@@ -8,6 +8,7 @@ export interface Clients {
   user_id: number; // Refers to auth user
   created_at: string; // ISO date
   updated_at: string; // ISO date
+  active :boolean
 }
 
 // TODO: Refactor the adress field to a separate model Street, HouseNumber, City, State, ZipCode, Country
@@ -18,4 +19,5 @@ export interface ClientDto {
   email?: string;
   address?: Address;
   user_id?: number; // Refers to auth user
+  active?: boolean
 }

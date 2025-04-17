@@ -3,14 +3,14 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ServiceManagementService } from '../../services/service-management/service-management.service';
 import { ServiceFormComponent } from './service-form/service-form.component';
 import { HttpService } from '../../services/httpclient/http.service';
-import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Service, ServiceDto } from '../../models/service.model';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-service-management',
   standalone: true,
-  imports: [CommonModule, ServiceFormComponent],
+  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon],
   templateUrl: './service-management.component.html',
   styleUrl: './service-management.component.scss',
 })
@@ -35,6 +35,12 @@ export class ServiceManagementComponent implements OnInit {
   openEditForm(service: Service) {
     this.sms.selectedService.set(service);
     this.formOpen.set(true);
+    this.sms.successful.set(false);
+  }
+
+  openForm(){
+    this.formOpen.set(true);
+    this.sms.selectedService.set(null);
     this.sms.successful.set(false);
   }
 

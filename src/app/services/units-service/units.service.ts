@@ -20,7 +20,9 @@ export class UnitsService {
     this.setLoading(true);
         this.httpService.get<Unit[]>(`${environment.apiBaseUrl}/api/units/`).subscribe({
           next: (data) => {
-            this.units.set(data);
+            this.units.set(data.slice().sort((a, b) => {
+              return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+            }));
             this.setLoading(false);
           },
           error: this.handleError('Failed to load Ünits')

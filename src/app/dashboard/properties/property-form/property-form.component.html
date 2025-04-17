@@ -82,6 +82,15 @@
         }
       </div>
     </div>
+    <div class="input-area">
+      <label for="active">Active</label>
+      <div class="form-field">
+        <select name="" id="active" formControlName="active">
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+    </div>
     <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
       (missingDescriptionChange)="missingDescription = $event"></app-image-upload>
 
@@ -89,13 +98,17 @@
       @if(propertyService.selectedProperty() !== null) {
       <button type="button" (click)="deleteProperty()">Delete</button>
       <button type="submit" (click)="updateProperty()"
-        [disabled]="propertyForm.invalid || propertyService.sending() || missingDescription" (mouseenter)="formService.markAllAsTouched(propertyForm)" (mouseleave)="formService.unmarkAllAsTouched(propertyForm)">
+        [disabled]="propertyForm.invalid || propertyService.sending() || missingDescription"
+        (mouseenter)="formService.markAllAsTouched(propertyForm)"
+        (mouseleave)="formService.unmarkAllAsTouched(propertyForm)">
         Update
       </button>
       }
       @if(propertyService.selectedProperty() === null) {
       <button type="submit" (click)="createProperty()"
-        [disabled]="propertyForm.invalid || propertyService.sending() || missingDescription" (mouseenter)="formService.markAllAsTouched(propertyForm)" (mouseleave)="formService.unmarkAllAsTouched(propertyForm)">
+        [disabled]="propertyForm.invalid || propertyService.sending() || missingDescription"
+        (mouseenter)="formService.markAllAsTouched(propertyForm)"
+        (mouseleave)="formService.unmarkAllAsTouched(propertyForm)">
         Save
       </button>
       }

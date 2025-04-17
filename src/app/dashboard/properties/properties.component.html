@@ -15,6 +15,7 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th class="active-column">Active</th>
                         <th>Name</th>
                         <th>Units</th>
                         <th>Description</th>
@@ -26,6 +27,7 @@
                 <tbody>
                     @for (property of propertyService.properties(); track property.id;) {
                     <tr>
+                        <td> <mat-icon [ngClass]="property.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
                         <td>{{property.name}}</td>
                         <td>{{property.units.length}}</td>
                         <td>{{property.description}}</td>
@@ -34,6 +36,7 @@
                         <td>
                             <button [disabled]="propertyService.sending()" (click)="propertyService.selectedProperty.set(property); openEditForm()">Edit</button>
                         </td>
+
                     </tr>
                     }
                 </tbody>

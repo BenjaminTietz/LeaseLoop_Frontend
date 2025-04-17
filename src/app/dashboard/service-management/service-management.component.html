@@ -2,31 +2,32 @@
     <content>
         <div class="header">
             <h1>Services</h1>
-            <button class="btn-add" (click)="this.formOpen.set(true)">+ Add Service</button>
+            <button  (click)="openForm()">
+                <mat-icon>add</mat-icon>
+                <span>New Service</span>
+            </button>
         </div>
         <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Active</th>
                         <th>Name</th>
-                        <th>Associated</th>
+                        <th>Associated property</th>
                         <th>Price (€)</th>
                         <th>Type</th>
-                        <th></th>
+                        <th>Edit Service</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (s of this.sms.services(); track s.id; let index = $index) {
                     <tr>
+                        <td><mat-icon [ngClass]="s.active ? 'active' : 'inactive'">radio_button_checked</mat-icon></td>
                         <td>{{ s.name }}</td>
                         <td>{{ s.property_info.name }}</td>
                         <td>{{ s.price }}</td>
                         <td>{{ s.type === 'one_time' ? 'One-time' : 'Per day' }}</td>
-                        <td>
-                            <div class="btn-container">
-                                <button (click)="this.openEditForm(s)">Edit</button>
-                            </div>
-                        </td>
+                        <td> <button class="btn" (click)="this.openEditForm(s)">Edit</button> </td>
                     </tr>
                     }
                 </tbody>

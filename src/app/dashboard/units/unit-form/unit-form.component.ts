@@ -28,6 +28,9 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   imagePreviews!: any[]
   missingDescription: boolean = false
 
+  unitTypes = ['apartment', 'villa', 'house', 'studio', 'suite', 'cabin', 'condo', 'townhouse']
+  unitStatus = ['available', 'booked', 'unavailable', 'booked', 'maintenance']
+
 
   unitCapacityValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const capacity = control.get('capacity')?.value;
@@ -51,7 +54,10 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     max_capacity: [0, [Validators.required, Validators.min(1)]], 
     price_per_night: [0, [Validators.required, Validators.min(0)]], 
     price_per_extra_person: [0, [Validators.required, Validators.min(0)]], 
-    property: [null as PropertyShort | null, Validators.required]
+    property: [null as PropertyShort | null, Validators.required],
+    type : ['apartment', Validators.required],
+    status : ['available', Validators.required],
+    active : [true, Validators.required]
   }, { validators: this.unitCapacityValidator });
 
   constructor() {
@@ -85,7 +91,10 @@ export class UnitFormComponent implements OnInit, OnDestroy {
         price_per_night: selected.price_per_night,
         property: selected.property,
         price_per_extra_person: selected.price_per_extra_person,
-        max_capacity: selected.max_capacity
+        max_capacity: selected.max_capacity,
+        type: selected.type,
+        status: selected.status,
+        active: selected.active
       });
     }    
   }
