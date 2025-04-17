@@ -6,6 +6,7 @@ import {
   BookingStats,
   ServiceStats,
 } from '../../models/analytics.models';
+import { subDays, subWeeks, subMonths, subYears, format } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -18,18 +19,48 @@ export class AnalyticsService {
 
   dateFrom = signal<string>('2025-01-01');
   dateTo = signal<string>('2025-03-31');
+  selectedPeriod = signal<'day' | 'week' | 'month' | 'year'>('month');
+
   selectedProperty = signal<string>('all');
   selectedUnit = signal<string>('all');
 
   constructor() {
-    effect(() => {
-      const from = this.dateFrom();
-      const to = this.dateTo();
-      const property = this.selectedProperty();
-      const unit = this.selectedUnit();
+    effect(
+      () => {
+        const period = this.selectedPeriod();
 
-      this.updateAllAnalytics(from, to, property, unit);
-    });
+        const today = new Date();
+        let from: Date;
+
+        switch (period) {
+          case 'day':
+            from = subDays(today, 1);
+            break;
+          case 'week':
+            from = subWeeks(today, 1);
+            break;
+          case 'month':
+            from = subMonths(today, 1);
+            break;
+          case 'year':
+            from = subYears(today, 1);
+            break;
+          default:
+            from = subMonths(today, 1);
+        }
+
+        this.dateFrom.set(format(from, 'yyyy-MM-dd'));
+        this.dateTo.set(format(today, 'yyyy-MM-dd'));
+
+        console.log(
+          'Date range updated:',
+          this.dateFrom(),
+          this.dateTo(),
+          this.selectedPeriod()
+        );
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   public updateAllAnalytics(
