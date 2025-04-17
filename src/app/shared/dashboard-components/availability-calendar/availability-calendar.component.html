@@ -15,25 +15,27 @@
                 }
 
             </label>
-
+ 
             <label>
                 Month:
-                <select [(ngModel)]="selectedMonth">
+                <select [(ngModel)]="selectedMonth" (change)="onMonthChange($event)">
                     @for (m of months; track m.value; let i = $index) {
-                    <option [ngValue]="m.value">{{ m.label }}</option>
+                    <option [ngValue]="m.value" >{{ m.label }}</option>
                     }
                 </select>
             </label>
 
             <label>
                 Year:
-                <select [(ngModel)]="selectedYear">
+                <select [(ngModel)]="selectedYear" (change)="onYearChange($event)">
                     @for (y of years; track y; let i = $index) {
                     <option [ngValue]="y">{{ y }}</option>
                     }
                 </select>
             </label>
         </div>
+
+        TODO: Async loading of property and units
         <div class="calendar-info">
             <p>Unit availability for the next 30 days.
             </p>

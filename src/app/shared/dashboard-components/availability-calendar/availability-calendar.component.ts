@@ -13,6 +13,7 @@ import { PropertiesService } from '../../../services/properties-service/properti
 import { UnitsService } from '../../../services/units-service/units.service';
 import { HorizontalDirectivesDirective } from '../../../directives/horizontal-scroll/horizontal-directives.directive';
 import { DashboardService } from '../../../services/dashboard-service/dashboard.service';
+import { timeout } from 'rxjs';
 @Component({
   selector: 'app-availability-calendar',
   standalone: true,
@@ -51,11 +52,34 @@ export class AvailabilityCalendarComponent implements OnInit {
   availability = signal<Record<number, Record<string, 0 | 1>>>({});
   sortedBookings = signal<any[]>([]);
 
-  ngOnInit(): void {
-    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+  constructor() {
     this.propertyService.loadProperties();
     this.unitService.loadUnits();
     this.bookingService.loadBooking();
+    setTimeout(() => {
+      this.selectedPropertyId.set(this.propertyService.properties()[0].id);
+      this.loadBookings();
+      this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+    }, 1000);
+
+
+    
+  }
+
+  ngOnInit(): void {
+    
+  
+  }
+
+ onMonthChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
+    
+  }
+
+  onYearChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
   }
 
   units = computed(() =>
@@ -200,6 +224,8 @@ export class AvailabilityCalendarComponent implements OnInit {
   }
 
   onSelectChange(event: Event) {
+    console.log('Selected property:', (event.target as HTMLSelectElement).value);
+    
     const select = event.target as HTMLSelectElement;
     this.selectedPropertyId.set(Number(select.value));
     this.loadBookings();
