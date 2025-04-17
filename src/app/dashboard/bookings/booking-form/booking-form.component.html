@@ -56,6 +56,9 @@
       <p class="info-text">No available properties for the selected dates.</p>
       <button routerLink="/dashboard">Check availability calendar</button>
     }
+    @if(checkIn() && checkOut() && availableProperties().length > 0 && bookingForm.get('property')?.value === null) {
+      <p class="info-text">Please select a property.</p>
+    }
     
 
 
@@ -84,33 +87,47 @@
           <input type="number" min="1" id="guests_count" name="guests_count" required placeholder="Guests conunt"
             (change)="onGuestsCountChange($any($event.target).value)" formControlName="guests_count"
             (input)="onGuestsCountChange($any($event.target).value)">
+            
         </div>
+        @if(bookingForm.get('guests_count')?.value === null) {
+          <p>Please enter the number of guests.</p>
+        }
+        @if(guestCountExceedsCapacity()) {
+          <p>Selected unit cannot accommodate this number of guests.</p>
+        }
       </div>
-      @if(showGuestsInput() && !bookingForm.get('guests_count')?.value) {
-        <small>Please enter the number of guests.</small>
-      }
       
-      @if(guestCountExceedsCapacity()) {
-        <small>Selected unit cannot accommodate this number of guests.</small>
-      }
     }
    
       
-    @if(showRestOfForm()) {
+    @if(clientService.clients().length === 0 && showClient()) {
+      <p class="info-text">No clients available.</p>
+      <button routerLink="/dashboard/clients">Add Client</button>
+    }
+    
+      @if(showClient() && clientService.clients().length > 0){
 
-
-    <div class="input-area">
-      <label for="client">Client</label>
-      <div class="form-field">
-        <select id="client" name="client" formControlName="client">
-          <option [ngValue]="null" disabled>Select Customer</option>
-          @for(client of clientService.clients(); track $index) {
-          <option [ngValue]="client.id">{{client.first_name}} {{client.last_name}}</option>
-          }
-        </select>
+      <div class="input-area">
+        <label for="client">Client</label>
+        <div class="form-field">
+          <select id="client" name="client" formControlName="client" (change)="onClientChange($any($event.target).value)">
+            <option [ngValue]="null" disabled>Select Customer</option>
+            @for(client of clientService.clients(); track $index) {
+            <option [ngValue]="client.id">{{client.first_name}} {{client.last_name}}</option>
+            }
+          </select>
+          
+        </div>
       </div>
-    </div>
+      
+        
+      @if(bookingForm.get('client')?.value === null && clientService.clients().length > 0) {
+        <p class="info-text">Please select a client.</p>
+      }
+   
+  }
 
+    @if(showRestOfForm()) {
 
     <div class="input-area">
       <label for="deposit_paid">Deposit Paid</label>
