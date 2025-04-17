@@ -2,6 +2,7 @@ export interface Unit {
   id: number;
   name: string;
   capacity: number;
+  type : string;
   price_per_extra_person: number;
   property: PropertyShort // PropertyShort;
   status: string; // 'available' | 'booked' | 'cleaning' | 'maintenance'
@@ -11,6 +12,7 @@ export interface Unit {
   price_per_night: number;
   max_capacity: number;
   images : UnitImage[];
+  active : boolean;
 }
 
 export interface PropertyShort {

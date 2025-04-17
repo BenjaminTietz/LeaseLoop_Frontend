@@ -3,10 +3,11 @@ import { PropertiesService } from '../../services/properties-service/properties.
 import { PropertyFormComponent } from "./property-form/property-form.component";
 import { MatIcon } from '@angular/material/icon';
 import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-properties',
   standalone: true,
-  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent],
+  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent, CommonModule],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })

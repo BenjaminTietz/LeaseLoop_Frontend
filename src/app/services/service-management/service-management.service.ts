@@ -29,7 +29,9 @@ export class ServiceManagementService {
    this.httpService
       .get<Service[]>(`${environment.apiBaseUrl}/api/services/`)
       .subscribe({
-        next: (data) => this.services.set(data),
+        next: (data) => this.services.set(data.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0)
+        })),
         error: (error) => console.error('Failed to load services', error),
       });
   }
@@ -51,7 +53,9 @@ export class ServiceManagementService {
       .subscribe({
         next: (service) => {
           const current = this.services();
-          this.services.set([...current, service]);
+          this.services.set([...current, service].slice().sort((a, b) => {
+            return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+          }));
 
           this.sending.set(false);
           this.successful.set(true);
@@ -77,14 +81,17 @@ export class ServiceManagementService {
    * @param id - The ID of the service to be updated.
    * @param data - The data to be used for the update.
    */
-  updateService(id: number, data: ServiceDto) {
+  updateService( data: ServiceDto) {
+    let id = this.selectedService()?.id
     this.sending.set(true);
     this.httpService
       .patch<Service>(`${environment.apiBaseUrl}/api/service/${id}/`, data)
       .subscribe({
         next: (service) => {
           const current = this.services();
-          this.services.set(current.map((s) => (s.id === id ? service : s)));
+          this.services.set(current.map((s) => (s.id === id ? service : s)).slice().sort((a, b) => {
+            return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+          }));
           this.sending.set(false);
           this.successful.set(true);
           this.selectedService.set(null);

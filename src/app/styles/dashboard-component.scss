@@ -33,7 +33,7 @@ main {
         th,
         td {
             color: var(--color-text-base);
-            padding: 16px;
+            padding: 12px;
             text-align: left;
         }
 
@@ -42,16 +42,23 @@ main {
             color: #647188;
             text-wrap: nowrap
         }
-
-        .btn-container {
-            @include display(flex, row, center, center);
-            gap: 10px;
-
-            button {
-                font-weight: 400;
-                padding: 5px 8px;
-                font-size: 14px;
-            }
-        }
     }
+}
+
+.inactive{
+    color:red
+}
+
+.active{
+    color: #24AF71;
+}
+
+.active-column{
+    max-width: 55px;
+}
+
+.btn{
+    max-height: 32px;
+    font-size: 16px;
+    padding: 5px 10px;
 }

@@ -3,28 +3,29 @@
         <div class="header">
             <h1>Clients</h1>
             <button class="btn-add" (click)="this.formOpen.set(true)">
-                <span class="icon">+</span> New Client
+                <mat-icon>add</mat-icon>
+                <span>New Client</span>
             </button>
         </div>
         <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
+                        <th class="active-column">Active</th>
                         <th>Name</th>
-                        <th>Last Visit</th>
-                        <th></th>
+                        <th>Email</th>
+                        <th>Adress</th>
+                        <th>Edit</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (c of this.clientService.clients(); track c.id) {
                     <tr>
+                        <td> <mat-icon [ngClass]="c.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
                         <td>{{c.first_name}} {{c.last_name}}</td>
-                        <td>24.08.2024</td>
-                        <td>
-                            <div class="btn-container">
-                                <button (click)="this.openEditForm(c)">Edit</button>
-                            </div>
-                        </td>
+                        <td>{{c.email}}</td>
+                        <td>{{c.address.street}} {{c.address.house_number}}, {{c.address.postal_code}} {{c.address.city}}, {{c.address.country}}, {{c.address.phone}} </td>
+                        <td> <button class="btn" (click)="this.openEditForm(c)">Edit</button> </td>
                     </tr>
                     }
                 </tbody>

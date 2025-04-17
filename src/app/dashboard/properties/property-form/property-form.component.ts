@@ -29,6 +29,7 @@ export class PropertyFormComponent {
   propertyForm  = new FormBuilder().nonNullable.group({
     name: ['' , Validators.required],
     description: ['', Validators.required],
+    active: [true, Validators.required],
     address: new FormBuilder().nonNullable.group({
       street: ['', Validators.required],
       house_number: ['', Validators.required],
@@ -55,7 +56,8 @@ export class PropertyFormComponent {
       this.propertyForm.patchValue({
         name: selected.name,
         address: selected.address,
-        description: selected.description
+        description: selected.description,
+        active: selected.active
       });
     }
   }

@@ -21,7 +21,9 @@ export class PropertiesService {
     this.setLoading(true);
     this.httpService.get<Property[]>(`${environment.apiBaseUrl}/api/properties/`).subscribe({
       next: (data) => {
-        this.properties.set(data);
+        this.properties.set(data.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0)
+        }));
         this.setLoading(false);
       },
       error: this.handleError('Failed to load properties')

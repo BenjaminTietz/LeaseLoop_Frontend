@@ -9,6 +9,7 @@ export interface Service {
   created_at: string; // ISO date
   updated_at: string; // ISO date
   property_info: PropertyShort;
+  active: boolean;
 }
 
 export interface PropertyShort {
@@ -22,4 +23,5 @@ export interface ServiceDto {
   type?: ServiceType;
   price?: number;
   property?: number;
+  active?: boolean;
 }

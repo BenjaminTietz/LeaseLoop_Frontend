@@ -2,11 +2,13 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ClientsService } from '../../services/clients-service/clients.service';
 import { ClientFormComponent } from './client-form/client-form.component';
 import { Clients } from '../../models/clients.model';
+import { MatIcon } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [ClientFormComponent],
+  imports: [ClientFormComponent, MatIcon, CommonModule],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
 })

@@ -91,6 +91,40 @@
       </div>
     </div>
 
+    <div class="form-input-wrapper">
+      <div class="input-area">
+        <label for="type">Unit Type</label>
+        <div class="form-field">
+          <select name="" id="type">
+            @for(type of unitTypes; track $index){
+            <option [ngValue]="type">{{type.charAt(0).toUpperCase() + type.slice(1)}}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <label for="status">Status</label>
+        <div class="form-field">
+          <select name="" id="status" formControlName="status">
+            @for(status of unitStatus; track $index){
+            <option [ngValue]="status">{{status.charAt(0).toUpperCase() + status.slice(1)}}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <label for="active">Active</label>
+        <div class="form-field">
+          <select name="" id="active" formControlName="active">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option> 
+          </select>
+        </div>
+      </div>
+    </div>
+
     <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
       (missingDescriptionChange)="missingDescription = $event"></app-image-upload>
     <div class="button-area">

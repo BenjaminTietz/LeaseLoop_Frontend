@@ -11,6 +11,7 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th class="active-column">Active</th>
                         <th>Property</th>
                         <th>Name</th>
                         <th>Capacity</th>
@@ -21,7 +22,8 @@
                 </thead>
                 <tbody>
                     @for (unit of this.unitsService.units(); track unit) {
-                    <tr>
+                    <tr >
+                        <td> <mat-icon [ngClass]="unit.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
                         <td>{{unit.property.name}}</td>
                         <td>{{unit.name}}</td>
                         <td>{{unit.capacity}}</td>
