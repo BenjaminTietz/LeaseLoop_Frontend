@@ -3,8 +3,8 @@ import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import {
   RevenueStats,
-  BookingStats,
   ServiceStats,
+  PropertyBookingStats,
 } from '../../models/analytics.models';
 import { subDays, subWeeks, subMonths, subYears, format } from 'date-fns';
 
@@ -15,10 +15,10 @@ export class AnalyticsService {
   private http = inject(HttpService);
   revenueData = signal<RevenueStats[]>([]);
   serviceData = signal<ServiceStats[]>([]);
-  bookingData = signal<BookingStats[]>([]);
+  bookingData = signal<PropertyBookingStats[]>([]);
 
   dateFrom = signal<string>('2025-01-01');
-  dateTo = signal<string>('2025-03-31');
+  dateTo = signal<string>('2025-12-31');
   selectedPeriod = signal<'day' | 'week' | 'month' | 'year'>('month');
 
   selectedProperty = signal<string>('all');
@@ -107,7 +107,7 @@ export class AnalyticsService {
       property,
       unit
     );
-    this.http.get<any[]>(url).subscribe({
+    this.http.get<PropertyBookingStats[]>(url).subscribe({
       next: (data) => this.bookingData.set(data),
       error: (err) => console.error('Error fetching booking data:', err),
     });
@@ -141,13 +141,13 @@ export class AnalyticsService {
   ): string {
     const base = `${environment.apiBaseUrl}${endpoint}`;
     const params = new URLSearchParams({ from, to });
-
-    if (property !== 'all') {
-      params.append('property', property);
-    }
-    if (unit !== 'all') {
-      params.append('unit', unit);
-    }
+    // TODO: Uncomment the following lines if you want to filter by property and unit decide if we need to filter by property and unit
+    // if (property !== 'all') {
+    //   params.append('property', property);
+    // }
+    // if (unit !== 'all') {
+    //   params.append('unit', unit);
+    // }
 
     return `${base}?${params.toString()}`;
   }

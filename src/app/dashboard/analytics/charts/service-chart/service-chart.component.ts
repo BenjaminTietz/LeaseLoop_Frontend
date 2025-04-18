@@ -73,5 +73,11 @@ export class ServiceChartComponent implements OnInit {
     const unit = this.analyticsService.selectedUnit();
 
     this.analyticsService.getServiceData(from, to, property, unit);
+
+    console.log(
+      'Service Chart:',
+      { from, to, property, unit },
+      this.analyticsService.serviceData()
+    );
   }
 }
