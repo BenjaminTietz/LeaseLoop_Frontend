@@ -153,7 +153,7 @@
     <div class="input-area">
       <label for="status">Status</label>
       <div class="form-field">
-        <select name="status" id="status" formControlName="status">
+        <select name="status" id="status" formControlName="status" (change)="onStatusChange()">
           <option [ngValue]="'pending'">Pending</option>
           <option [ngValue]="'confirmed'">Confirmed</option>
           <option [ngValue]="'cancelled'">Cancelled</option>

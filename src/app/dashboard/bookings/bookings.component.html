@@ -11,6 +11,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>Status</th>
             <th>Name</th>
             <th>Guests</th>
             <th>Property</th>
@@ -20,14 +21,18 @@
             <th>Booked Service</th>
             <th>Total Price</th>
             <th>Deposit</th>
-            <th>Status</th>
-            <th></th>
-            <th></th>
+            <th>Edit</th>
+            <th>View</th>
           </tr>
         </thead>
         <tbody>
           @for (booking of this.bs.bookings(); track booking.id; let index = $index) {
           <tr>
+            <td><mat-icon  [ngClass]="{
+              'active': booking.status === 'confirmed',
+              'inactive': booking.status === 'cancelled',
+              'pending': booking.status === 'pending'
+            }">radio_button_checked</mat-icon></td>
             <td>{{booking.client.first_name}} {{booking.client.last_name}}</td>
             <td>{{ booking.guests_count }}</td>
             <td>{{booking.property.name}}</td>
@@ -39,13 +44,10 @@
               {{ service?.name }}@if (i < ((booking.services.length) - 1)) {, } } </td>
             <td>{{ booking.total_price }} €</td>
             <td>@if (booking.deposit_paid) {✔ {{ booking.deposit_amount }} €} @else {X}</td>
-            <td>{{ booking.status }}</td>
-            <td>
-              <div class="btn-container">
-                <button (click)="openForm(booking)">Edit</button>
-                <button (click)="this.dashboardService.showBooking.set(booking);
+            
+            <td> <button class="btn" (click)="openForm(booking)">Edit</button></td>
+            <td> <button class="btn" (click)="this.dashboardService.showBooking.set(booking);
                 this.dashboardService.isbookingPopupOpen.set(true);">Details</button>
-              </div>
             </td>
           </tr>
           }

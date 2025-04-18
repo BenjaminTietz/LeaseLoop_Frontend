@@ -275,6 +275,10 @@ export class BookingFormComponent {
     }
   }
 
+  onStatusChange(){
+    this.nochangesMade.set(false);
+  }
+
   guestCountExceedsCapacity() {
     const guests = this.bookingForm.get('guests_count')?.value;
     const unitId = this.bookingForm.get('unit')?.value;
@@ -293,6 +297,6 @@ export class BookingFormComponent {
   }
 
   updateBooking() {
-    
+    this.bookingService.updateBooking( this.bookingForm.value);
   }
 }
