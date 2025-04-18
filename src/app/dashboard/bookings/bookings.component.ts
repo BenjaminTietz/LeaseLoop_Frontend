@@ -5,11 +5,12 @@ import { DashboardService } from '../../services/dashboard-service/dashboard.ser
 import { MatIcon } from '@angular/material/icon';
 import { BookingFormComponent } from "./booking-form/booking-form.component";
 import { Booking } from '../../models/booking.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [BookingPopupComponent, MatIcon, BookingFormComponent],
+  imports: [BookingPopupComponent, MatIcon, BookingFormComponent, CommonModule],
   templateUrl: './bookings.component.html',
   styleUrl: './bookings.component.scss',
 })

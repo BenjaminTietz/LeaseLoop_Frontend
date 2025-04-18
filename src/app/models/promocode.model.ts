@@ -7,6 +7,7 @@ export interface PromoCode {
   owner_id: number;
   created_at: string; // ISO date
   updated_at: string; // ISO date
+  active: boolean
 }
 
 export interface PromoDto {
@@ -14,4 +15,5 @@ export interface PromoDto {
   description?: string;
   valid_until?: string;
   discount_percent?: number;
+  active ?: boolean
 }

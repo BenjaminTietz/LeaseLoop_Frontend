@@ -53,6 +53,10 @@ main {
     color: #24AF71;
 }
 
+.pending{
+    color: #FF9A42;
+}
+
 .active-column{
     max-width: 55px;
 }
@@ -61,4 +65,5 @@ main {
     max-height: 32px;
     font-size: 16px;
     padding: 5px 10px;
+    margin-left: 0px;
 }

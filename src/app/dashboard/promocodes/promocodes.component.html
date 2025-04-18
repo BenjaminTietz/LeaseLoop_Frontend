@@ -2,33 +2,32 @@
     <content>
         <div class="header">
             <h1>Promocodes</h1>
-            <button (click)="this.formOpen.set(true)" class="btn-add">
-                <span class="icon">+</span> New Promocode
+            <button (click)="openForm()" class="btn-add">
+                <mat-icon>add</mat-icon>
+                <span>New Promocode</span>
             </button>
         </div>
         <div class="table-wrapper">
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Active</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Valdid until</th>
                         <th>Discount Percentage</th>
-                        <th></th>
+                        <th>Edit Code</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (pc of this.pcs.promocodes(); track pc.id; let index = $index) {
                     <tr>
+                        <td><mat-icon [ngClass]="pc.active ? 'active' : 'inactive'">radio_button_checked</mat-icon></td>
                         <td>{{pc.code}}</td>
                         <td>{{pc.description}}</td>
                         <td>{{pc.valid_until}}</td>
                         <td>{{pc.discount_percent}}</td>
-                        <td>
-                            <div class="btn-container">
-                                <button (click)="this.openEditForm(pc)">Edit</button>
-                            </div>
-                        </td>
+                        <td> <button class="btn" (click)="this.openEditForm(pc)">Edit</button></td>
                     </tr>
                     }
                 </tbody>
