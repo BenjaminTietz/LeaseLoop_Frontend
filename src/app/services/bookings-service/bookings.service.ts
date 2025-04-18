@@ -43,11 +43,14 @@ export class BookingsService {
   }
 
   /** Update an existing Booking */
-  updateBooking(id: number, data: Partial<Booking>) {
-    return this.httpService.patch<Booking>(
-      `${environment.apiBaseUrl}/api/booking/${id}/`,
-      data
-    );
+  updateBooking( data:any) {
+    console.log(data);
+   this.httpService
+      .patch(`${environment.apiBaseUrl}/api/booking/${this.selectedBooking()?.id}/`, data)
+      .subscribe({
+        next: (data) =>{ this.loadBooking() },
+        error: (error) => console.error('Failed to update Booking', error),
+      });
   }
 
   /** Delete a Booking */

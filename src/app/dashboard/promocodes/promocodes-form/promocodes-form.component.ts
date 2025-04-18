@@ -40,18 +40,19 @@ export class PromocodesFormComponent {
   today: string = new Date().toISOString().split('T')[0];
   promocodeForm = new FormBuilder().nonNullable.group({
     code: [
-      '',
+      this.promocodeService.selectedPromocode()?.code || '',
       [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
     ],
     description: [
-      '',
+      this.promocodeService.selectedPromocode()?.description || '',
       [Validators.required, Validators.minLength(10), Validators.maxLength(50)],
     ],
     valid_until: [this.today, Validators.required],
     discount_percent: [
-      null as number | null,
+      this.promocodeService.selectedPromocode()?.discount_percent || 0,
       [Validators.required, this.integerValidator],
     ],
+    active: [this.promocodeService.selectedPromocode()?.active ?? true, Validators.required],
   });
 
   integerValidator(control: AbstractControl): ValidationErrors | null {
@@ -73,18 +74,6 @@ export class PromocodesFormComponent {
   }
 
   constructor() {
-    effect(() => {
-      const selected = this.promocodeService.selectedPromocode();
-      if (selected !== null) {
-        this.promocodeForm.patchValue({
-          code: selected.code,
-          description: selected.description,
-          valid_until: selected.valid_until,
-          discount_percent: selected.discount_percent,
-        });
-      }
-    });
-
     effect(
       () => {
         if (this.promocodeService.successful()) {
@@ -102,32 +91,10 @@ export class PromocodesFormComponent {
   };
 
   createPromocode() {
-    console.log('createPromocode', this.promocodeForm.value);
-    const promocode = this.promocodeForm.value;
-    const promocodeData: PromoDto = {
-      code: promocode.code,
-      description: promocode.description,
-      valid_until: new Date(promocode.valid_until ?? this.today)
-        .toISOString()
-        .split('T')[0],
-      discount_percent: promocode.discount_percent! ?? 0,
-    };
-
-    this.promocodeService.createPromocode(promocodeData);
+    this.promocodeService.createPromocode(this.promocodeForm.value);
   }
 
   updatePromocode() {
-    console.log('updatePromocode');
-    const raw = this.promocodeForm.value;
-    const promocodeData: PromoDto = {
-      code: raw.code,
-      description: raw.description,
-      valid_until: new Date(raw.valid_until ?? this.today)
-        .toISOString()
-        .split('T')[0],
-      discount_percent: raw.discount_percent! ?? 0,
-    };
-
-    this.promocodeService.updatePromocode(promocodeData);
+    this.promocodeService.updatePromocode(this.promocodeForm.value);
   }
 }

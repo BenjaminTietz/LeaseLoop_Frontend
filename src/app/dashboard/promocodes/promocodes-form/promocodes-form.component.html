@@ -52,20 +52,31 @@
                 }
             </div>
         </div>
-        <div class="input-area">
-            <label for="name">Discount percent</label>
-            <div class="form-field">
-                <input type="number" step="1" min="0" max="100" inputmode="numeric" id="discount_percent"
-                    name="discount_percent" placeholder="Discount percent" formControlName="discount_percent" />
-                @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['required']) {
-                <small>Discount is required</small>
-                }
-                @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['notInteger']) {
-                <small>Only whole numbers are allowed</small>
-                }
-                @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['outOfRange']) {
-                <small>Only values between 0 and 100 are allowed</small>
-                }
+        <div class="form-input-wrapper">
+            <div class="input-area">
+                <label for="name">Discount percent</label>
+                <div class="form-field">
+                    <input type="number" step="1" min="0" max="100" inputmode="numeric" id="discount_percent"
+                        name="discount_percent" placeholder="Discount percent" formControlName="discount_percent" />
+                    @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['required']) {
+                    <small>Discount is required</small>
+                    }
+                    @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['notInteger']) {
+                    <small>Only whole numbers are allowed</small>
+                    }
+                    @if (formService.getFormErrors(promocodeForm, 'discount_percent')?.['outOfRange']) {
+                    <small>Only values between 0 and 100 are allowed</small>
+                    }
+                </div>
+            </div>
+            <div class="input-area">
+                <label for="active">Active</label>
+                <div class="form-field">
+                    <select name="active" id="active" formControlName="active">
+                        <option [ngValue]="true">Active</option>
+                        <option [ngValue]="false">Inactive</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="button-area">
@@ -76,15 +87,16 @@
               )">Delete</button>
             <button type="submit" (click)="updatePromocode()"
                 [disabled]="promocodeForm.invalid || promocodeService.sending() "
-                (mouseenter)="formService.markAllAsTouched(promocodeForm)" (mouseleave)="formService.unmarkAllAsTouched(promocodeForm)">
+                (mouseenter)="formService.markAllAsTouched(promocodeForm)"
+                (mouseleave)="formService.unmarkAllAsTouched(promocodeForm)">
                 Update
             </button>
             }
             @if(promocodeService.selectedPromocode() === null) {
             <button type="submit" (click)="createPromocode()"
                 [disabled]="promocodeForm.invalid || promocodeService.sending()"
-                (mouseenter)="formService.markAllAsTouched(promocodeForm)" (mouseleave)="formService.unmarkAllAsTouched(promocodeForm)"
-                >
+                (mouseenter)="formService.markAllAsTouched(promocodeForm)"
+                (mouseleave)="formService.unmarkAllAsTouched(promocodeForm)">
                 Save
             </button>
             }
