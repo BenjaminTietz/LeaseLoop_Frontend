@@ -293,7 +293,7 @@ export class BookingFormComponent {
   } 
 
   deleteBooking() {
-   
+    this.bookingService.deleteBooking();
   }
 
   updateBooking() {

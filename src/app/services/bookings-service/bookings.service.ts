@@ -48,15 +48,18 @@ export class BookingsService {
    this.httpService
       .patch(`${environment.apiBaseUrl}/api/booking/${this.selectedBooking()?.id}/`, data)
       .subscribe({
-        next: (data) =>{ this.loadBooking() },
+        next: () =>{ this.loadBooking() },
         error: (error) => console.error('Failed to update Booking', error),
       });
   }
 
   /** Delete a Booking */
-  deleteBooking(id: number) {
-    return this.httpService.delete(
-      `${environment.apiBaseUrl}/api/booking/${id}/`
-    );
+  deleteBooking() {
+    this.httpService
+      .delete(`${environment.apiBaseUrl}/api/booking/${this.selectedBooking()?.id}/`)
+      .subscribe({
+        next: () => this.loadBooking(),
+        error: (error) => console.error('Failed to delete Booking', error),
+      });
   }
 }

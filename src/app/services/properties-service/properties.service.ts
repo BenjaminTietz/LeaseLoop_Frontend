@@ -108,6 +108,7 @@ export class PropertiesService {
   }
 
   uploadImages(propertyId: number, files: File[], descriptions: string[] = []) {
+    if(!files || files.length == 0) return;
     files.forEach((file, i) => {
       const form = new FormData();
       form.append('property', String(propertyId));

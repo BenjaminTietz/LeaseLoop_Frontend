@@ -124,6 +124,7 @@ export class UnitsService {
   }
 
   uploadImages(unitId: number, files: File[], descriptions: string[] = []) {
+    if(!files || files.length == 0) return;
     files.forEach((file, i) => {
       const form = new FormData();
       form.append('unit', String(unitId));

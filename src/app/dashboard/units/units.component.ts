@@ -22,11 +22,12 @@ export class UnitsComponent implements OnInit {
 
   openForm() {
     this.formOpen.set(true);
-  }
-
-  openEditForm() {
-    this.formOpen.set(true);
     this.unitsService.selectedUnit.set(null);
     this.unitsService.successful.set(false);
+  }
+
+  openEditForm(unit:any) {
+    this.formOpen.set(true);
+    this.unitsService.selectedUnit.set(unit)
   }
 }
