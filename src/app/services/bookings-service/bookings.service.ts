@@ -11,11 +11,8 @@ export class BookingsService {
   selectedBooking = signal<Booking | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
-
-  // Signals to hold reactive state
   bookings = signal<Booking[]>([]);
 
-  /** Load all Booking assoziated to current user / property */
   loadBooking() {
     this.httpService
       .get<Booking[]>(`${environment.apiBaseUrl}/api/bookings/`)
@@ -25,14 +22,6 @@ export class BookingsService {
       });
   }
 
-  /** Load a single Booking by its ID */
-  getBooking(id: number) {
-    return this.httpService.get<Booking>(
-      `${environment.apiBaseUrl}/api/booking/${id}/`
-    );
-  }
-
-  /** Create a new Booking */
   createBooking(data:any) {
     this.httpService
       .post<Booking>(`${environment.apiBaseUrl}/api/bookings/`, data)
@@ -42,9 +31,7 @@ export class BookingsService {
       });
   }
 
-  /** Update an existing Booking */
   updateBooking( data:any) {
-    console.log(data);
    this.httpService
       .patch(`${environment.apiBaseUrl}/api/booking/${this.selectedBooking()?.id}/`, data)
       .subscribe({
@@ -53,7 +40,6 @@ export class BookingsService {
       });
   }
 
-  /** Delete a Booking */
   deleteBooking() {
     this.httpService
       .delete(`${environment.apiBaseUrl}/api/booking/${this.selectedBooking()?.id}/`)

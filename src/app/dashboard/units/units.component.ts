@@ -28,6 +28,7 @@ export class UnitsComponent implements OnInit {
 
   openEditForm(unit:any) {
     this.formOpen.set(true);
+    this.unitsService.successful.set(false);
     this.unitsService.selectedUnit.set(unit)
   }
 }

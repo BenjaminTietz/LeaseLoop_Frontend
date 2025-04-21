@@ -1,48 +1,57 @@
+@let booking = this.dashboardService.showBooking();
+@let client = this.dashboardService.showBooking()?.client;
+@let clientAddress = this.dashboardService.showBooking()?.client?.address;
+@let unit = this.dashboardService.showBooking()?.unit;
+@let promocode = this.dashboardService.showBooking()?.promo_code;
+
 <main class="booking-detail">
     <mat-icon aria-label="Close" class="close-icon"
         (click)="this.dashboardService.isbookingPopupOpen.set(false)">close</mat-icon>
     <header class="booking-header">
         <h1>Booking Details</h1>
         <div class="booking-status">
-            Status: {{ this.dashboardService.showBooking()?.status }}
+            Status: {{ booking?.status }}
         </div>
     </header>
 
     <section class="section">
         <h3>Guest Information</h3>
         <ul>
-            <li><strong>Name:</strong> {{ this.dashboardService.showBooking()?.client?.first_name}} {{
-                this.dashboardService.showBooking()?.client?.last_name}}</li>
-            <li><strong>Email:</strong> {{ this.dashboardService.showBooking()?.client?.email}}</li>
-            <li><strong>Address:</strong> {{ this.dashboardService.showBooking()?.client?.address}}</li>
+            <li><strong>Name:</strong> {{client?.first_name}} {{
+                client?.last_name}}</li>
+            <li><strong>Email:</strong> {{ client?.email}}</li>
+            <li><strong>Address:</strong> <br> {{ clientAddress?.street}}, {{clientAddress?.house_number}} <br>
+                {{ clientAddress?.city}}, {{ clientAddress?.postal_code}}, <br> {{ clientAddress?.country}}
+            </li>
+            <li><strong>Phone:</strong> {{  clientAddress?.phone }}</li>
         </ul>
     </section>
 
     <section class="section">
         <h3>Booking Info</h3>
         <ul>
-            <li><strong>Check-in:</strong> {{ this.dashboardService.showBooking()?.check_in}}</li>
-            <li><strong>Check-out:</strong> {{ this.dashboardService.showBooking()?.check_out}}</li>
-            <li><strong>Total Nights:</strong> {{ this.dashboardService.showBooking()?.total_days}}</li>
-            <li><strong>Guests:</strong> {{ this.dashboardService.showBooking()?.guests_count}}</li>
+            <li><strong>Check-in:</strong> {{ booking?.check_in}}</li>
+            <li><strong>Check-out:</strong> {{ booking?.check_out}}</li>
+            <li><strong>Total Nights:</strong> {{ booking?.total_days}}</li>
+            <li><strong>Guests:</strong> {{ booking?.guests_count}}</li>
         </ul>
     </section>
 
     <section class="section">
         <h3>Unit</h3>
         <ul>
-            <li><strong>Name:</strong> {{ this.dashboardService.showBooking()?.unit?.name}}</li>
-            <li><strong>Property:</strong> {{ this.dashboardService.showBooking()?.unit?.property?.name}}</li>
-            <li><strong>max Capacity:</strong> {{ this.dashboardService.showBooking()?.unit?.capacity}}</li>
-            <li><strong>Price per Night:</strong> {{ this.dashboardService.showBooking()?.unit?.price_per_night}} €</li>
+            <li><strong>Name:</strong> {{ unit?.name}}</li>
+            <li><strong>Property:</strong> {{ unit?.property?.name}}</li>
+            <li><strong>Max Capacity:</strong> {{ unit?.max_capacity}}</li>
+            <li><strong>Price per Night:</strong> {{ unit?.price_per_night}} €</li>
         </ul>
     </section>
 
     <section class="section">
         <h3>Extra Services</h3>
-        @if(this.dashboardService.showBooking()?.services != null) {
+        @if(booking?.services != null) {
         <ul>
-            @for (service of this.dashboardService.showBooking()?.services; track service.id; let index = $index) {
+            @for (service of booking?.services; track $index) {
             <li>
                 {{ service.name }} –
                 {{ service.type === 'per_day' ? 'per Day' : 'One-Time' }} –
@@ -58,10 +67,10 @@
 
     <section class="section">
         <h3>Promo Code</h3>
-        @if (this.dashboardService.showBooking()?.promo_code != null) {
-        <p>Promo Code: {{ this.dashboardService.showBooking()?.promo_code?.code }}</p>
-        <p>Promo Discount: {{ this.dashboardService.showBooking()?.promo_code?.discount_percent }} %</p>
-        <p>Promo Description : {{ this.dashboardService.showBooking()?.promo_code?.description }}</p>
+        @if (promocode != null) {
+        <p>Promo Code: {{ promocode?.code }}</p>
+        <p>Promo Discount: {{ promocode?.discount_percent }} %</p>
+        <p>Promo Description : {{ promocode?.description }}</p>
         }
         @else {
         <p>No promo code applied</p>
@@ -71,9 +80,9 @@
     <section class="section payment-section">
         <h3>Payment Info</h3>
         <ul>
-            <li><strong>Total Price:</strong> {{ this.dashboardService.showBooking()?.total_price}} €</li>
-            <li><strong>Deposit Required:</strong> {{ this.dashboardService.showBooking()?.deposit_amount}} €</li>
-            <li><strong>Deposit Paid:</strong> {{ this.dashboardService.showBooking()?.deposit_paid ? 'Yes' : 'No'}}
+            <li><strong>Total Price:</strong> {{ booking?.total_price}} €</li>
+            <li><strong>Required deposit amount:</strong> {{ booking?.deposit_amount}} €</li>
+            <li><strong>Deposit Paid:</strong> {{booking?.deposit_paid ? 'Yes' : 'No'}}
             </li>
         </ul>
     </section>

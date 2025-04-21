@@ -14,6 +14,7 @@ export class ServiceManagementService {
   selectedService = signal<Service | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
+  sortServices = (s: Service[]) => s.slice().sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
 
   /**
    * Load all services from the server.
@@ -26,12 +27,10 @@ export class ServiceManagementService {
    * @returns An observable that emits the received services.
    */
   loadService() {
-   this.httpService
+    this.httpService
       .get<Service[]>(`${environment.apiBaseUrl}/api/services/`)
       .subscribe({
-        next: (data) => this.services.set(data.slice().sort((a, b) => {
-          return (b.active ? 1 : 0) - (a.active ? 1 : 0)
-        })),
+        next: (data) => this.services.set(this.sortServices(data)),
         error: (error) => console.error('Failed to load services', error),
       });
   }
@@ -52,19 +51,12 @@ export class ServiceManagementService {
       .post<Service>(`${environment.apiBaseUrl}/api/services/`, data)
       .subscribe({
         next: (service) => {
-          const current = this.services();
-          this.services.set([...current, service].slice().sort((a, b) => {
-            return (b.active ? 1 : 0) - (a.active ? 1 : 0);
-          }));
-
-          this.sending.set(false);
-          this.successful.set(true);
-          this.selectedService.set(null);
+          this.services.set(this.sortServices([...this.services(), service]));
+          this.setResponse(false, true, null);
         },
         error: (err) => {
           console.error('Failed to create service:', err);
-          this.sending.set(false);
-          this.successful.set(false);
+          this.setResponse(false, false);
         },
       });
   }
@@ -88,18 +80,12 @@ export class ServiceManagementService {
       .patch<Service>(`${environment.apiBaseUrl}/api/service/${id}/`, data)
       .subscribe({
         next: (service) => {
-          const current = this.services();
-          this.services.set(current.map((s) => (s.id === id ? service : s)).slice().sort((a, b) => {
-            return (b.active ? 1 : 0) - (a.active ? 1 : 0);
-          }));
-          this.sending.set(false);
-          this.successful.set(true);
-          this.selectedService.set(null);
+          this.services.set(this.sortServices([...this.services(), service]));
+          this.setResponse(false, true, null);
         },
         error: (err) => {
           console.error('Failed to create service:', err);
-          this.sending.set(false);
-          this.successful.set(false);
+          this.setResponse(false, false);
         },
       });
   }
@@ -116,22 +102,37 @@ export class ServiceManagementService {
    */
 
   deleteService(id: number) {
-    console.log('deleteService', id);
     this.httpService
       .delete(`${environment.apiBaseUrl}/api/service/${id}/`)
       .subscribe({
         next: (service) => {
-          const current = this.services();
-          this.services.set(current.filter((s) => s.id !== id));
-          this.sending.set(false);
-          this.successful.set(true);
-          this.selectedService.set(null);
+          this.services.set(this.sortServices([...this.services()]));
+          this.setResponse(false, true, null);
         },
         error: (err) => {
           console.error('Failed to create service:', err);
-          this.sending.set(false);
-          this.successful.set(false);
+          this.setResponse(false, false);
         },
       });
   }
+
+  /**
+   * Sets the sending, successful, and selectedService states of the service based
+   * on the given parameters.
+   *
+   * @param sending - A boolean indicating whether the service is currently being
+   * sent to the server.
+   * @param successful - A boolean indicating whether the service was successfully
+   * created, updated, or deleted.
+   * @param selected - An optional service object to be set as the selected
+   * service. If not provided, the current selected service is not changed.
+   */
+  setResponse(sending: boolean, successful: boolean, selected?: Service | null) {	
+  if (selected) {
+    this.selectedService.set(selected);
+  }
+    this.sending.set(sending);
+    this.successful.set(successful);
+  }
+
 }

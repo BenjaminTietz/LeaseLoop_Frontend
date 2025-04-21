@@ -21,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (unit of this.unitsService.units(); track unit) {
+                    @for (unit of this.unitsService.units(); track $index) {
                     <tr >
                         <td> <mat-icon [ngClass]="unit.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
                         <td>{{unit.property.name}}</td>
