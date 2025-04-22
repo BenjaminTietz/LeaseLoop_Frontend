@@ -4,6 +4,7 @@ import { PropertyFormComponent } from "./property-form/property-form.component";
 import { MatIcon } from '@angular/material/icon';
 import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 import { CommonModule } from '@angular/common';
+import { Property } from '../../models/property.model';
 @Component({
   selector: 'app-properties',
   standalone: true,
@@ -25,8 +26,9 @@ export class PropertiesComponent implements OnInit {
     this.propertyService.loadProperties();
   }
 
-  openEditForm(){
+  openEditForm(property : Property) {
     this.formOpen.set(true);
     this.propertyService.successful.set(false);
+    this.propertyService.selectedProperty.set(property);
   }
 }

@@ -21,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (unit of this.unitsService.units(); track unit) {
+                    @for (unit of this.unitsService.units(); track $index) {
                     <tr >
                         <td> <mat-icon [ngClass]="unit.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
                         <td>{{unit.property.name}}</td>
@@ -29,11 +29,7 @@
                         <td>{{unit.capacity}}</td>
                         <td>{{unit.price_per_night}}</td>
                         <td>{{unit.status}}</td>
-                        <td>
-                            <div class="btn-container">
-                                <button (click)="openEditForm(); unitsService.selectedUnit.set(unit)">Edit</button>
-                            </div>
-                        </td>
+                        <td> <button class="btn" (click)="openEditForm(unit)">Edit</button> </td>
                     </tr>
                     }
 

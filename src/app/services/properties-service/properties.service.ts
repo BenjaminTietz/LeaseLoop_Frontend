@@ -35,7 +35,7 @@ export class PropertiesService {
     this.http.post<Property>(this.getUrl('properties'), formData, this.getAuthOptions())
       .subscribe({
         next: (property) => {
-          this.uploadImages(property.id, images, descriptions);
+          this.uploadImages(images, descriptions);
           this.onSuccess();
         },
         error: this.handleError('Create property failed')
@@ -43,14 +43,12 @@ export class PropertiesService {
   }
 
   updateProperty(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
-    const id = this.selectedProperty()?.id;
-    if (!id) return;
     this.setLoading(true);
-    this.http.patch<Property>(this.getUrl(`properties/${id}`), formData, this.getAuthOptions())
+    this.http.patch<Property>(this.getUrl(`properties/${this.selectedProperty()?.id}`), formData, this.getAuthOptions())
       .subscribe({
         next: () => {
           if (Array.isArray(newImages) && newImages.length > 0) {
-            this.uploadImages(id, newImages, descriptions ?? []);
+            this.uploadImages( newImages, descriptions ?? []);
           }
           this.successful.set(true);
         },
@@ -107,13 +105,13 @@ export class PropertiesService {
     return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
   }
 
-  uploadImages(propertyId: number, files: File[], descriptions: string[] = []) {
+  uploadImages( files: File[], descriptions: string[] = []) {
+    if(!files || files.length == 0) return;
     files.forEach((file, i) => {
       const form = new FormData();
-      form.append('property', String(propertyId));
+      form.append('property', String(this.selectedProperty()?.id));
       form.append('image', file);
       form.append('alt_text', descriptions?.[i]?.trim() || '');
-  
       this.http.post(this.getUrl('property-images'), form, this.getAuthOptions())
         .subscribe({
           error: (err) => console.error('Image upload failed:', err)
@@ -124,7 +122,6 @@ export class PropertiesService {
   updateImageDescription(id: number, desc: string): Promise<void> {
     const formData = new FormData();
     formData.append('alt_text', desc);
-  
     return new Promise((resolve, reject) => {
       this.http.patch(this.getUrl(`property-image/${id}`), formData, this.getAuthOptions()).subscribe({
         next: () => resolve(),

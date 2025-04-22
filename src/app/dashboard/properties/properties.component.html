@@ -33,9 +33,7 @@
                         <td>{{property.description}}</td>
                         <td>{{property.address.street}}, {{property.address.city}}, {{property.address.house_number}}</td>
                         <td>{{property.images.length}}</td>
-                        <td>
-                            <button [disabled]="propertyService.sending()" (click)="propertyService.selectedProperty.set(property); openEditForm()">Edit</button>
-                        </td>
+                        <td>  <button class="btn" [disabled]="propertyService.sending()" (click)=" openEditForm(property)">Edit</button></td>
 
                     </tr>
                     }

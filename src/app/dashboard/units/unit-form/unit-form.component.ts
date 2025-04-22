@@ -148,6 +148,9 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     enableBackgroundScroll();
     this.unitService.selectedUnit.set(null);
+    this.unitService.deletedImageIds.set([]);
+    this.unitService.loadUnits();
+    this.close.emit()
   }
 
   getCapacityPriceError(): string | null {
