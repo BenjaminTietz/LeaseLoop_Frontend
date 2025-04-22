@@ -116,7 +116,7 @@ export class AnalyticsService {
         }
 
         const mapped = data.map((item) => ({
-          name: item['property__name'] ?? item['unit__name'] ?? 'Unknown',
+          name: item.name ?? 'Unknown',
           revenue: item.revenue ?? 0,
         }));
 
