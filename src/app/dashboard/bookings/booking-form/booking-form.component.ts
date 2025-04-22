@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Output, signal } from '@angular/core';
 import { BookingsService } from '../../../services/bookings-service/bookings.service';
 import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
 import { MatIcon } from '@angular/material/icon';
@@ -45,6 +45,17 @@ export class BookingFormComponent {
   showClient = signal(false);
   showRestOfForm = signal(false);
   nochangesMade = signal(true);
+
+
+  constructor() {
+    this.loadAllData();
+    effect(() => {
+          if (this.bookingService.successful()) {
+            this.formService.resetForm(this.bookingForm);
+            this.closeForm();
+          }
+        }, { allowSignalWrites: true });
+  }
 
   
   setMinCheckOutDate(checkInDate: string) {
@@ -188,14 +199,17 @@ export class BookingFormComponent {
   closeForm = () => this.close.emit();
 
   ngOnInit(): void {
+    
+    this.setDataBooking()
+  }
+
+  loadAllData(){
     this.bookingService.loadBooking();
     this.propertyService.loadProperties();
     this.clientService.loadClients();
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
-    console.log('Booking:', this.bookingService.selectedBooking());
-    this.setDataBooking()
   }
 
 
