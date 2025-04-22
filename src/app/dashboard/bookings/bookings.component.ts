@@ -24,13 +24,19 @@ export class BookingsComponent implements OnInit {
     this.bs.loadBooking();
   }
 
-  openForm(booking: Booking | null = null) {
+  openForm() {
     this.formOpen.set(true);
     this.bs.selectedBooking.set(null);
-    if(booking) this.bs.selectedBooking.set(booking);
+    this.bs.successful.set(false);
   }
 
   closeForm() {
     this.formOpen.set(false);
+  }
+
+  openEditForm(booking: Booking) {
+    this.formOpen.set(true);
+    this.bs.selectedBooking.set(booking);
+    this.bs.successful.set(false);
   }
 }

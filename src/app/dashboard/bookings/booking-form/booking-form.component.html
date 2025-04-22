@@ -44,7 +44,7 @@
       <div class="form-field">
         <select id="property" name="property" formControlName="property"
           (change)="onPropertyChange(bookingForm.value.property)">
-          <option [ngValue]="null" disabled>Select Property</option>
+          <option [ngValue]="0" disabled>Select Property</option>
           @for(property of availableProperties(); track $index) {
           <option [ngValue]="property.id">{{ property.name }}</option>
           }
@@ -56,7 +56,7 @@
       <p class="info-text">No available properties for the selected dates.</p>
       <button routerLink="/dashboard">Check availability calendar</button>
     }
-    @if(checkIn() && checkOut() && availableProperties().length > 0 && bookingForm.get('property')?.value === null) {
+    @if(checkIn() && checkOut() && availableProperties().length > 0 && bookingForm.get('property')?.value === 0) {
       <p class="info-text">Please select a property.</p>
     }
     
@@ -67,7 +67,7 @@
       <label for="unit">Unit</label>
       <div class="form-field">
         <select id="unit" name="unit" formControlName="unit" (change)="onUnitChange($any($event.target).value)">
-          <option [ngValue]="null" disabled>Select Unit</option>
+          <option [ngValue]="0" disabled>Select Unit</option>
           @for(unit of availableUnits(); track $index) {
           <option [ngValue]="unit.id">{{ unit.name }}</option>
           }
@@ -76,7 +76,7 @@
     </div>
     }
 
-    @if(showUnitInput() && bookingForm.get('unit')?.value === null && availableUnits().length > 0) {
+    @if(showUnitInput() && bookingForm.get('unit')?.value === 0 && availableUnits().length > 0) {
       <p class="info-text">Please select a unit.</p>
     }
 
@@ -87,7 +87,12 @@
           <input type="number" min="1" id="guests_count" name="guests_count" required placeholder="Guests conunt"
             (change)="onGuestsCountChange($any($event.target).value)" formControlName="guests_count"
             (input)="onGuestsCountChange($any($event.target).value)">
-            
+            @if(formService.getFormErrors(bookingForm, 'guests_count')?.['required']) {
+              <small>Guests count is required.</small>
+            }
+            @if(formService.getFormErrors(bookingForm, 'guests_count')?.['min']) {
+              <small>Guests count must be at least 1.</small>
+            }
         </div>
         @if(bookingForm.get('guests_count')?.value === null) {
           <p>Please enter the number of guests.</p>
@@ -112,7 +117,7 @@
         <label for="client">Client</label>
         <div class="form-field">
           <select id="client" name="client" formControlName="client" (change)="onClientChange($any($event.target).value)">
-            <option [ngValue]="null" disabled>Select Customer</option>
+            <option [ngValue]="0" disabled>Select Customer</option>
             @for(client of clientService.clients(); track $index) {
             <option [ngValue]="client.id">{{client.first_name}} {{client.last_name}}</option>
             }
@@ -122,7 +127,7 @@
       </div>
       
         
-      @if(bookingForm.get('client')?.value === null && clientService.clients().length > 0) {
+      @if(bookingForm.get('client')?.value === 0 && clientService.clients().length > 0) {
         <p class="info-text">Please select a client.</p>
       }
    
@@ -144,8 +149,14 @@
     <div class="input-area">
       <label for="deposit_amount">Deposit Amount</label>
       <div class="form-field">
-        <input type="number" id="deposit_amount" name="deposit_amount" required placeholder="Deposit Amount"
+        <input type="number" id="deposit_amount" min="1" name="deposit_amount" required placeholder="Deposit Amount"
           formControlName="deposit_amount">
+          @if(formService.getFormErrors(bookingForm, 'deposit_amount')?.['required']) {
+          <small>Deposit amount is required.</small>
+          }
+          @if(formService.getFormErrors(bookingForm, 'deposit_amount')?.['min']) {  
+          <small>Deposit amount must be at least 0.</small>
+          }
       </div>
     </div>
     }
@@ -165,7 +176,7 @@
       <label for="promo_code">Promo code</label>
       <div class="form-field">
         <select name="promo_code" id="promo_code" formControlName="promo_code">
-          <option [ngValue]="null" disabled>Select Promo Code</option>
+          <option [ngValue]="0" disabled>Select Promo Code</option>
           @for(promocode of promoService.promocodes(); track $index) {
           <option [ngValue]="promocode.id">{{promocode.description}} {{promocode.discount_percent}}%</option>
           }

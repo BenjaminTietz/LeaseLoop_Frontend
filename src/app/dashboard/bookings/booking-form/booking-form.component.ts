@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Output, signal } from '@angular/core';
 import { BookingsService } from '../../../services/bookings-service/bookings.service';
 import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
 import { MatIcon } from '@angular/material/icon';
@@ -12,11 +12,8 @@ import { Property } from '../../../models/property.model';
 import { ClientsService } from '../../../services/clients-service/clients.service';
 import { PromocodeService } from '../../../services/promocode-service/promocode.service';
 import { ServiceManagementService } from '../../../services/service-management/service-management.service';
-import { Service } from '../../../models/service.model';
-import { PromoCode } from '../../../models/promocode.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UnitsService } from '../../../services/units-service/units.service';
-import { Booking } from '../../../models/booking.model';
 import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-booking-form',
@@ -49,15 +46,26 @@ export class BookingFormComponent {
   showRestOfForm = signal(false);
   nochangesMade = signal(true);
 
+
+  constructor() {
+    this.loadAllData();
+    effect(() => {
+          if (this.bookingService.successful()) {
+            this.formService.resetForm(this.bookingForm);
+            this.closeForm();
+          }
+        }, { allowSignalWrites: true });
+  }
+
   
   setMinCheckOutDate(checkInDate: string) {
     this.minCheckOutDate = new Date(new Date(checkInDate).setDate(new Date(checkInDate).getDate() + 1)).toISOString().split('T')[0];
   
     this.bookingForm.patchValue({
       check_out: '',
-      property: null,
-      unit: null,
-      guests_count: null
+      property: 0,
+      unit: 0,
+      guests_count: 0
     });
   
     this.showCheckOutInput.set(true);
@@ -75,14 +83,15 @@ export class BookingFormComponent {
     this.filterAvailableProperties(checkInDate, checkOutDate);
   
     this.bookingForm.patchValue({
-      property: null,
-      unit: null,
-      guests_count: null,
+      property: 0,
+      unit: 0,
+      guests_count: 0,
     });
   
     this.showPropertyInput.set(true);
     this.showUnitInput.set(false);
     this.showGuestsInput.set(false);
+    this.showClient.set(false);
     this.showRestOfForm.set(false);
     this.nochangesMade.set(false);
   }
@@ -91,8 +100,8 @@ export class BookingFormComponent {
     if (propertyId == null) return;
   
     this.bookingForm.patchValue({
-      unit: null,
-      guests_count: null
+      unit: 0,
+      guests_count: 0
     });
   
     const checkInDate = this.checkIn();
@@ -123,7 +132,7 @@ export class BookingFormComponent {
 
   onUnitChange(unitId: number) {
     this.bookingForm.patchValue({
-      guests_count: null
+      guests_count: 0
     });
   
     this.showGuestsInput.set(true);
@@ -143,7 +152,7 @@ export class BookingFormComponent {
     if (selectedUnit && guestsCount <= selectedUnit.max_capacity) {
       this.showClient.set(true);
       this.bookingForm.patchValue({
-        client: null
+        client: 0
       })
     } else {
       this.showClient.set(false);
@@ -190,29 +199,32 @@ export class BookingFormComponent {
   closeForm = () => this.close.emit();
 
   ngOnInit(): void {
+    
+    this.setDataBooking()
+  }
+
+  loadAllData(){
     this.bookingService.loadBooking();
     this.propertyService.loadProperties();
     this.clientService.loadClients();
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
-    console.log('Booking:', this.bookingService.selectedBooking());
-    this.setDataBooking()
   }
 
 
   bookingForm = new FormBuilder().nonNullable.group({
-    property: [null as number | null ,  Validators.required],
-    unit: [null as number |null , Validators.required],
-    client: [null as number | null],
-    guests_count: [null as number | null, Validators.required],
-    check_in: ['', Validators.required],
-    check_out: ['', Validators.required],
-    deposit_paid : [false, Validators.required],
-    deposit_amount: [0],
-    promo_code: [null as number| null, Validators.required],
-    services: [[] as number[]],
-    status: ['pending'],
+    property: [this.bookingService.selectedBooking()?.property.id || 0 ,  Validators.required],
+    unit: [this.bookingService.selectedBooking()?.unit.id || 0 , Validators.required],
+    client: [this.bookingService.selectedBooking()?.client.id || 0, Validators.required],
+    guests_count: [this.bookingService.selectedBooking()?.guests_count || 0, Validators.required],
+    check_in: [this.bookingService.selectedBooking()?.check_in || '', Validators.required],
+    check_out: [this.bookingService.selectedBooking()?.check_out || '', Validators.required],
+    deposit_paid : [this.bookingService.selectedBooking()?.deposit_paid || false, Validators.required],
+    deposit_amount: [this.bookingService.selectedBooking()?.deposit_amount || 0, Validators.min(0)],
+    promo_code: [this.bookingService.selectedBooking()?.promo_code?.id || 0, Validators.required],
+    services: [this.bookingService.selectedBooking()?.services.map(s => s.id) || [], Validators.required],
+    status: [this.bookingService.selectedBooking()?.status || 'pending', Validators.required],
   });
 
   checkIn = toSignal<string | null>(this.bookingForm.get('check_in')!.valueChanges, { initialValue: null });
@@ -224,28 +236,12 @@ export class BookingFormComponent {
   setDataBooking() {
     const booking = this.bookingService.selectedBooking();
     if (booking) {
-      this.bookingForm.patchValue({
-        property: booking.property.id,
-        unit: booking.unit.id,
-        client: booking.client.id,
-        guests_count: booking.guests_count,
-        check_in: booking.check_in,
-        check_out: booking.check_out,
-        deposit_paid: booking.deposit_paid,
-        deposit_amount: booking.deposit_amount,
-        promo_code: booking.promo_code?.id,
-        services: booking.services.map(s => s.id),
-        status: booking.status
-      });
-  
       const properties = this.propertyService.properties();
       if (!properties.some(p => p.id === booking.property.id)) {
         this.availableProperties.set([...properties, booking.property]);
       } else {
         this.availableProperties.set(properties);
       }
-  
-      
       const units = this.unitService.units();
       if (!units.some(u => u.id === booking.unit.id)) {
         this.availableUnits.set([...units, booking.unit]);
@@ -253,12 +249,17 @@ export class BookingFormComponent {
         this.availableUnits.set(units);
       }
   
-      this.showCheckOutInput.set(true);
+      this.showFullForm();
+    }
+  }
+
+  showFullForm(){
+    this.showCheckOutInput.set(true);
       this.showPropertyInput.set(true);
+      this.showClient.set(true);
       this.showUnitInput.set(true);
       this.showGuestsInput.set(true);
       this.showRestOfForm.set(true);
-    }
   }
   
 
@@ -278,6 +279,7 @@ export class BookingFormComponent {
   onStatusChange(){
     this.nochangesMade.set(false);
   }
+
 
   guestCountExceedsCapacity() {
     const guests = this.bookingForm.get('guests_count')?.value;
