@@ -2,7 +2,6 @@ import { effect, inject, Injectable, signal } from '@angular/core';
 import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import {
-  RevenueStats,
   ServiceStats,
   PropertyBookingStats,
 } from '../../models/analytics.models';
@@ -13,7 +12,8 @@ import { subDays, subWeeks, subMonths, subYears, format } from 'date-fns';
 })
 export class AnalyticsService {
   private http = inject(HttpService);
-  revenueData = signal<RevenueStats[]>([]);
+  revenueData = signal<any[]>([]);
+  revenueGroupedData = signal<{ name: string; revenue: number }[]>([]);
   serviceData = signal<ServiceStats[]>([]);
   bookingData = signal<PropertyBookingStats[]>([]);
 
@@ -72,6 +72,7 @@ export class AnalyticsService {
     this.getRevenueData(from, to, property, unit);
     this.getBookingData(from, to, property, unit);
     this.getServiceData(from, to, property, unit);
+    this.getRevenueGroupedData(from, to, property, unit);
     console.log('Analytics updated:', { from, to, property, unit });
   }
 
@@ -88,9 +89,42 @@ export class AnalyticsService {
       property,
       unit
     );
-    this.http.get<RevenueStats[]>(url).subscribe({
+    this.http.get<any[]>(url).subscribe({
       next: (data) => this.revenueData.set(data ?? []),
       error: (err) => console.error('Error fetching revenue data:', err),
+    });
+  }
+
+  public getRevenueGroupedData(
+    from: string,
+    to: string,
+    property: string,
+    unit: string
+  ) {
+    const url = this.buildUrl(
+      '/api/analytics/revenue-by/',
+      from,
+      to,
+      property,
+      unit
+    );
+    this.http.get<any[]>(url).subscribe({
+      next: (data) => {
+        if (!Array.isArray(data) || data.length === 0) {
+          this.revenueGroupedData.set([]);
+          return;
+        }
+
+        const mapped = data.map((item) => ({
+          name: item['property__name'] ?? item['unit__name'] ?? 'Unknown',
+          revenue: item.revenue ?? 0,
+        }));
+
+        this.revenueGroupedData.set(mapped);
+        console.log('Revenue grouped data:', mapped);
+      },
+      error: (err) =>
+        console.error('Error fetching grouped revenue data:', err),
     });
   }
 

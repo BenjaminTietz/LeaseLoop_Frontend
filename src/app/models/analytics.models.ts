@@ -1,7 +1,3 @@
-export interface RevenueStats {
-  total_revenue: number;
-}
-
 export interface UnitBookingStats {
   unit: string;
   total: number;
@@ -20,13 +16,11 @@ export interface ServiceStats {
   sales: number;
 }
 
-export interface Property {
-  id: string;
-  name: string;
+export interface RevenueStats {
+  total_revenue: number;
 }
 
-export interface Unit {
-  id: string;
+export interface RevenueGroupedStats {
   name: string;
-  propertyId: string;
+  revenue: number;
 }
