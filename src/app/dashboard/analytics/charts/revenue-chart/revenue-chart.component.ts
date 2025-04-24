@@ -20,6 +20,8 @@ import {
 } from 'ng-apexcharts';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
+import { ThemeService } from '../../../../services/theme-service/theme.service';
+
 @Component({
   selector: 'app-revenue-chart',
   standalone: true,
@@ -29,6 +31,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 })
 export class RevenueChartComponent {
   private analyticsService = inject(AnalyticsService);
+  private themeService = inject(ThemeService);
+
   chartOptions = signal<{
     series: ApexAxisChartSeries;
     chart: ApexChart;
@@ -37,6 +41,7 @@ export class RevenueChartComponent {
     stroke: ApexStroke;
     dataLabels: ApexDataLabels;
     grid: ApexGrid;
+    theme: { mode: 'light' | 'dark' };
   } | null>(null);
 
   ngOnInit(): void {
@@ -52,6 +57,9 @@ export class RevenueChartComponent {
     effect(
       () => {
         const groupedRevenue = this.analyticsService.revenueGroupedData();
+        const isDark = this.themeService.getCurrentTheme() === 'dark';
+        console.log('isdark', isDark);
+
         if (
           !groupedRevenue ||
           !Array.isArray(groupedRevenue) ||
@@ -67,15 +75,29 @@ export class RevenueChartComponent {
 
         this.chartOptions.set({
           series: [{ name: 'Revenue', data: seriesData }],
-          chart: { type: 'bar', height: 350 },
-          xaxis: { categories },
-          title: { text: 'Revenue by Property/Unit' },
+          chart: { type: 'bar', height: 350, background: 'transparent' },
+          theme: { mode: isDark ? 'dark' : 'light' },
+          xaxis: {
+            categories,
+            labels: {
+              style: {
+                colors: isDark ? '#fff' : '#000',
+              },
+            },
+          },
+          title: {
+            text: 'Revenue by Property/Unit',
+            style: {
+              color: isDark ? '#fff' : '#000',
+            },
+          },
           stroke: { curve: 'smooth' },
           dataLabels: { enabled: false },
           grid: {
+            borderColor: isDark ? '#444' : '#ccc',
             row: {
-              colors: ['#f3f3f3', 'transparent'],
-              opacity: 0.5,
+              colors: [isDark ? '#333' : '#f3f3f3', 'transparent'],
+              opacity: 1,
             },
           },
         });

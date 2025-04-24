@@ -4,6 +4,11 @@
 
 main {
     position: unset;
+    height: unset;
+    width: unset;
+    background-color: var(--color-bg-surface);
+
+    color: var(--color-text-base);
 }
 
 app-selector {
