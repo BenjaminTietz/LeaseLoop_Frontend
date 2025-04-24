@@ -223,13 +223,11 @@ export class AvailabilityCalendarComponent {
     const booking = this.filteredBookings().find(
       (b) =>
         b.unit.id === unitId &&
-        this.dayString(day) >= b.check_in &&
+        this.dayString(day) < b.check_in &&
         this.dayString(day) < b.check_out
     );
     if (booking) {
-      console.log('Booking clicked:', booking);
       this.dashboardService.showBooking.set(booking);
-      console.log('Booking:', this.dashboardService.showBooking());
       this.dashboardService.isbookingPopupOpen.set(true);
     }
   }
