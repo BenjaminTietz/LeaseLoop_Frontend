@@ -12,7 +12,6 @@ import { NavigatorService } from '../../../services/navigator/navigator.service'
 })
 export class ThemeButtonComponent {
   title = 'thynkris-frontend';
-  currentTheme =signal(''); ;
   themeService = inject(ThemeService);
   navigator = inject(NavigatorService);
 
@@ -20,11 +19,11 @@ export class ThemeButtonComponent {
 
   ngOnInit() {
     this.themeService.initTheme();
-    this.currentTheme.set(this.themeService.getCurrentTheme());
+    this.themeService.currentTheme.set(this.themeService.getCurrentTheme())
   }
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
-    this.currentTheme.set(this.themeService.getCurrentTheme());
+    this.themeService.currentTheme.set(this.themeService.getCurrentTheme());
   }
 }

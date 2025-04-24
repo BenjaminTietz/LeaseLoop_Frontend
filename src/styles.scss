@@ -167,23 +167,6 @@ app-booking-popup {
   position: relative;
 }
 
-
-// apex charts styles
-.apexcharts-tooltip.apexcharts-theme-light {
-  background: var(--color-bg-surface);
-  color: var(--color-text-base);
-  border-radius: 8px;
-  padding: 16px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-apx-chart {
-  text {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text-base);
-  }
-
-
+apx-chart{
+  width: 100%;
 }

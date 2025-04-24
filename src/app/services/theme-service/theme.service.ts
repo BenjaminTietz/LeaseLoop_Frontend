@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class ThemeService {
   storageKey = 'user-theme';
   root = document.documentElement;
+  currentTheme =signal('');
   constructor() {}
 
   initTheme(): void {
