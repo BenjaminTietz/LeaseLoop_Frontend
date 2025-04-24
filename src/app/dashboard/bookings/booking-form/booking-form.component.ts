@@ -6,7 +6,7 @@ import { FormService } from '../../../services/form-service/form.service';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Unit } from '../../../models/unit.model';
 import { Property } from '../../../models/property.model';
 import { ClientsService } from '../../../services/clients-service/clients.service';
@@ -15,6 +15,7 @@ import { ServiceManagementService } from '../../../services/service-management/s
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UnitsService } from '../../../services/units-service/units.service';
 import { RouterLink } from '@angular/router';
+import { Booking } from '../../../models/booking.model';
 @Component({
   selector: 'app-booking-form',
   standalone: true,
@@ -55,6 +56,9 @@ export class BookingFormComponent {
             this.closeForm();
           }
         }, { allowSignalWrites: true });
+        effect(() => {
+          console.log('Form valid?', this.bookingForm.valid);
+        });
   }
 
   
@@ -199,7 +203,7 @@ export class BookingFormComponent {
   closeForm = () => this.close.emit();
 
   ngOnInit(): void {
-    
+    this.bookingService.sending.set(false);
     this.setDataBooking()
   }
 
@@ -222,7 +226,7 @@ export class BookingFormComponent {
     check_out: [this.bookingService.selectedBooking()?.check_out || '', Validators.required],
     deposit_paid : [this.bookingService.selectedBooking()?.deposit_paid || false, Validators.required],
     deposit_amount: [this.bookingService.selectedBooking()?.deposit_amount || 0, Validators.min(0)],
-    promo_code: [this.bookingService.selectedBooking()?.promo_code?.id || 0, Validators.required],
+    promo_code: [this.bookingService.selectedBooking()?.promo_code?.id ?? null, Validators.nullValidator],
     services: [this.bookingService.selectedBooking()?.services.map(s => s.id) || [], Validators.required],
     status: [this.bookingService.selectedBooking()?.status || 'pending', Validators.required],
   });
@@ -232,6 +236,13 @@ export class BookingFormComponent {
 
   selectedProperty = toSignal(this.bookingForm.get('property')!.valueChanges, { initialValue: null });
 
+  optionalSelectValidator() {
+    return (control: AbstractControl) => {
+      return control.value !== null && control.value >= 0
+        ? null
+        : { required: true };
+    };
+  }
 
   setDataBooking() {
     const booking = this.bookingService.selectedBooking();
@@ -276,7 +287,7 @@ export class BookingFormComponent {
     }
   }
 
-  onStatusChange(){
+  onValueChange(){
     this.nochangesMade.set(false);
   }
 
@@ -300,5 +311,12 @@ export class BookingFormComponent {
 
   updateBooking() {
     this.bookingService.updateBooking( this.bookingForm.value);
+  }
+
+  ngOnDestroy(){
+    this.loadAllData()
+    this.bookingService.selectedBooking.set(null);
+    this.bookingService.successful.set(false);
+    this.bookingService.sending.set(false);
   }
 }

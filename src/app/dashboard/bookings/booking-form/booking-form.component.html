@@ -164,7 +164,7 @@
     <div class="input-area">
       <label for="status">Status</label>
       <div class="form-field">
-        <select name="status" id="status" formControlName="status" (change)="onStatusChange()">
+        <select name="status" id="status" formControlName="status" (change)="onValueChange()">
           <option [ngValue]="'pending'">Pending</option>
           <option [ngValue]="'confirmed'">Confirmed</option>
           <option [ngValue]="'cancelled'">Cancelled</option>
@@ -175,8 +175,8 @@
     <div class="input-area">
       <label for="promo_code">Promo code</label>
       <div class="form-field">
-        <select name="promo_code" id="promo_code" formControlName="promo_code">
-          <option [ngValue]="0" disabled>Select Promo Code</option>
+        <select name="promo_code" id="promo_code" formControlName="promo_code" (change)="onValueChange()">
+          <option [ngValue]="0" >Select Promo Code</option>
           @for(promocode of promoService.promocodes(); track $index) {
           <option [ngValue]="promocode.id">{{promocode.description}} {{promocode.discount_percent}}%</option>
           }
