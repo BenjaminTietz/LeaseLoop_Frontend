@@ -4,7 +4,7 @@
 @let unit = this.dashboardService.showBooking()?.unit;
 @let promocode = this.dashboardService.showBooking()?.promo_code;
 
-<main class="booking-detail">
+<main class="booking-detail" [appClickOutside]="closePopup">
     <mat-icon aria-label="Close" class="close-icon"
         (click)="this.dashboardService.isbookingPopupOpen.set(false)">close</mat-icon>
     <header class="booking-header">
@@ -23,7 +23,7 @@
             <li><strong>Address:</strong> <br> {{ clientAddress?.street}}, {{clientAddress?.house_number}} <br>
                 {{ clientAddress?.city}}, {{ clientAddress?.postal_code}}, <br> {{ clientAddress?.country}}
             </li>
-            <li><strong>Phone:</strong> {{  clientAddress?.phone }}</li>
+            <li><strong>Phone:</strong> {{ clientAddress?.phone }}</li>
         </ul>
     </section>
 
@@ -49,7 +49,7 @@
 
     <section class="section">
         <h3>Extra Services</h3>
-        @if(booking?.services != null) {
+        @if((booking?.services?.length ?? 0) > 0) {
         <ul>
             @for (service of booking?.services; track $index) {
             <li>
