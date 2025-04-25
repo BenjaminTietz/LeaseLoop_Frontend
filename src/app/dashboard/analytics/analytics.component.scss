@@ -1,17 +1,19 @@
 @use "../../styles/mixins" as *;
 @use '../../styles/dashboard-component.scss' as *;
-@use '../../styles/dashboard-forms.scss' as *;
 
-main {
-    position: unset;
-    height: unset;
-    width: unset;
-    background-color: var(--color-bg-surface);
-
-    color: var(--color-text-base);
+content{
+    
+    border-radius: 12px;
+    background: var(--color-bg-surface);
+    box-shadow: 0 0 0 1px #ddd;
+    position: relative;
 }
 
-app-selector {
-    margin-bottom: 20px;
-    @include display(flex, row, center, center);
+app-selector{
+    width: 100%;
+}
+
+app-revenue-chart, app-service-chart, app-booking-chart{
+    display: flex;
+    width: 100%;
 }

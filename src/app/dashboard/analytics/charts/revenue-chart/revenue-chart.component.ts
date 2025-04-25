@@ -5,6 +5,7 @@ import {
   OnInit,
   signal,
   isSignal,
+  computed,
 } from '@angular/core';
 import { AnalyticsService } from '../../../../services/analytics-service/analytics.service';
 import { CommonModule } from '@angular/common';
@@ -33,16 +34,92 @@ export class RevenueChartComponent {
   private analyticsService = inject(AnalyticsService);
   private themeService = inject(ThemeService);
 
-  chartOptions = signal<{
+  chartOptions = computed<{
     series: ApexAxisChartSeries;
     chart: ApexChart;
     xaxis: ApexXAxis;
+    yaxis: ApexYAxis;
     title: ApexTitleSubtitle;
     stroke: ApexStroke;
     dataLabels: ApexDataLabels;
     grid: ApexGrid;
+    tooltip: ApexTooltip;
+    fill: ApexFill;
     theme: { mode: 'light' | 'dark' };
-  } | null>(null);
+  } | null>(() => {
+    const data = this.analyticsService.revenueGroupedData();
+    const dark = this.themeService.currentTheme() === 'dark';
+    if (!data || data.length === 0) return null;
+
+    return {
+      series: [
+        {
+          name: 'Revenue',
+          data: data.map((item) => parseFloat(item.revenue.toFixed(2))),
+
+        },
+      ],
+      chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: { show: false },
+        
+      },
+      xaxis: {
+        type: 'category',
+        categories: data.map((item) => item.name),
+        labels: {
+          style: {
+            colors: dark ? 'white' : 'black',
+          },
+        }
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: dark ? 'white' : 'black',
+          },
+        },
+      },
+      title: {
+        theme: dark ? 'dark' : 'light',
+        text: 'Grouped Revenue',
+        style: {
+          color: dark ? 'white' : 'black',
+        },
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+        
+      },
+      fill: {
+        colors: dark ? ['#179E7F'] : ['#FFD006'],
+      },
+
+      dataLabels: {
+        enabled: true,
+        theme: dark ? 'dark' : 'light',
+        style: {
+          colors: dark ? ['white'] : ['black'],
+        },
+      },
+      grid: {
+        strokeDashArray: 4,
+      },
+      tooltip: {
+        theme: dark ? 'dark' : 'light',
+        marker: {
+          fillColors: dark ? ['#179E7F'] : ['#FFD006'],
+        }
+      },
+      theme: {
+        mode: dark ? 'dark' : 'light',
+      },
+    };
+  });
+
 
   ngOnInit(): void {
     const from = this.analyticsService.dateFrom();
@@ -51,58 +128,23 @@ export class RevenueChartComponent {
     const unit = this.analyticsService.selectedUnit();
 
     this.analyticsService.getRevenueGroupedData(from, to, property, unit);
+
   }
 
   constructor() {
-    effect(
-      () => {
-        const groupedRevenue = this.analyticsService.revenueGroupedData();
-        const isDark = this.themeService.getCurrentTheme() === 'dark';
-        console.log('isdark', isDark);
+    effect(() => {
+      const isDark = this.themeService.currentTheme() === 'dark';
+      const groupedRevenue = this.analyticsService.revenueGroupedData();
 
-        if (
-          !groupedRevenue ||
-          !Array.isArray(groupedRevenue) ||
-          groupedRevenue.length === 0
-        ) {
-          return;
-        }
+      if (!groupedRevenue || !Array.isArray(groupedRevenue) || groupedRevenue.length === 0) {
+        return;
+      }
 
-        const categories = groupedRevenue.map((item) => item.name);
-        const seriesData = groupedRevenue.map((item) =>
-          parseFloat(item.revenue.toFixed(2))
-        );
+      const categories = groupedRevenue.map((item) => item.name);
+      const seriesData = groupedRevenue.map((item) =>
+        parseFloat(item.revenue.toFixed(2))
+      );
 
-        this.chartOptions.set({
-          series: [{ name: 'Revenue', data: seriesData }],
-          chart: { type: 'bar', height: 350, background: 'transparent' },
-          theme: { mode: isDark ? 'dark' : 'light' },
-          xaxis: {
-            categories,
-            labels: {
-              style: {
-                colors: isDark ? '#fff' : '#000',
-              },
-            },
-          },
-          title: {
-            text: 'Revenue by Property/Unit',
-            style: {
-              color: isDark ? '#fff' : '#000',
-            },
-          },
-          stroke: { curve: 'smooth' },
-          dataLabels: { enabled: false },
-          grid: {
-            borderColor: isDark ? '#444' : '#ccc',
-            row: {
-              colors: [isDark ? '#333' : '#f3f3f3', 'transparent'],
-              opacity: 1,
-            },
-          },
-        });
-      },
-      { allowSignalWrites: true }
-    );
+    }, { allowSignalWrites: true });
   }
 }
