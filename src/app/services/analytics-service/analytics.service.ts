@@ -16,9 +16,10 @@ export class AnalyticsService {
   revenueGroupedData = signal<{ name: string; revenue: number }[]>([]);
   serviceData = signal<ServiceStats[]>([]);
   bookingData = signal<PropertyBookingStats[]>([]);
+  cancelledBookingsData = signal<any>(null);
 
-  dateFrom = signal<string>('2025-01-01');
-  dateTo = signal<string>('2025-12-31');
+  dateFrom = signal<string>('2023-01-01');
+  dateTo = signal<string>('2026-12-31');
   selectedPeriod = signal<'day' | 'week' | 'month' | 'year'>('month');
 
   selectedProperty = signal<string>('all');
@@ -73,6 +74,7 @@ export class AnalyticsService {
     this.getBookingData(from, to, property, unit);
     this.getServiceData(from, to, property, unit);
     this.getRevenueGroupedData(from, to, property, unit);
+    this.getCancelledBookingsData(from, to, property, unit);
     console.log('Analytics updated:', { from, to, property, unit });
   }
 
@@ -184,5 +186,25 @@ export class AnalyticsService {
     // }
 
     return `${base}?${params.toString()}`;
+  }
+
+  public getCancelledBookingsData(
+    from: string,
+    to: string,
+    property: string,
+    unit: string
+  ) {
+    const url = this.buildUrl(
+      '/api/analytics/cancelled-bookings/',
+      from,
+      to,
+      property,
+      unit
+    );
+    this.http.get<any>(url).subscribe({
+      next: (data) => this.cancelledBookingsData.set(data),
+      error: (err) =>
+        console.error('Error fetching cancelled bookings data:', err),
+    });
   }
 }

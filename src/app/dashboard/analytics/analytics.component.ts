@@ -15,6 +15,7 @@ import { BookingChartComponent } from './charts/booking-chart/booking-chart.comp
 import { ServiceChartComponent } from './charts/service-chart/service-chart.component';
 import { RevenueChartComponent } from './charts/revenue-chart/revenue-chart.component';
 import { SelectorComponent } from './charts/selector/selector.component';
+import { CancelledBookingsComponent } from './charts/cancelled-bookings/cancelled-bookings.component';
 @Component({
   selector: 'app-analytics',
   standalone: true,
@@ -25,6 +26,7 @@ import { SelectorComponent } from './charts/selector/selector.component';
     ServiceChartComponent,
     RevenueChartComponent,
     SelectorComponent,
+    CancelledBookingsComponent,
     SelectorComponent,
   ],
   templateUrl: './analytics.component.html',
