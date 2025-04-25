@@ -46,27 +46,30 @@ export class BookingChartComponent {
   } | null>(() => {
     const properties = this.data();
 
-  
     if (!properties || Object.keys(properties).length === 0) return null;
-  
+
     const labels: string[] = [];
     const series: number[] = [];
-  
     for (const propertyId in properties) {
-      const units = properties[propertyId].units;
+      const property = properties[propertyId];
+      const propertyName = property.name ?? `Property ${propertyId}`;
+      const units = property.units;
+
       for (const unitId in units) {
-        const stats = units[unitId];
-        const label = `Property ${propertyId} - Unit ${unitId}`;
+        const unit = units[unitId];
+        const unitName = unit.name ?? `Unit ${unitId}`;
+        const stats = unit;
+        const label = `${propertyName} - ${unitName}`;
         labels.push(label);
         series.push(stats.confirmed ?? stats.total ?? 0);
       }
     }
-  
+
     return {
       series,
       chart: {
         type: 'pie',
-        foreColor: this.dark() ? '#FFFFFF' : '#000000', 
+        foreColor: this.dark() ? '#FFFFFF' : '#000000',
         width: 600,
       },
       labels,
@@ -81,7 +84,7 @@ export class BookingChartComponent {
               show: true,
               position: 'bottom',
               labels: {
-                colors: this.dark() ? ['white'] : ['black'], 
+                colors: this.dark() ? ['white'] : ['black'],
               },
             },
           },
@@ -109,7 +112,6 @@ export class BookingChartComponent {
       },
     };
   });
-  
 
   ngOnInit(): void {
     const from = this.analyticsService.dateFrom();
@@ -119,6 +121,5 @@ export class BookingChartComponent {
     this.analyticsService.getBookingData(from, to, property, unit);
   }
 
-  constructor() { }
-
+  constructor() {}
 }
