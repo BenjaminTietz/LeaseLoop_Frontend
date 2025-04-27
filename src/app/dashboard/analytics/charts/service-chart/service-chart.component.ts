@@ -16,6 +16,7 @@ import type {
   ApexDataLabels,
   ApexTitleSubtitle,
 } from 'ng-apexcharts';
+import { ThemeService } from '../../../../services/theme-service/theme.service';
 
 @Component({
   selector: 'app-service-chart',
@@ -25,45 +26,77 @@ import type {
   styleUrl: './service-chart.component.scss',
 })
 export class ServiceChartComponent implements OnInit {
-  private analyticsService = inject(AnalyticsService);
+  analyticsService = inject(AnalyticsService);
+  themeService = inject(ThemeService);
+  data = computed(() => this.analyticsService.serviceData());
+  dark = computed(() => this.themeService.currentTheme() === 'dark');
 
-  chartOptions = signal<{
+  chartOptions = computed(() => <{
     series: ApexAxisChartSeries;
     chart: ApexChart;
     xaxis: ApexXAxis;
     dataLabels: ApexDataLabels;
+    yaxis: ApexYAxis;
     title: ApexTitleSubtitle;
-  } | null>(null);
+    tooltip: ApexTooltip;
+    fill: ApexFill;
+  } | null>({
+    series: [
+      {
+        name: 'Sales',
+        data: this.data().map((s) => s.sales),
+      },
+    ],
+
+    fill: {
+      colors: this.dark() ? ['#179E7F'] : ['#FFD006'],
+    },
+    chart: {
+      type: 'bar',
+      height: 350,
+      toolbar: { show: false },
+    },
+    title: {
+      offsetX: 20,
+      text: 'Top Services by Sales',
+      style: {
+        color: this.dark() ? '#fff' : '#000',
+        
+      }
+    },
+    xaxis: {
+      categories: this.data().map((s) => s.name),
+      labels:{
+        style: {
+          colors: this.dark() ? '#fff' : '#000',
+        }
+      },
+      
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: this.dark() ? '#fff' : '#000',
+        }
+      },
+      
+    },
+      tooltip: {
+        theme: this.dark()? 'dark' : 'light',
+        marker: {
+          fillColors: this.dark() ? ['#179E7F'] : ['#FFD006'],
+        }
+      },
+    dataLabels: {
+      enabled: true,
+      style: {
+        colors: this.dark()  ? ['white'] : ['black'],
+      },
+    },
+
+  }));
 
   constructor() {
-    effect(
-      () => {
-        const data = this.analyticsService.serviceData();
-
-        this.chartOptions.set({
-          series: [
-            {
-              name: 'Sales',
-              data: data.map((s) => s.sales),
-            },
-          ],
-          chart: {
-            type: 'bar',
-            height: 350,
-          },
-          title: {
-            text: 'Top Services by Sales',
-          },
-          xaxis: {
-            categories: data.map((s) => s.name),
-          },
-          dataLabels: {
-            enabled: true,
-          },
-        });
-      },
-      { allowSignalWrites: true }
-    );
   }
 
   ngOnInit(): void {

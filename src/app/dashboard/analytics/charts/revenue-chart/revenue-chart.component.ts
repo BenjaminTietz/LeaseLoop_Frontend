@@ -82,6 +82,7 @@ export class RevenueChartComponent {
         },
       },
       title: {
+        offsetX: 20,
         theme: dark ? 'dark' : 'light',
         text: 'Grouped Revenue',
         style: {

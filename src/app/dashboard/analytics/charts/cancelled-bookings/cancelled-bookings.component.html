@@ -1,4 +1,6 @@
+@if(chartOptions()!=null){
 <apx-chart *ngIf="chartOptions() as opts" [series]="opts.series" [chart]="opts.chart" [xaxis]="opts.xaxis"
     [colors]="opts.colors" [stroke]="opts.stroke" [plotOptions]="opts.plotOptions" [dataLabels]="opts.dataLabels"
     [legend]="opts.legend" [yaxis]="opts.yaxis" [tooltip]="opts.tooltip">
 </apx-chart>
+}

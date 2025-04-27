@@ -18,6 +18,8 @@ export class AnalyticsService {
   bookingData = signal<PropertyBookingStats[]>([]);
   cancelledBookingsData = signal<any>(null);
 
+  sending = signal<boolean>(false);
+
   dateFrom = signal<string>('2023-01-01');
   dateTo = signal<string>('2026-12-31');
   selectedPeriod = signal<'day' | 'week' | 'month' | 'year'>('month');
@@ -52,13 +54,6 @@ export class AnalyticsService {
 
         this.dateFrom.set(format(from, 'yyyy-MM-dd'));
         this.dateTo.set(format(today, 'yyyy-MM-dd'));
-
-        console.log(
-          'Date range updated:',
-          this.dateFrom(),
-          this.dateTo(),
-          this.selectedPeriod()
-        );
       },
       { allowSignalWrites: true }
     );
@@ -84,6 +79,7 @@ export class AnalyticsService {
     property: string,
     unit: string
   ): void {
+    this.sending.set(true);
     const url = this.buildUrl(
       '/api/analytics/revenue/',
       from,
@@ -92,8 +88,8 @@ export class AnalyticsService {
       unit
     );
     this.http.get<any[]>(url).subscribe({
-      next: (data) => this.revenueData.set(data ?? []),
-      error: (err) => console.error('Error fetching revenue data:', err),
+      next: (data) =>{ this.revenueData.set(data ?? []), this.sending.set(false)},
+      error: (err) => {console.error('Error fetching revenue data:', err); this.sending.set(false)},
     });
   }
 
@@ -103,6 +99,7 @@ export class AnalyticsService {
     property: string,
     unit: string
   ) {
+    this.sending.set(true);
     const url = this.buildUrl(
       '/api/analytics/revenue-by/',
       from,
@@ -114,6 +111,7 @@ export class AnalyticsService {
       next: (data) => {
         if (!Array.isArray(data) || data.length === 0) {
           this.revenueGroupedData.set([]);
+          this.sending.set(false);
           return;
         }
 
@@ -121,12 +119,14 @@ export class AnalyticsService {
           name: item.name ?? 'Unknown',
           revenue: item.revenue ?? 0,
         }));
-
         this.revenueGroupedData.set(mapped);
-        console.log('Revenue grouped data:', mapped);
       },
       error: (err) =>
-        console.error('Error fetching grouped revenue data:', err),
+      {
+        this.sending.set(false);
+        console.error('Error fetching grouped revenue data:', err);
+      }
+        
     });
   }
 
@@ -136,6 +136,7 @@ export class AnalyticsService {
     property: string,
     unit: string
   ) {
+    this.sending.set(true);
     const url = this.buildUrl(
       '/api/analytics/bookings/',
       from,
@@ -144,8 +145,8 @@ export class AnalyticsService {
       unit
     );
     this.http.get<PropertyBookingStats[]>(url).subscribe({
-      next: (data) => this.bookingData.set(data),
-      error: (err) => console.error('Error fetching booking data:', err),
+      next: (data) => {this.bookingData.set(data), this.sending.set(false)},
+      error: (err) => {console.error('Error fetching booking data:', err), this.sending.set(false)}
     });
   }
 
@@ -155,6 +156,7 @@ export class AnalyticsService {
     property: string,
     unit: string
   ) {
+    this.sending.set(true);
     const url = this.buildUrl(
       '/api/analytics/services/',
       from,
@@ -163,8 +165,8 @@ export class AnalyticsService {
       unit
     );
     this.http.get<any[]>(url).subscribe({
-      next: (data) => this.serviceData.set(data),
-      error: (err) => console.error('Error fetching service data:', err),
+      next: (data) => {this.serviceData.set(data), this.sending.set(false)},
+      error: (err) => {console.error('Error fetching service data:', err), this.sending.set(false)}
     });
   }
 

@@ -163,4 +163,9 @@ export class AuthService {
     this.error.set(null);
     this.successMessage.set(null);
   }
+
+  loginDemo() {
+    this.loginData.set({ email: 'guest@exampless.com', password: 'guest1234BB!!' });
+    this.login();
+  }
 }

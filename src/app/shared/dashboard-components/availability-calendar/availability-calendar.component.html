@@ -1,4 +1,7 @@
-<div class="calendar" appHorizontalDirectives>
+<div class="calendar" appHorizontalDirectives [ngClass]="this.dashboardService.isbookingPopupOpen() ? 'no-overflow' : '' ">
+    @if(!allDataLoaded()) {
+        <app-progress-bar></app-progress-bar>
+    }
     <div class="calendar-title">
         <h2>Availability Calendar</h2>
         @if(allDataLoaded()){
@@ -36,7 +39,6 @@
             </label>
         </div>
 
-        TODO: Async loading of property and units
         <div class="calendar-info">
             <p>Unit availability for the next 30 days.
             </p>
@@ -59,7 +61,7 @@
           }">
                 <!-- show bookings -->
                 @if (hasBooking(unit.id, day)) {
-                <div (click)="onBookingClick(unit.id, day)" class="booking" [style.background-color]="getBookingColor()"
+                <div (click)="onBookingClick(unit.id, day)" class="booking" [style.background-color]="getBookingColor(unit.id, day)"
                     [attr.title]="getBookingInfo(unit.id, day)">
                     {{ getBookingLabel(unit.id, day) }}
                 </div>

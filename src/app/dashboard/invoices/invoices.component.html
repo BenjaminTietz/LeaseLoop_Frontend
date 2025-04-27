@@ -4,6 +4,10 @@
             <h1>Invoices</h1>
         </div>
         <div class="table-wrapper">
+            @if(invoiceService.sending()) {
+                <app-progress-bar></app-progress-bar>
+            }
+        
             <table class="table">
                 <thead>
                     <tr>

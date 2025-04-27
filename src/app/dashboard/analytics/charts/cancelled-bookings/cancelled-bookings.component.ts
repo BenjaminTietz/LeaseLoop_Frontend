@@ -68,6 +68,12 @@ export class CancelledBookingsComponent {
         height: 350,
         stacked: false,
         foreColor: this.dark() ? '#FFFFFF' : '#000000',
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false
+        },
       },
       xaxis: {
         categories: raw.categories,
@@ -96,6 +102,10 @@ export class CancelledBookingsComponent {
       tooltip: {
         shared: true,
         intersect: false,
+        theme: this.dark()? 'dark' : 'light',
+        marker: {
+          fillColors: this.dark() ? ['#179E7F'] : ['#FFD006'],
+        }
       },
       yaxis: [
         {
@@ -119,7 +129,8 @@ export class CancelledBookingsComponent {
       ],
     };
   });
-  ngOnInit(): void {
+
+  constructor() {
     const from = this.analyticsService.dateFrom();
     const to = this.analyticsService.dateTo();
     const property = this.analyticsService.selectedProperty();

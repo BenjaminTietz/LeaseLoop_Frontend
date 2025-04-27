@@ -14,10 +14,11 @@ import { UnitsService } from '../../../services/units-service/units.service';
 import { HorizontalDirectivesDirective } from '../../../directives/horizontal-scroll/horizontal-directives.directive';
 import { DashboardService } from '../../../services/dashboard-service/dashboard.service';
 import { timeout } from 'rxjs';
+import { ProgressBarComponent } from "../../global/progress-bar/progress-bar.component";
 @Component({
   selector: 'app-availability-calendar',
   standalone: true,
-  imports: [DatePipe, CommonModule, FormsModule, HorizontalDirectivesDirective],
+  imports: [DatePipe, CommonModule, FormsModule, HorizontalDirectivesDirective, ProgressBarComponent],
   templateUrl: './availability-calendar.component.html',
   styleUrl: './availability-calendar.component.scss',
 })
@@ -199,8 +200,21 @@ export class AvailabilityCalendarComponent {
    * @returns A string representing the color code for bookings.
    */
 
-  getBookingColor(): string {
-    return '#4589FF';
+  getBookingColor(unitId: any, day: Date) {
+    const booking = this.filteredBookings().find(
+      (b) =>
+        b.unit.id === unitId &&
+        this.dayString(day) < b.check_in &&
+        this.dayString(day) < b.check_out
+    );
+    if(booking?.status === 'confirmed') {
+      return 'green';
+    }
+    if(booking?.status === 'pending') {
+      return '#FFC810';
+    }
+    return 'red';
+    
   }
 
   /**
