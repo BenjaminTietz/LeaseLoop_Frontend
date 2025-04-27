@@ -28,11 +28,17 @@
             </div>
         </section>
         <section class="trial-section">
-            <div class="container">
                 <h2>Try the Tool</h2>
                 <p>No registration needed – explore the demo environment now.</p>
-                <button class="btn secondary">Explore Demo</button>
-            </div>
+                <div class="button-container">
+                    @if(auth.sending()) {
+                        <h2>Loading demo...</h2>
+                        <app-progress-bar aria-label="Loading"></app-progress-bar>
+                    }@else {
+                        <button class="btn secondary" (click)="auth.loginDemo()">Explore Demo</button>
+                    }
+                    
+                </div>
         </section>
     </content>
 </main>

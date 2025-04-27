@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Output, signal } from '@angular/core';
 import { BookingsService } from '../../../services/bookings-service/bookings.service';
 import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
 import { MatIcon } from '@angular/material/icon';
@@ -32,6 +32,21 @@ export class BookingFormComponent {
   promoService = inject(PromocodeService)
   serviceService = inject(ServiceManagementService)
   unitService = inject(UnitsService);
+  clientInput = signal('');
+  initialClientInput = computed(() => {
+    const selected = this.bookingService.selectedBooking();
+    if (selected && selected.client) {
+      return `${selected.client.first_name} ${selected.client.last_name}, ${selected.client.email}`;
+    }
+    return '';
+  });
+  filteredClients = computed(() => {
+    const search = this.clientInput().toLowerCase();
+    return this.clientService.clients().filter(c =>
+      (c.first_name + ' ' + c.last_name).toLowerCase().includes(search)
+    );
+  });
+  clientDropdownOpen = false;
 
   minCheckInDate = new Date().toISOString().split('T')[0];
   minCheckOutDate = new Date().toISOString().split('T')[0];
@@ -299,7 +314,21 @@ export class BookingFormComponent {
     return unit != null && guests != null && Number(guests) > unit.max_capacity;
   }
 
+  onClientInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.clientInput.set(value);
+  }
+  
+  selectClient(client: { id: number, first_name: string, last_name: string }) {
+    this.bookingForm.patchValue({ client: client.id });
+    this.clientInput.set(`${client.first_name} ${client.last_name}`);
+    this.clientDropdownOpen = false;
+    this.onClientChange(client.id);
+  }
 
+  closeClientDropdown = () => {
+    this.clientDropdownOpen = false;
+  }
 
   createBooking() {
     this.bookingService.createBooking(this.bookingForm.value);
@@ -319,4 +348,8 @@ export class BookingFormComponent {
     this.bookingService.successful.set(false);
     this.bookingService.sending.set(false);
   }
+
+  getClientInputValue() {
+    return this.clientInput() || this.initialClientInput();
+  }  
 }

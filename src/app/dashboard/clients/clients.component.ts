@@ -17,12 +17,7 @@ export class ClientsComponent implements OnInit {
   formOpen = signal(false);
 
   ngOnInit(): void {
-
     this.clientService.loadClients();
-    setTimeout(() => {
-      console.log(this.clientService.clients());
-      
-    }, 2000);
   }
 
   openForm() {

@@ -113,23 +113,28 @@
     
       @if(showClient() && clientService.clients().length > 0){
       
-      <div class="input-area">
-        <label for="client">Client</label>
-        <div class="form-field">
-          <select id="client" name="client" formControlName="client" (change)="onClientChange($any($event.target).value)">
-            <option [ngValue]="0" disabled>Select Customer</option>
-            @for(client of clientService.clients(); track $index) {
-            <option [ngValue]="client.id">{{client.first_name}} {{client.last_name}}</option>
+        <div class="input-area" (click)="$event.stopPropagation()">
+          <label for="client">Client</label>
+          <div class="form-field">
+            <input type="text" 
+                   placeholder="Type to search clients..."
+                   [value]="getClientInputValue() || ''"
+                   (input)="onClientInput($event)"
+                   (focus)="clientDropdownOpen = true">
+            
+            @if(clientDropdownOpen && filteredClients().length > 0) {
+              <ul class="dropdown" [appClickOutside]="closeClientDropdown">
+                @for(client of filteredClients(); track $index) {
+                  <li (click)="selectClient(client)">{{ client.first_name }} {{ client.last_name }}, {{ client.email }}, {{ client.address.postal_code }}, {{ client.address.city }}, {{ client.address.country }}</li>
+                }
+              </ul>
             }
-          </select>
-          
+          </div>
         </div>
-      </div>
-      
         
-      @if(bookingForm.get('client')?.value === 0 && clientService.clients().length > 0) {
-        <p class="info-text">Please select a client.</p>
-      }
+        @if(showClient() && bookingForm.get('client')?.value === 0) {
+          <p class="info-text">Please select a client.</p>
+        }
    
   }
 

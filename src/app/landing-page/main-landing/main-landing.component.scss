@@ -69,7 +69,7 @@ p {
 }
 
 .trial-section {
-
+    position:relative;
     text-align: center;
     padding: 60px 20px;
 
@@ -81,4 +81,8 @@ p {
     p {
         margin-bottom: 30px;
     }
+}
+
+.button-container{
+    position: relative;
 }

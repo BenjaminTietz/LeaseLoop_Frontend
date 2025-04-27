@@ -16,6 +16,7 @@ import { ServiceChartComponent } from './charts/service-chart/service-chart.comp
 import { RevenueChartComponent } from './charts/revenue-chart/revenue-chart.component';
 import { SelectorComponent } from './charts/selector/selector.component';
 import { CancelledBookingsComponent } from './charts/cancelled-bookings/cancelled-bookings.component';
+import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 @Component({
   selector: 'app-analytics',
   standalone: true,
@@ -28,14 +29,16 @@ import { CancelledBookingsComponent } from './charts/cancelled-bookings/cancelle
     SelectorComponent,
     CancelledBookingsComponent,
     SelectorComponent,
-  ],
+    ProgressBarComponent
+],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.scss',
 })
 export class AnalyticsComponent implements OnInit {
   analyticsService = inject(AnalyticsService);
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit(): void {}
 }

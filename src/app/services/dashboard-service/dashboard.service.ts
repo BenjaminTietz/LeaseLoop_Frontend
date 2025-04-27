@@ -1,8 +1,9 @@
-import { inject, Injectable, OnInit, signal } from '@angular/core';
+import { effect, inject, Injectable, OnInit, signal } from '@angular/core';
 import { DashboardStats } from '../../models/dashboard-stats.model';
 import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import { Booking } from '../../models/booking.model';
+import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,15 @@ export class DashboardService implements OnInit {
   showBooking = signal<Booking | null>(null);
   ngOnInit(): void {
     this.getDashboardStats();
+  }
+  constructor() {
+    effect(() => {
+      if(this.isbookingPopupOpen()){
+        disableBackgroundScroll()
+      }else{
+        enableBackgroundScroll()
+      }
+    });
   }
 
   getDashboardStats() {
