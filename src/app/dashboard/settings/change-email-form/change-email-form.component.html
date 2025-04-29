@@ -1,0 +1,13 @@
+<main>
+  <form [appClickOutside]="closeForm" [formGroup]="emailForm" >
+    <h1>Change E-mail</h1>
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    <div class="input-area">
+      <label for="email">E-mail</label>
+      <div class="form-field">
+        <input type="email" placeholder="E-mail">
+      </div>
+    </div>
+    <button>Change e-mail</button>
+  </form>
+</main>

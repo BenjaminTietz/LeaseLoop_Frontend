@@ -1,1 +1,53 @@
-<p>settings works!</p>
+<main>
+  <content>
+    <div class="header">
+      <h1>Settings</h1>
+    </div>
+    <div class="content">
+      <div class="top">
+        <div class="card">
+          <h2>Your Logo</h2>
+          <div>
+            <img [src]="image()" alt="Profilbild">
+            <button (click)="openChangeImage()"> Change image</button>
+            @if(changeImage()){
+              <app-change-image-form (close)="closeForm()"></app-change-image-form>
+            }
+          </div>
+        </div>
+
+        <div class="card ">
+          <h2>E-mail</h2>
+          <span>{{user.email}}</span>
+          <button (click)="openChangeEmail()">Change e-mail</button>
+          @if(changeEmail()){
+            <app-change-email-form (close)="closeForm()"></app-change-email-form>
+          }
+        </div>
+      </div>
+      <div class="top">
+        <div class="card">
+          <h2>Change Password</h2>
+          <button (click)="openChangePass()">Change password</button>
+          @if(changePass()){
+            <app-change-pass-form (close)="closeForm()"></app-change-pass-form>
+          }
+        </div>
+        <div class="card">
+          <h2>Your Public Page Link</h2>
+          <a href="">Pubic link</a>
+        </div>
+      </div>
+      <div class="top">
+        <div class="card">
+          <h2>Your Adress</h2>
+          <span>{{user.adress}}</span>
+          <button (click)="openChangeAddress()">Change address</button>
+          @if(changeAddress()){
+            <app-change-adress-form (close)="closeForm()"></app-change-adress-form>
+          }
+        </div>
+      </div>
+    </div>
+  </content>
+</main>
