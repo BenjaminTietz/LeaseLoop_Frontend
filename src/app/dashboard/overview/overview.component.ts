@@ -3,12 +3,11 @@ import { AvailabilityCalendarComponent } from '../../shared/dashboard-components
 import { UnitsService } from '../../services/units-service/units.service';
 import { DashboardService } from '../../services/dashboard-service/dashboard.service';
 import { BookingPopupComponent } from './booking-popup/booking-popup.component';
-import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [AvailabilityCalendarComponent, BookingPopupComponent, ProgressBarComponent],
+  imports: [AvailabilityCalendarComponent, BookingPopupComponent],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.scss',
 })
