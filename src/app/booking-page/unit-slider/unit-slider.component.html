@@ -1,0 +1,23 @@
+<div class="unit-slider-container" *ngIf="units().length > 0 && current()">
+    <h2>Available Units</h2>
+
+    <div class="slider-image">
+        <img [src]="current().image" [alt]="current().name" />
+    </div>
+
+    <div class="slider-info">
+        <h3>{{ current().name }}</h3>
+
+        <button (click)="onBookUnit()">Book This Unit</button>
+    </div>
+
+    <div class="slider-controls">
+        <button (click)="prev()">‹ Prev</button>
+        <button (click)="next()">Next ›</button>
+    </div>
+</div>
+@if (units().length === 0) {
+<div>
+    <p>No units available for this property.</p>
+</div>
+}

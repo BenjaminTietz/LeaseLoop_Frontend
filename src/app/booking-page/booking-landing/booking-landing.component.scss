@@ -1,0 +1,39 @@
+@use "../../styles/mixins.scss" as *;
+
+
+main {
+    margin-right: 0px;
+    background-color: var(--color-bg-body);
+    min-height: 100vh;
+    @include display(flex, column, space-between, center);
+    padding: 40px 20px;
+
+}
+
+.booking-header {
+    @include display(flex, row, space-between, center);
+}
+
+.date-selector {
+    @include display(flex, row, flex-start, center);
+    width: 100%;
+}
+
+.date-input {
+    @include display(flex, column, space-between, center);
+
+    input {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .guest-count {
+        max-width: 100px;
+    }
+}
+
+.booking-footer {
+    @include display(flex, row, space-between, center);
+    margin-top: 20px;
+}
