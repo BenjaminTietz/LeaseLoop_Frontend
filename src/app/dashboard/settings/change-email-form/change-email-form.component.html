@@ -1,13 +1,55 @@
 <main>
-  <form [appClickOutside]="closeForm" [formGroup]="emailForm" >
+  <form [appClickOutside]="closeForm" [formGroup]="emailForm">
     <h1>Change E-mail</h1>
     <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
     <div class="input-area">
-      <label for="email">E-mail</label>
+      <label for="actualEmail">Your Actual Email</label>
       <div class="form-field">
-        <input type="email" placeholder="E-mail">
+        <input type="email" placeholder="E-mail" formControlName="actual_email">
+        <small>{{actualEmailErrors}}</small>
       </div>
     </div>
-    <button>Change e-mail</button>
+
+    <div class="input-area">
+      <label for="password">Password</label>
+      <div class="form-field">
+        <input type="password" placeholder="Password" formControlName="actual_password">
+        <small>{{actualPasswordErrors}}</small>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <label for="newEmail">New E-mail</label>
+      <div class="form-field">
+        <input type="email" placeholder="E-mail" formControlName="new_email">
+        <small>{{newEmailErrors}}</small>
+      </div>
+    </div>
+
+
+
+    <button type="button" (click)="changeEmail()" [disabled]="emailForm.invalid || settingsService.sending()"
+      (mouseenter)="formService.markAllAsTouched(emailForm)"
+      (mouseleave)="formService.unmarkAllAsTouched(emailForm)">Change e-mail</button>
   </form>
+
+  @if(settingsService.errorMessage() !== ''){
+  <div class="error-popup">
+    <mat-icon aria-label="Close" class="close-icon" (click)="closePopUp()">close</mat-icon>
+    <div class="pop-up-text">
+      <span>{{settingsService.errorMessage()}}</span>
+      <button (click)="closePopUp()">Okay</button>
+    </div>
+  </div>
+  }
+
+  @if(settingsService.successful()){
+  <div class="error-popup">
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeSuccessPopUp()">close</mat-icon>
+    <div class="pop-up-text">
+      <h3>Changed e-mail successfully</h3>
+      <button (click)="closeSuccessPopUp()">Okay</button>
+    </div>
+  </div>
+  }
 </main>

@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
+import { FormService } from '../../../services/form-service/form.service';
+import { SettingsService } from '../../../services/settings-service/settings.service';
 
 @Component({
   selector: 'app-change-email-form',
@@ -13,6 +15,8 @@ import { ClickOutsideDirective } from '../../../directives/outside-click/click-o
 })
 export class ChangeEmailFormComponent {
   @Output() close = new EventEmitter()
+  formService = inject(FormService)
+  settingsService = inject(SettingsService)
 
   closeForm = () => {
     this.close.emit()
@@ -21,7 +25,70 @@ export class ChangeEmailFormComponent {
   emailSentResponse = signal('')
 
   emailForm = new FormBuilder().nonNullable.group({
-    email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')]],
+    actual_email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'), this.matchCurrentEmailValidator(this.settingsService.userEmail())]],
+    actual_password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/)]],
+    new_email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')]],
   })
+
+  get actualEmailErrors(){
+    if(this.formService.getFormErrors(this.emailForm, 'actual_email')?.['required']){
+      return 'Please enter your actual email'
+    }
+    if(this.formService.getFormErrors(this.emailForm, 'actual_email')?.['pattern']){
+      return 'Please enter a valid email'
+    }
+    if(this.formService.getFormErrors(this.emailForm, 'actual_email')?.['emailMismatch']){
+      return 'Ths is not your email'
+    }
+    return ''
+  }
+
+  get actualPasswordErrors(){
+    if(this.formService.getFormErrors(this.emailForm, 'actual_password')?.['required']){
+      return 'Please enter your actual password'
+    }
+    if(this.formService.getFormErrors(this.emailForm, 'actual_password')?.['pattern']){
+      return 'Please enter a valid password'
+    }
+    return ''
+  }
+
+  get newEmailErrors(){
+    if(this.formService.getFormErrors(this.emailForm, 'new_email')?.['required']){
+      return 'Please enter your new email'
+    }
+    if(this.formService.getFormErrors(this.emailForm, 'new_email')?.['pattern']){
+      return 'Please enter a valid email'
+    }
+    return ''
+  }
+
+  changeEmail = () => {
+    console.log(this.emailForm.value)
+    this.settingsService.changeEmail(this.emailForm.value)
+  }
+
+  matchCurrentEmailValidator(currentEmail: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const inputEmail = control.value?.trim().toLowerCase();
+      const expectedEmail = currentEmail?.trim().toLowerCase();
+      if (inputEmail && expectedEmail && inputEmail !== expectedEmail) {
+        return { emailMismatch: true };
+      }
+      return null;
+    };
+  }
+
+  closePopUp() {
+    this.formService.resetForm(this.emailForm);
+    this.settingsService.errorMessage.set('')
+  }
+
+  closeSuccessPopUp() {
+    this.settingsService.successful.set(false)
+    this.settingsService.sending.set(false)
+    this.closePopUp()
+    this.close.emit()
+  }
 
 }

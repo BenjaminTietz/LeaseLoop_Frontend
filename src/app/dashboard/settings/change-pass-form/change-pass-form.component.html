@@ -1,46 +1,50 @@
 <main>
-<form [appClickOutside]="closeForm" [formGroup]="changePassForm" >
-  <h1>Change Password</h1>
-  <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
-  <div class="input-area">
-    <label for="old_password">Old password</label>
-    <div class="form-field">
-      <input type="password" placeholder="Old password" formControlName="old_password">
-      <small>{{oldPasswordErrors}}</small>
+  <form [appClickOutside]="closeForm" [formGroup]="changePassForm">
+    <h1>Change Password</h1>
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    <div class="input-area">
+      <label for="old_password">Old password</label>
+      <div class="form-field">
+        <input type="password" placeholder="Old password" formControlName="old_password">
+        <small>{{oldPasswordErrors}}</small>
+      </div>
     </div>
-  </div>
-  <div class="input-area">
-    <label for="new_password">New password</label>
-    <div class="form-field">
-      <input type="password" placeholder="New password" formControlName="new_password">
-      <small>{{newPasswordErrors}}</small>
+    <div class="input-area">
+      <label for="new_password">New password</label>
+      <div class="form-field">
+        <input type="password" placeholder="New password" formControlName="new_password">
+        <small>{{newPasswordErrors}}</small>
+      </div>
     </div>
-  </div>
-  <div class="input-area">
-    <label for="repeat_password">Repeat new password</label>
-    <div class="form-field">
-      <input type="password" placeholder="Repeat new password" formControlName="confirm_password">
-      
-      <small>{{repeatPasswordErrors}}</small>
+    <div class="input-area">
+      <label for="repeat_password">Repeat new password</label>
+      <div class="form-field">
+        <input type="password" placeholder="Repeat new password" formControlName="confirm_password">
+
+        <small>{{repeatPasswordErrors}}</small>
+      </div>
+
     </div>
-    
-  </div>
-  <button type="button" (click)="changePassword()">Change password</button>
-  @if(settingsService.errorMessage() !== ''){
+    <button type="button" [disabled]="changePassForm.invalid || settingsService.sending()"
+      (mouseenter)="formService.markAllAsTouched(changePassForm)"
+      (mouseleave)="formService.unmarkAllAsTouched(changePassForm)" (click)="changePassword()">Change password</button>
+    @if(settingsService.errorMessage() !== ''){
     <div class="error-popup">
       <h3>{{settingsService.errorMessage()}}</h3>
       <mat-icon aria-label="Close" class="close-icon" (click)="closePopUp()">close</mat-icon>
       <button (click)="closePopUp()">Okay</button>
     </div>
-  }
+    }
 
-  @if(settingsService.successful()){
+    @if(settingsService.successful()){
     <div class="error-popup">
-      <h3>Changed password successfully</h3>
-      <mat-icon aria-label="Close" class="close-icon" (click)="closeSuccessPopUp()">close</mat-icon>
-      <button (click)="closeSuccessPopUp()">Okay</button>
+      <div class="pop-up-text">
+        <h3>Changed password successfully</h3>
+        <mat-icon aria-label="Close" class="close-icon" (click)="closeSuccessPopUp()">close</mat-icon>
+        <button (click)="closeSuccessPopUp()">Okay</button>
+      </div>
     </div>
-  }
-  
-</form>
+    }
+
+  </form>
 </main>
