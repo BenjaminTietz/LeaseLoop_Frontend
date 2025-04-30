@@ -1,0 +1,21 @@
+<div class="slider-container" *ngIf="current()">
+    <div class="slider-image">
+        <img [src]="current().image" [alt]="current().name" />
+    </div>
+
+    <div class="slider-info">
+        <h3>{{ current().name }}</h3>
+        <p>{{ current().description }}</p>
+
+        @if (!bookingService.selectedProperty() || bookingService.selectedProperty()?.id !== current().id)
+        { <button (click)="bookNow()">
+            Book Now
+        </button>}
+
+    </div>
+
+    <div class="slider-controls">
+        <button (click)="prev()">‹ Prev</button>
+        <button (click)="next()">Next ›</button>
+    </div>
+</div>

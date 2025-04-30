@@ -1,0 +1,33 @@
+@use "../../styles/mixins.scss" as *;
+
+.slider-container {
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+}
+
+.slider-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.slider-info {
+    margin-top: 12px;
+}
+
+.slider-controls {
+    @include display(flex, row, space-between, center);
+    margin-top: 8px;
+
+    button {
+        margin: 0 8px;
+        padding: 6px 16px;
+        border: none;
+        border-radius: 6px;
+        background: var(--color-primary, #333);
+        color: white;
+        cursor: pointer;
+    }
+}
