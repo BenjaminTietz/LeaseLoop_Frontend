@@ -5,19 +5,24 @@ import { ChangeEmailFormComponent } from "./change-email-form/change-email-form.
 import { ChangeImageFormComponent } from "./change-image-form/change-image-form.component";
 import { SettingsService } from '../../services/settings-service/settings.service';
 import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
+import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [ChangePassFormComponent, ChangeAdressFormComponent, ChangeEmailFormComponent, ChangeImageFormComponent],
+  imports: [ChangePassFormComponent, ChangeAdressFormComponent, ChangeEmailFormComponent, ChangeImageFormComponent, ClickOutsideDirective, MatIcon],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent {
   changePass = signal(false)
   changeEmail = signal(false)
-  changeAddress = signal(false)
   changeImage = signal(false)
+  changePersonals = signal(false)
+  showFoto = signal(false)
+
+
 
   settingsService = inject(SettingsService)
 
@@ -31,7 +36,14 @@ export class SettingsComponent {
   user = {
     name: 'John Doe',
     email: 'KjY4l@example.com',
-    adress : '123 Main St, Anytown, USA',
+    address : {
+      street: '123 Main St',
+      city: 'Anytown',
+      street_number: '123',
+      country: 'USA',
+      zip: '12345'
+    },
+    tax_id : '123456789'
   }
 
   constructor() {
@@ -39,33 +51,22 @@ export class SettingsComponent {
     
   }
 
-  openChangePass() {
-    this.changePass.set(true)
-    disableBackgroundScroll()
+ 
+
+  openForm = (form: 'changePass' | 'changeEmail' | 'changePersonals' | 'changeImage' | 'showFoto')  => {
+    this[form].set(true);
+    this.settingsService.successful.set(false);
+    disableBackgroundScroll();
   }
+  
 
-  openChangeEmail() {
-    this.changeEmail.set(true)
-    disableBackgroundScroll()
-  }
-
-  openChangeAddress() {
-    this.changeAddress.set(true)
-    disableBackgroundScroll()
-  }
-
-  openChangeImage() {
-    this.changeImage.set(true)
-    disableBackgroundScroll()
-  }
-
-
-
-  closeForm() {
-    this.changePass.set(false)
-    this.changeEmail.set(false)
-    this.changeAddress.set(false)
-    this.changeImage.set(false)
-    enableBackgroundScroll()
+  closeAllForms = () => {
+    this.settingsService.successful.set(false);
+    this.changePass.set(false);
+    this.changeEmail.set(false);
+    this.changeImage.set(false);
+    this.changePersonals.set(false);
+    this.showFoto.set(false);
+    enableBackgroundScroll();
   }
 }

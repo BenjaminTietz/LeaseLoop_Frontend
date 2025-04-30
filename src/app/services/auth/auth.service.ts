@@ -124,6 +124,8 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     this.navigator.navigateTo('/login');
     this.loginData.set({});
   }

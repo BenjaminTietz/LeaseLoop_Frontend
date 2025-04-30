@@ -4,33 +4,47 @@
       <h1>Settings</h1>
     </div>
     <div class="content">
-      <div class="top">
+      <div class="side">
         <div class="card">
           <h2>Your Logo</h2>
-          <div>
-            <img [src]="image()" alt="Profilbild">
-            <button (click)="openChangeImage()"> Change image</button>
+          <div class="logo">
+            <img (click)="openForm('showFoto')" [src]="image()" alt="Logo">
+            <button (click)="openForm('changeImage')">Change Logo</button>
             @if(changeImage()){
-              <app-change-image-form (close)="closeForm()"></app-change-image-form>
+              <app-change-image-form (close)="closeAllForms()"></app-change-image-form>
             }
           </div>
         </div>
 
-        <div class="card ">
-          <h2>E-mail</h2>
-          <span>{{user.email}}</span>
-          <button (click)="openChangeEmail()">Change e-mail</button>
+        <div class="card">
+          <button (click)="openForm('changeEmail')">Change account e-mail</button>
           @if(changeEmail()){
-            <app-change-email-form (close)="closeForm()"></app-change-email-form>
+            <app-change-email-form (close)="closeAllForms()"></app-change-email-form>
           }
         </div>
-      </div>
-      <div class="top">
         <div class="card">
-          <h2>Change Password</h2>
-          <button (click)="openChangePass()">Change password</button>
+          <button (click)="openForm('changePass')">Change account password</button>
           @if(changePass()){
-            <app-change-pass-form (close)="closeForm()"></app-change-pass-form>
+            <app-change-pass-form (close)="closeAllForms()"></app-change-pass-form>
+          }
+        </div>
+
+      </div>
+      <div class="side">
+        
+        
+        <div class="card">
+          <h2>Your personals</h2>
+          <ul>
+            <li>Street: {{user.address.street}}</li>
+            <li>Street Number: {{user.address.street_number}}</li>
+            <li>City: {{user.address.city}}</li>
+            <li>Country: {{user.address.country}}</li>
+            <li>Zip: {{user.address.zip}}</li>
+          </ul>
+          <button (click)="openForm('changePersonals')">Change personal data</button>
+          @if(changePersonals()){
+            <app-change-adress-form (close)="closeAllForms()"></app-change-adress-form>
           }
         </div>
         <div class="card">
@@ -38,16 +52,13 @@
           <a href="">Pubic link</a>
         </div>
       </div>
-      <div class="top">
-        <div class="card">
-          <h2>Your Adress</h2>
-          <span>{{user.adress}}</span>
-          <button (click)="openChangeAddress()">Change address</button>
-          @if(changeAddress()){
-            <app-change-adress-form (close)="closeForm()"></app-change-adress-form>
-          }
-        </div>
-      </div>
+      
     </div>
+    @if(showFoto()){
+    <div class="full-foto">
+      <mat-icon aria-label="Close" class="close-icon" (click)="closeAllForms()">close</mat-icon>
+      <img [src]="image()" alt="Logo" [appClickOutside]="closeAllForms" >
+    </div>
+    }
   </content>
 </main>
