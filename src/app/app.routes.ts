@@ -25,6 +25,7 @@ import { InvoicesComponent } from './dashboard/invoices/invoices.component';
 import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
 import { SettingsComponent } from './dashboard/settings/settings.component';
 import { HelpPageComponent } from './dashboard/help-page/help-page.component';
+import { BookingLandingComponent } from './booking-page/booking-landing/booking-landing.component';
 
 export const routes: Routes = [
   {
@@ -61,5 +62,10 @@ export const routes: Routes = [
       { path: 'settings', component: SettingsComponent },
       { path: 'help', component: HelpPageComponent },
     ],
+  },
+  {
+    path: 'booking-landing',
+    component: BookingLandingComponent,
+    children: [],
   },
 ];

@@ -1,1 +1,38 @@
-<p>help-page works!</p>
+<main>
+    <content>
+        <div class="help-container">
+            <h1>Help Center</h1>
+            <input type="text" placeholder="Search Help Topics..." [(ngModel)]="searchTerm" class="search-bar" />
+            @if (searchTerm() && searchResults().length > 0) {
+            <div class="search-preview">
+                @for (result of searchResults(); track result.sectionTitle; let index =$index) {
+                <div class="preview-item" (click)="openSectionFromSearch(result.sectionTitle, result.topicTitle)">
+                    <strong>{{ result.topicTitle }}</strong>
+                    <span class="section-name">({{ result.sectionTitle }})</span>
+                </div>
+                }
+            </div>
+            }
+            @for (section of filteredSections(); track section.title; let index = $index) {
+            <div class="help-section">
+                <button (click)="toggleSection(index)" class="accordion-btn">
+                    {{ section.title }}
+                </button>
+                <div class="panel" [class.active]="section.open">
+                    @for (topic of section.topics; track topic.title; let index = $index) {
+                    <div class="topic" #topicRef [attr.data-topic-title]="topic.title">
+                        <h3>{{ topic.title }}</h3>
+                        <p>{{ topic.content }}</p>
+                        @if (topic.gif) {
+                        <div>
+                            <img [src]="topic.gif" alt="{{ topic.title }} Tutorial" class="gif-tutorial" />
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+    </content>
+</main>

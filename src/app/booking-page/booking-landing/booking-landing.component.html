@@ -1,0 +1,64 @@
+<main>
+    <content>
+
+        <!-- Header -->
+        <div class="booking-header">
+            <h1> {{ bookingService.hotelName() }}</h1>
+            <p>{{bookingService.hotelDescription()}}</p>
+            <div class="btn">About</div>
+            <div class="btn">Contact</div>
+            <app-theme-button></app-theme-button>
+        </div>
+
+        <!-- Date selection -->
+        <section class="date-selector">
+            <div class="date-input">
+                <p>Check-in</p>
+                <input type="date" [value]="bookingService.checkInDate()" (input)="setCheckInFromEvent($event)" />
+            </div>
+            <div class="date-input">
+                <p>Check-out</p>
+                <input type="date" [value]="bookingService.checkOutDate()" (input)="setCheckOutFromEvent($event)" />
+            </div>
+            <div class="date-input guest-count">
+                <p>Guests</p>
+                <input type="number" min="1" max="10" [value]="bookingService.guestCount()"
+                    (input)="setGuestCountFromEvent($event)" />
+            </div>
+
+            <button class="btn">Search</button>
+        </section>
+
+        <!-- Property Showcase -->
+        <section class="property-showcase">
+            <h2>Featured Properties</h2>
+            <app-property-slider></app-property-slider>
+        </section>
+
+        <!-- Unit Selector -->
+        @if (bookingService.selectedProperty()) {
+        <section class="unit-selector">
+            <h2>Available Units for {{ bookingService.selectedProperty()?.name }}</h2>
+            <app-unit-slider></app-unit-slider>
+        </section>
+        }
+
+        <!-- Optional: Calendar -->
+        <!-- <section class="availability-section">
+            <h2>Availability Overview</h2>
+            <app-availability-calendar></app-availability-calendar>
+        </section> -->
+
+        <!-- Guest + Booking Form (später) -->
+        <!-- <section class="guest-booking-form" *ngIf="bookingService.selectedUnit()">
+            <h2>Complete Your Booking</h2>
+            <app-guest-form></app-guest-form>
+        </section> -->
+
+        <!-- ✨ 7. Footer -->
+        <footer class="booking-footer">
+            <p>© {{ bookingService.currentYear() }} {{ bookingService.hotelName() }}. All rights reserved.</p>
+        </footer>
+
+    </content>
+</main>
