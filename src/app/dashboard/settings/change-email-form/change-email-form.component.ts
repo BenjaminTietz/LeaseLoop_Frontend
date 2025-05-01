@@ -64,7 +64,6 @@ export class ChangeEmailFormComponent {
   }
 
   changeEmail = () => {
-    console.log(this.emailForm.value)
     this.settingsService.changeEmail(this.emailForm.value)
   }
 

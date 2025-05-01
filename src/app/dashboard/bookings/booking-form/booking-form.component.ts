@@ -71,9 +71,6 @@ export class BookingFormComponent {
             this.closeForm();
           }
         }, { allowSignalWrites: true });
-        effect(() => {
-          console.log('Form valid?', this.bookingForm.valid);
-        });
   }
 
   

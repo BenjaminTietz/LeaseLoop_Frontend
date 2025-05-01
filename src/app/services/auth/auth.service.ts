@@ -152,12 +152,9 @@ export class AuthService {
   }
   
   handleError(error: any, fallbackMessage: string = 'Something went wrong.') {
-    console.log(error);
     const msg = error?.error?.message || error?.error?.error || error?.error?.detail || fallbackMessage;
     this.error.set(msg);
     this.successMessage.set(null);
-    console.log(msg);
-    
     this.sending.set(false);
   }
 

@@ -8,7 +8,9 @@
         <div class="card">
           <h2>Your Logo</h2>
           <div class="logo">
-            <img (click)="openForm('showFoto')" [src]="image()" alt="Logo">
+            @if(showData()){
+              <img (click)="showFoto.set(true)" [src]="image()" alt="Logo">
+            }
             <button (click)="openForm('changeImage')">Change Logo</button>
             @if(changeImage()){
               <app-change-image-form (close)="closeAllForms()"></app-change-image-form>
@@ -35,13 +37,20 @@
         
         <div class="card">
           <h2>Your personals</h2>
-          <ul>
-            <li>Street: {{user.address.street}}</li>
-            <li>Street Number: {{user.address.street_number}}</li>
-            <li>City: {{user.address.city}}</li>
-            <li>Country: {{user.address.country}}</li>
-            <li>Zip: {{user.address.zip}}</li>
-          </ul>
+          @if(showData()){
+            <ul>
+              <li>First Name: {{settingsService.newUserData().first_name}}</li>
+              <li>Last Name: {{settingsService.newUserData().last_name}}</li>
+              <li>Phone: {{settingsService.newUserData().address.phone}}</li>
+              <li>Email: {{settingsService.newUserData().email}}</li>
+              <li>Street: {{settingsService.newUserData().address.street}} {{settingsService.newUserData().address.house_number}}</li>
+              <li>City: {{settingsService.newUserData().address.postal_code}} {{settingsService.newUserData().address.city}} </li>
+              <li>Country: {{settingsService.newUserData().address.country}}</li>
+              <li>Tax ID: {{settingsService.newUserData().tax_id}}</li>
+
+            </ul>
+          }
+          
           <button (click)="openForm('changePersonals')">Change personal data</button>
           @if(changePersonals()){
             <app-change-adress-form (close)="closeAllForms()"></app-change-adress-form>

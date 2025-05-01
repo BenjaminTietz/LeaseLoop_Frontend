@@ -26,7 +26,6 @@ export class ClientsService {
   }
 
   deleteClient(id: number) {
-    console.log('deleteClient', id);
     this.httpService
       .delete(`${environment.apiBaseUrl}/api/client/${id}/`)
       .subscribe({
