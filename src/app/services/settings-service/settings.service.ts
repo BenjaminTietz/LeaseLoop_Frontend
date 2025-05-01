@@ -3,6 +3,25 @@ import { environment } from '../../../environments/environment';
 import { HttpService } from '../httpclient/http.service';
 import { HttpClient } from '@angular/common/http';
 
+export interface UserData {
+  tax_id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  address: {
+    street: string;
+    house_number: string;
+    city: string;
+    country: string;
+    postal_code: string;
+    phone: string;
+  },
+  image:{
+    logo: string
+  }
+  ;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +37,7 @@ export class SettingsService {
   userLogo = signal('')
   userSignal = signal(this.getStoredUser());
   loggedInUserData = computed(() => this.userSignal());
-  newUserData = signal({})
+  newUserData = signal<UserData>({} as UserData);
 
   userId = computed(() => {
     return this.loggedInUserData().id
@@ -113,12 +132,27 @@ export class SettingsService {
     this.userSignal.set(user);
   }
 
-  changeAdress(data:any){
+  changePersonals(data:any){
     this.sending.set(true)
-    this.httpService.patch(this.baseURL + `/auth/change-address/`, data).subscribe({
+    this.httpService.patch(this.baseURL + `/auth/change-personals/`, data).subscribe({
       next: () => {this.sending.set(false), this.successful.set(true), this.updateLocalStorageUserData(data.first_name)},
       error: (err) => {
         if(err.error){
+          this.errorMessage.set(err.error.detail[0])
+        }
+      }
+    })
+  }
+
+
+  getUserFullData(){
+    this.sending.set(true)
+    this.httpService.get(this.baseURL + `/auth/get-full-user-data/`).subscribe({
+      next: (data) => {this.sending.set(false), this.successful.set(true), this.newUserData.set(data as UserData)},
+      error: (err) => {
+        if(err.error){
+          this.successful.set(false)
+          this.sending.set(false)
           this.errorMessage.set(err.error.detail[0])
         }
       }

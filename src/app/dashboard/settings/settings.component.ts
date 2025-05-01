@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ChangePassFormComponent } from "./change-pass-form/change-pass-form.component";
 import { ChangeAdressFormComponent } from "./change-adress-form/change-adress-form.component";
 import { ChangeEmailFormComponent } from "./change-email-form/change-email-form.component";
@@ -7,6 +7,9 @@ import { SettingsService } from '../../services/settings-service/settings.servic
 import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
 import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
 import { MatIcon } from '@angular/material/icon';
+import { add } from 'date-fns';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-settings',
@@ -27,30 +30,22 @@ export class SettingsComponent {
   settingsService = inject(SettingsService)
 
   image = computed(() => {
-    if(this.settingsService.userLogo() === ''){
+    if(this.showData() == false){
       return 'favicon.ico'
     }else{
-      return this.settingsService.logoPath()
+      return environment.mediaBaseUrl + this.settingsService.newUserData().image.logo
     }
   });
-  user = {
-    name: 'John Doe',
-    email: 'KjY4l@example.com',
-    address : {
-      street: '123 Main St',
-      city: 'Anytown',
-      street_number: '123',
-      country: 'USA',
-      zip: '12345'
-    },
-    tax_id : '123456789'
-  }
+
+  showData = computed(() => {
+    const data = this.settingsService.newUserData();
+    return !!data && typeof data === 'object' && Object.keys(data).length > 0;
+  });
+
 
   constructor() {
-    this.settingsService.getLogo()
-    
+    this.settingsService.getUserFullData()
   }
-
  
 
   openForm = (form: 'changePass' | 'changeEmail' | 'changePersonals' | 'changeImage' | 'showFoto')  => {
@@ -62,11 +57,13 @@ export class SettingsComponent {
 
   closeAllForms = () => {
     this.settingsService.successful.set(false);
+    this.settingsService.sending.set(false);
     this.changePass.set(false);
     this.changeEmail.set(false);
     this.changeImage.set(false);
     this.changePersonals.set(false);
     this.showFoto.set(false);
     enableBackgroundScroll();
+    this.settingsService.getUserFullData();
   }
 }

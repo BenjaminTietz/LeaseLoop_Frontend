@@ -70,7 +70,6 @@ export class AnalyticsService {
     this.getServiceData(from, to, property, unit);
     this.getRevenueGroupedData(from, to, property, unit);
     this.getCancelledBookingsData(from, to, property, unit);
-    console.log('Analytics updated:', { from, to, property, unit });
   }
 
   public getRevenueData(

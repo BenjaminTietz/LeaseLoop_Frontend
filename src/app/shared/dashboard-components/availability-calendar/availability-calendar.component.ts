@@ -247,11 +247,6 @@ export class AvailabilityCalendarComponent {
   }
 
   onSelectChange(event: Event) {
-    console.log(
-      'Selected property:',
-      (event.target as HTMLSelectElement).value
-    );
-
     const select = event.target as HTMLSelectElement;
     this.selectedPropertyId.set(Number(select.value));
     this.loadBookings();

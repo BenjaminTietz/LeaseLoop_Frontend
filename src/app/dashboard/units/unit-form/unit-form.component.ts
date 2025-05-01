@@ -80,7 +80,6 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     disableBackgroundScroll();
     this.propertyService.loadProperties();
     const selected = this.unitService.selectedUnit();
-    console.log('Selected unit:', selected);
     
 
     if (selected) {

@@ -31,7 +31,6 @@ export class PromocodesComponent implements OnInit {
   }
 
   openEditForm(code: PromoCode) {
-    console.log('openEditForm', code);
     this.pcs.selectedPromocode.set(code);
     this.formOpen.set(true);
     this.pcs.successful.set(false);

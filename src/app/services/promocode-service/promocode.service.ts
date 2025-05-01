@@ -24,7 +24,6 @@ export class PromocodeService {
   }
 
   deleteService(id: number) {
-    console.log('deleteService', id);
     this.httpService
       .delete(`${environment.apiBaseUrl}/api/promocode/${id}/`)
       .subscribe({

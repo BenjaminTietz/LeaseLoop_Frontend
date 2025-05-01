@@ -52,8 +52,6 @@ export class UnitsService {
 
   /** Update a unit */
   updateUnit(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
-    console.log('Uploading with:', this.selectedUnit()?.id);
-    
       const id = this.selectedUnit()?.id;
       if (!id) return;
       this.setLoading(true);
@@ -130,9 +128,6 @@ export class UnitsService {
       form.append('unit', String(unitId));
       form.append('image', file);
       form.append('alt_text', descriptions?.[i]?.trim() || '');
-
-      console.log('Uploading with:', unitId); 
-  
       this.http.post(this.getUrl('unit-images'), form, this.getAuthOptions())
         .subscribe({
           error: (err) => console.error('Image upload failed:', err)
