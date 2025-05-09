@@ -1,44 +1,18 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { Property } from '../../models/property.model';
+import { Unit } from '../../models/unit.model';
+import { Booking } from '../../models/booking.model';
+import { HttpService } from '../httpclient/http.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClientBookingService {
-  properties = signal([
-    {
-      id: 1,
-      name: 'Sunset Apartments',
-      description: 'Beautiful seaside view',
-      image: 'demo/property/property_1.jpg',
-    },
-    {
-      id: 2,
-      name: 'Mountain Retreat',
-      description: 'Quiet mountain escape',
-      image: 'demo/property/property_2.jpg',
-    },
-  ]);
-
-  units = signal([
-    {
-      id: 1,
-      propertyId: 1,
-      name: 'Balcony Studio',
-      image: 'demo/unit/unit_1.jpg',
-    },
-    {
-      id: 2,
-      propertyId: 1,
-      name: 'Ocean View',
-      image: 'demo/unit/unit_2.jpg',
-    },
-    {
-      id: 3,
-      propertyId: 2,
-      name: 'Mountain Suite',
-      image: 'demo/unit/unit_3.jpg',
-    },
-  ]);
+  httpService = inject(HttpService);
+  properties = signal<Property[]>([]);
+  units = signal<Unit[]>([]);
+  bookings = signal<Booking[]>([]);
 
   selectedPropertyId = signal<number | null>(null);
   hotelName = signal<string>('Hotel Booking App');
@@ -53,8 +27,29 @@ export class ClientBookingService {
   );
 
   filteredUnits = computed(() =>
-    this.units().filter((u) => u.propertyId === this.selectedPropertyId())
+    this.units().filter((u) => u.property.id === this.selectedPropertyId())
   );
+
+  loadBookingData() {
+    this.httpService
+      .get<{ properties: Property[]; bookings: Booking[] }>(
+        `${environment.apiBaseUrl}/api/public/booking/testUser/`
+      )
+      .subscribe({
+        next: (res) => {
+          this.properties.set(res.properties);
+          const allUnits = res.properties.flatMap((p) =>
+            p.units.map((unit) => ({
+              ...unit,
+              propertyId: p.id,
+            }))
+          );
+          this.units.set(allUnits);
+          this.bookings.set(res.bookings);
+        },
+        error: (err) => console.error('Error loading booking data', err),
+      });
+  }
 
   selectProperty(id: number) {
     this.selectedPropertyId.set(id);
