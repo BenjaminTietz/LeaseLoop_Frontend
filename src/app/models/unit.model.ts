@@ -2,17 +2,18 @@ export interface Unit {
   id: number;
   name: string;
   capacity: number;
-  type : string;
+  type: string;
   price_per_extra_person: number;
-  property: PropertyShort // PropertyShort;
+  property: PropertyShort; // PropertyShort;
   status: string; // 'available' | 'booked' | 'cleaning' | 'maintenance'
   created_at: string; // ISO date
   updated_at: string; // ISO date
   description: string;
   price_per_night: number;
   max_capacity: number;
-  images : UnitImage[];
-  active : boolean;
+  images: UnitImage[];
+  active: boolean;
+  deleted: boolean;
 }
 
 export interface PropertyShort {

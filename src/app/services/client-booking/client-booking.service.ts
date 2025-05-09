@@ -70,8 +70,17 @@ export class ClientBookingService {
   }
 
   setGuestCount(count: number) {
-    this.guestCount.set(count);
-    console.log('Guest count set to:', count);
+    const max = Math.max(...this.units().map((u) => u.max_capacity), 1);
+    const validCount = Math.min(count, max);
+    this.guestCount.set(validCount);
+
+    if (count > max) {
+      console.warn(
+        `⚠️ Guest count '${count}' exceeds max allowed (${max}) – adjusted to ${validCount}.`
+      );
+    }
+
+    console.log('Guest count set to:', validCount);
   }
 
   isValidRange = computed(() => {
@@ -79,4 +88,39 @@ export class ClientBookingService {
     const outDate = this.checkOutDate();
     return !!inDate && !!outDate && inDate < outDate;
   });
+
+  filterUnitsByCheckInDate(date: string) {
+    const checkIn = new Date(date);
+    const guestCount = this.guestCount();
+
+    const isOverlapping = (start: string, end: string) =>
+      new Date(start) <= checkIn && checkIn < new Date(end);
+
+    const filtered = this.units().filter((unit) => {
+      if (
+        unit.status !== 'available' ||
+        !unit.active ||
+        (unit as any).deleted ||
+        unit.max_capacity < guestCount
+      ) {
+        return false;
+      }
+
+      // Buchungen prüfen
+      const overlapping = this.bookings().some(
+        (b) =>
+          b.unit.id === unit.id &&
+          b.status !== 'cancelled' &&
+          isOverlapping(b.check_in, b.check_out)
+      );
+
+      return !overlapping;
+    });
+
+    console.log(
+      `Filtered units for ${guestCount} guests on ${date}:`,
+      filtered
+    );
+    return filtered;
+  }
 }
