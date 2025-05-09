@@ -1,9 +1,13 @@
 <div class="unit-slider-container" *ngIf="units().length > 0 && current()">
     <h2>Available Units</h2>
 
-    <div class="slider-image">
-        <img [src]="current().image" [alt]="current().name" />
+    <div class="slider-image" *ngIf="current().images.length > 0">
+        <img [src]="current().images[0].image" [alt]="current().images[0].alt_text || current().name" />
     </div>
+    <div class="slider-image" *ngIf="current().images.length === 0">
+        <p>No image available</p>
+    </div>
+
 
     <div class="slider-info">
         <h3>{{ current().name }}</h3>

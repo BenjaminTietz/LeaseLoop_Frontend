@@ -1,7 +1,10 @@
 <div class="slider-container" *ngIf="current()">
     <div class="slider-image">
-        <img [src]="current().image" [alt]="current().name" />
+        <img *ngIf="current().images.length > 0" [src]="current().images[0].image"
+            [alt]="current().images[0].alt_text || current().name" />
+
     </div>
+
 
     <div class="slider-info">
         <h3>{{ current().name }}</h3>

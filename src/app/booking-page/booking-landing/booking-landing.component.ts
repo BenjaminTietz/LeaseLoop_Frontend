@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { AvailabilityCalendarComponent } from '../../shared/dashboard-components/availability-calendar/availability-calendar.component';
 import { PropertySliderComponent } from '../property-slider/property-slider.component';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
@@ -17,25 +17,12 @@ import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-but
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
 })
-export class BookingLandingComponent {
+export class BookingLandingComponent implements OnInit {
   bookingService = inject(ClientBookingService);
 
   currentIndex = signal(0);
 
-  properties = signal([
-    {
-      id: 1,
-      name: 'Sunset Apartments',
-      description: 'Beautiful seaside view with modern amenities.',
-      image: 'assets/demo/property1.jpg',
-    },
-    {
-      id: 2,
-      name: 'Mountain Retreat',
-      description: 'A quiet getaway in the mountains.',
-      image: 'assets/demo/property2.jpg',
-    },
-  ]);
+  properties = computed(() => this.bookingService.properties());
 
   currentProperty = computed(() => this.properties()[this.currentIndex()]);
 
@@ -64,5 +51,9 @@ export class BookingLandingComponent {
     const input = event.target as HTMLInputElement;
     const value = parseInt(input.value, 10);
     this.bookingService.setGuestCount(isNaN(value) ? 1 : value);
+  }
+
+  ngOnInit() {
+    this.bookingService.loadBookingData();
   }
 }
