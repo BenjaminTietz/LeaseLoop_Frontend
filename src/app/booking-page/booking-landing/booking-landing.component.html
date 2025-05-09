@@ -1,6 +1,5 @@
 <main>
     <content>
-
         <!-- Header -->
         <div class="booking-header">
             <h1> {{ bookingService.hotelName() }}</h1>
@@ -9,7 +8,6 @@
             <div class="btn">Contact</div>
             <app-theme-button></app-theme-button>
         </div>
-
         <!-- Date selection -->
         <section class="date-selector">
             <div class="date-input">
@@ -22,13 +20,16 @@
             </div>
             <div class="date-input guest-count">
                 <p>Guests</p>
-                <input type="number" min="1" max="10" [value]="bookingService.guestCount()"
+                <input type="number" [min]="1" [max]="maxGuestCapacity()" [value]="bookingService.guestCount()"
                     (input)="setGuestCountFromEvent($event)" />
+                @if (bookingService.guestCount() >= maxGuestCapacity()) {
+                <p class="info">
+                    Max. guest capacity reached – please reduce guest count or change filters.
+                </p>
+                }
             </div>
-
-            <button class="btn">Search</button>
+            <button class="btn" (click)="searchAvailableUnits()">Search</button>
         </section>
-
         <!-- Property Showcase -->
         <section class="property-showcase">
             <h2>Featured Properties</h2>
@@ -59,6 +60,5 @@
         <footer class="booking-footer">
             <p>© {{ bookingService.currentYear() }} {{ bookingService.hotelName() }}. All rights reserved.</p>
         </footer>
-
     </content>
 </main>

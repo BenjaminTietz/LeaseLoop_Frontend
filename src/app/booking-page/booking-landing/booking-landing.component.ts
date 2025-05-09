@@ -4,6 +4,7 @@ import { PropertySliderComponent } from '../property-slider/property-slider.comp
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
 import { UnitSliderComponent } from '../unit-slider/unit-slider.component';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-booking-landing',
@@ -13,6 +14,7 @@ import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-but
     PropertySliderComponent,
     UnitSliderComponent,
     ThemeButtonComponent,
+    CommonModule,
   ],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
@@ -39,7 +41,16 @@ export class BookingLandingComponent implements OnInit {
 
   setCheckInFromEvent(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.bookingService.setCheckIn(target.value);
+    const checkIn = target.value;
+    this.bookingService.setCheckIn(checkIn);
+
+    const currentOut = this.bookingService.checkOutDate();
+    if (!currentOut || new Date(currentOut) <= new Date(checkIn)) {
+      const nextDay = new Date(checkIn);
+      nextDay.setDate(nextDay.getDate() + 1);
+      const iso = nextDay.toISOString().split('T')[0];
+      this.bookingService.setCheckOut(iso);
+    }
   }
 
   setCheckOutFromEvent(event: Event) {
@@ -55,5 +66,20 @@ export class BookingLandingComponent implements OnInit {
 
   ngOnInit() {
     this.bookingService.loadBookingData();
+  }
+
+  searchAvailableUnits() {
+    const date = this.bookingService.checkInDate();
+    if (date) {
+      const availableUnits = this.bookingService.filterUnitsByCheckInDate(date);
+      this.bookingService.units.set(availableUnits);
+    }
+  }
+
+  maxGuestCapacity(): number {
+    return Math.max(
+      ...this.bookingService.units().map((u) => u.max_capacity),
+      1
+    );
   }
 }
