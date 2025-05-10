@@ -16,7 +16,7 @@ h2, span{
 }
 
 .content{
-  @include display(flex, row, center, center);
+  @include display(flex, row, flex-start, flex-start);
   gap: 20px;
   width: 100%;
   height: 100%;
@@ -24,7 +24,7 @@ h2, span{
 }
 
 .side{
-  @include display(flex, column, space-between, center);
+  @include display(flex, column, space-between, flex-start);
   width: 100%;
   gap: 30px;
 }

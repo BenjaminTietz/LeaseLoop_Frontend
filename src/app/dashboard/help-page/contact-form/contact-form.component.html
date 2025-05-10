@@ -1,0 +1,33 @@
+<main >
+  <form [formGroup]="contactForm" [appClickOutside]="closeForm">
+    <h1 class="form-title">Contact</h1>
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    <div class="side-by-side-area">
+      <div class="input-area">
+        <label for="first_name">Firstname</label>
+        <div class="form-field">
+          <input type="text" id="firstname" name="first_name" formControlName="first_name" required>
+        </div>
+      </div>
+      <div class="input-area">
+        <label for="last_name">Lastname</label>
+        <div class="form-field">
+          <input type="text" id="lastname" name="last_name" formControlName="last_name" required>
+        </div>
+      </div>
+    </div>
+    <div class="input-area">
+      <label for="email">Email</label>
+      <div class="form-field">
+        <input type="email" id="email" name="email" formControlName="email" required>
+      </div>
+    </div>
+    <div class="input-area ">
+      <label for="message">Message</label>
+      <div class="form-field textarea-field">
+        <textarea id="message" name="message" formControlName="message" required></textarea>
+      </div>
+    </div>
+    <button type="submit">Send</button>
+  </form>
+</main>

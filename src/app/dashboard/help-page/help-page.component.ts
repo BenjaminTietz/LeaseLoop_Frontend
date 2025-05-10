@@ -10,17 +10,18 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ContactFormComponent } from "./contact-form/contact-form.component";
 
 @Component({
   selector: 'app-help-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ContactFormComponent],
   templateUrl: './help-page.component.html',
   styleUrl: './help-page.component.scss',
 })
 export class HelpPageComponent {
   @ViewChildren('topicRef') topicRefs!: QueryList<ElementRef>;
-
+  contactFormOpen = signal(false);
   searchTerm = signal('');
 
   sections = signal([
@@ -248,5 +249,13 @@ export class HelpPageComponent {
 
       this.searchTerm.set('');
     }, 150);
+  }
+
+  openContactForm(){
+    this.contactFormOpen.set(true);
+  }
+
+  closeForm(){
+    this.contactFormOpen.set(false);
   }
 }

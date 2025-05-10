@@ -9,12 +9,13 @@ import { ClickOutsideDirective } from '../../directives/outside-click/click-outs
 import { MatIcon } from '@angular/material/icon';
 import { add } from 'date-fns';
 import { environment } from '../../../environments/environment';
+import { FillDataOverlayComponent } from "../fill-data-overlay/fill-data-overlay.component";
 
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [ChangePassFormComponent, ChangeAdressFormComponent, ChangeEmailFormComponent, ChangeImageFormComponent, ClickOutsideDirective, MatIcon],
+  imports: [ChangePassFormComponent, ChangeAdressFormComponent, ChangeEmailFormComponent, ChangeImageFormComponent, ClickOutsideDirective, MatIcon, FillDataOverlayComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
@@ -24,9 +25,6 @@ export class SettingsComponent {
   changeImage = signal(false)
   changePersonals = signal(false)
   showFoto = signal(false)
-
-
-
   settingsService = inject(SettingsService)
 
   image = computed(() => {
