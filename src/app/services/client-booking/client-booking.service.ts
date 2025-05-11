@@ -5,12 +5,14 @@ import { Booking } from '../../models/booking.model';
 import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import { HttpParams } from '@angular/common/http';
+import { NavigatorService } from '../navigator/navigator.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClientBookingService {
   httpService = inject(HttpService);
+  navigator  = inject(NavigatorService);
   properties = signal<Property[]>([]);
   units = signal<Unit[]>([]);
   bookings = signal<Booking[]>([]);
@@ -236,6 +238,7 @@ export class ClientBookingService {
 
   showPropertyDetails(property: Property) {
     this.selectedPropertyDetail.set(property);
+    this.navigator.navigateTo(`/property/${property.id}/`);
   }
 
   hidePropertyDetails() {
