@@ -1,0 +1,6 @@
+<main>
+  <div>
+    <h1>Welcome {{settingsService.newUserData().first_name}}, please change your personal data before you can start using the rest of the app </h1>
+    <button (click)="navigator.navigateTo('dashboard/settings')">Okay</button>
+  </div>
+</main>
