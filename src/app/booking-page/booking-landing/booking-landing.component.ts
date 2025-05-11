@@ -1,6 +1,4 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { AvailabilityCalendarComponent } from '../../shared/dashboard-components/availability-calendar/availability-calendar.component';
-import { PropertySliderComponent } from '../property-slider/property-slider.component';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
 import { UnitSliderComponent } from '../unit-slider/unit-slider.component';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';

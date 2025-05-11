@@ -17,6 +17,7 @@ export class ClientBookingService {
 
   selectedPropertyId = signal<number | null>(null);
 
+  //TODO: delete and hardcode in html template
   hotelName = signal<string>('Hotel Booking App');
   hotelDescription = signal<string>('Book your dream stay with us!');
 
@@ -73,7 +74,7 @@ export class ClientBookingService {
   );
 
   // load all properties of all users with pagination
-  loadInitialData(page: number = 1, pageSize: number = 10) {
+  loadInitialData(page: number = 1, pageSize: number = 20) {
     this.httpService
       .get<any>(
         `${environment.apiBaseUrl}/api/public/booking/?page=${page}&page_size=${pageSize}`
@@ -101,7 +102,7 @@ export class ClientBookingService {
     city: string | null,
     country: string | null,
     page = 1,
-    pageSize = 10
+    pageSize = 20
   ) {
     const params = new URLSearchParams();
     if (city) params.set('city', city);
@@ -128,19 +129,6 @@ export class ClientBookingService {
       });
   }
 
-  loadPropertiesOnly() {
-    this.httpService
-      .get<{ owner: any; properties: Property[] }>(
-        `${environment.apiBaseUrl}/api/public/booking/testUser/`
-      )
-      .subscribe({
-        next: (res) => {
-          this.properties.set(res.properties);
-        },
-        error: (err) => console.error('Error loading properties', err),
-      });
-  }
-
   fetchAvailableUnits() {
     const checkIn = this.checkInDate();
     const checkOut = this.checkOutDate();
@@ -157,7 +145,7 @@ export class ClientBookingService {
       .get<Unit[]>(
         `${
           environment.apiBaseUrl
-        }/api/public/booking/testUser/available-units/?${params.toString()}`
+        }/api/public/booking/available-units/?${params.toString()}`
       )
       .subscribe({
         next: (units) => {
