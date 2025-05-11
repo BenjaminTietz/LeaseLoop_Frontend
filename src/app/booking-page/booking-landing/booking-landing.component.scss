@@ -12,11 +12,95 @@ main {
 
 .booking-header {
     @include display(flex, row, space-between, center);
+
+    .btn {
+        cursor: pointer;
+    }
 }
 
-.date-selector {
-    @include display(flex, row, flex-start, center);
+.selector {
+    @include display(flex, column, flex-start, center);
     width: 100%;
+    border: 1px solid var(--color-border-default);
+    border-radius: 8px;
+    margin: 20px 0;
+    padding: 16px;
+}
+
+.location-container {
+    @include display(flex, row, space-between, center);
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 16px;
+
+    input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        outline: none;
+        color: black;
+
+        &:focus {
+            border-color: #4589ff;
+            box-shadow: 0 0 0 2px rgba(69, 137, 255, 0.2);
+        }
+    }
+
+    .dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 4px;
+        padding: 0;
+        list-style: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: scaleY(0.95);
+        animation: dropdownFadeIn 0.2s forwards;
+
+
+        @keyframes dropdownFadeIn {
+            to {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        li {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            color: black;
+
+            &:hover {
+                background-color: #e3eeff;
+            }
+        }
+    }
+}
+
+
+
+
+.date-selector {
+    @include display(flex, row, space-between, center);
+    width: 100%;
+    margin-bottom: 16px;
 }
 
 .date-input {
@@ -25,7 +109,8 @@ main {
     input {
         padding: 8px;
         border-radius: 6px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--color-border-default);
+        color: black;
     }
 
     .guest-count {
@@ -36,4 +121,135 @@ main {
 .booking-footer {
     @include display(flex, row, space-between, center);
     margin-top: 20px;
+}
+
+.property-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.property-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    width: 280px;
+    background: white;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+
+    img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    h3,
+    h2,
+    p,
+    span {
+        color: black;
+
+    }
+
+}
+
+
+.property-detail {
+    width: 100%;
+
+    .property-header {
+        @include display(flex, column, center, center);
+        gap: 32px;
+        margin-bottom: 32px;
+        text-align: center;
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            max-height: 800px;
+            object-fit: cover;
+            margin-bottom: 16px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-block {
+            max-width: 600px;
+
+            h2 {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+
+            p {
+                margin: 6px 0;
+            }
+        }
+    }
+
+    h3 {
+        font-size: 20px;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
+    .unit-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        margin-bottom: 32px;
+
+        .unit-card {
+            background-color: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 280px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+            text-align: center;
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            }
+
+            img {
+                width: 100%;
+                height: 160px;
+                object-fit: cover;
+                border-radius: 6px;
+                margin-bottom: 12px;
+            }
+
+            h4 {
+                font-size: 18px;
+                margin-bottom: 8px;
+                color: black;
+            }
+
+            p {
+                font-size: 14px;
+                margin: 4px 0;
+                color: black;
+            }
+
+            span {
+                font-size: 16px;
+                font-weight: bold;
+                color: black;
+            }
+
+            span::after {
+                content: " €";
+            }
+        }
+    }
 }

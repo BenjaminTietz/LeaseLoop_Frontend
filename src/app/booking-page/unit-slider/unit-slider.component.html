@@ -11,7 +11,9 @@
 
     <div class="slider-info">
         <h3>{{ current().name }}</h3>
-
+        <p>{{ current().description }}</p>
+        <p>Price: {{ current().price_per_night }}</p>
+        <p>Max Capacity: {{ current().max_capacity }}</p>
         <button (click)="onBookUnit()">Book This Unit</button>
     </div>
 

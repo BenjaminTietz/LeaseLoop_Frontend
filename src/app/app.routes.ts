@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+// Owner Landing Page
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './landing-page/login/login.component';
 import { RegisterComponent } from './landing-page/register/register.component';
@@ -25,11 +26,13 @@ import { InvoicesComponent } from './dashboard/invoices/invoices.component';
 import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
 import { SettingsComponent } from './dashboard/settings/settings.component';
 import { HelpPageComponent } from './dashboard/help-page/help-page.component';
+
+// Booking Page
 import { BookingLandingComponent } from './booking-page/booking-landing/booking-landing.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'owner',
     component: LandingPageComponent,
     children: [
       { path: '', component: MainLandingComponent },
@@ -64,7 +67,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'booking-landing',
+    path: '',
     component: BookingLandingComponent,
     children: [],
   },
