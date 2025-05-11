@@ -1,6 +1,7 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
 import { CommonModule } from '@angular/common';
+import { Unit } from '../../models/unit.model';
 
 @Component({
   selector: 'app-unit-slider',
@@ -13,7 +14,11 @@ export class UnitSliderComponent {
   bookingService = inject(ClientBookingService);
   index = signal(0);
 
-  units = this.bookingService.filteredUnits;
+  @Input({ required: false }) unitsInput?: Unit[];
+
+  units = computed(
+    () => this.unitsInput ?? this.bookingService.filteredUnits()
+  );
 
   current = computed(() => this.units()[this.index()]);
 

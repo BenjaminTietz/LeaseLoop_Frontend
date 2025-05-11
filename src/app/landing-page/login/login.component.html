@@ -3,53 +3,58 @@
     @if(auth.error() == null) {
     <form [formGroup]="loginForm" (submit)="login()">
       @if(auth.sending()) {
-        <app-progress-bar aria-label="Login progress bar"></app-progress-bar>
+      <app-progress-bar aria-label="Login progress bar"></app-progress-bar>
       }
       <h1>Login</h1>
       <div class="form-field">
-        <input aria-label="Email" type="email" id="email" name="email" required placeholder="Email" formControlName="email">
-        <mat-icon appAriaConverter >email</mat-icon>
+        <input aria-label="Email" type="email" id="email" name="email" required placeholder="Email"
+          formControlName="email">
+        <mat-icon appAriaConverter>email</mat-icon>
         @if (formService.getFormErrors(loginForm, 'email')?.['required']) {
-          <small>Email is required</small>
+        <small>Email is required</small>
         } @else if (formService.getFormErrors(loginForm, 'email')?.['pattern']) {
-          <small>Enter a valid email address</small>
+        <small>Enter a valid email address</small>
         }
       </div>
 
       <div class="form-field">
-        <input aria-label="Password" [type]="passVisible() ? 'text' : 'password'"  id="password" name="password" required  placeholder="Password" formControlName="password">
+        <input aria-label="Password" [type]="passVisible() ? 'text' : 'password'" id="password" name="password" required
+          placeholder="Password" formControlName="password">
         <mat-icon appAriaConverter class="c-pointer" (click)="togglePassVisible()">
           @if(passVisible()){
-            visibility_off
+          visibility_off
           } @else {
-            visibility
+          visibility
           }
         </mat-icon>
         @if (formService.getFormErrors(loginForm, 'password')?.['required']) {
-          <small>Password is required</small>
+        <small>Password is required</small>
         } @else if (formService.getFormErrors(loginForm, 'password')?.['minlength']) {
-          <small>Minimum 8 characters</small>
+        <small>Minimum 8 characters</small>
         } @else if (formService.getFormErrors(loginForm, 'password')?.['pattern']) {
-          <small>Password must include upper/lowercase, a number and a special character</small>
+        <small>Password must include upper/lowercase, a number and a special character</small>
         } @else if (formService.getFormErrors(loginForm, 'password')?.['maxlength']) {
-          <small>Password is too long</small>
+        <small>Password is too long</small>
         }
       </div>
       <div class="checkbox">
-        <input type="checkbox" aria-label="Remember me checkbox" id="remember" name="remember" (input)="auth.remember.set(!auth.remember())">
+        <input type="checkbox" aria-label="Remember me checkbox" id="remember" name="remember"
+          (input)="auth.remember.set(!auth.remember())">
         <label for="remember">Remember me</label>
       </div>
-        <button type="submit" (mouseenter)="formService.markAllAsTouched(loginForm)" (mouseleave)="formService.unmarkAllAsTouched(loginForm)" [disabled]="loginForm.invalid || auth.sending()">Sign in</button>
-        <a class="legal-link" (click)="navigator.navigateTo('forgot-password')">Forgot your password?</a>
+      <button type="submit" (mouseenter)="formService.markAllAsTouched(loginForm)"
+        (mouseleave)="formService.unmarkAllAsTouched(loginForm)" [disabled]="loginForm.invalid || auth.sending()">Sign
+        in</button>
+      <a class="legal-link" (click)="navigator.navigateTo('owner/forgot-password')">Forgot your password?</a>
     </form>
-  }
-  @if( auth.error()!==null) {
-    <form class="animated-form" >
-        <h2>{{ auth.error()}}</h2>
-        @if(auth.error()) {
-          <button (click)="auth.resetMessages(); auth.logout();" >Gotcha</button>
-        }
+    }
+    @if( auth.error()!==null) {
+    <form class="animated-form">
+      <h2>{{ auth.error()}}</h2>
+      @if(auth.error()) {
+      <button (click)="auth.resetMessages(); auth.logout();">Gotcha</button>
+      }
     </form>
-  }
+    }
   </content>
 </main>

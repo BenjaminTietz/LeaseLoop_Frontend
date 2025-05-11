@@ -4,6 +4,7 @@ import { Unit } from '../../models/unit.model';
 import { Booking } from '../../models/booking.model';
 import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +16,53 @@ export class ClientBookingService {
   bookings = signal<Booking[]>([]);
 
   selectedPropertyId = signal<number | null>(null);
+
   hotelName = signal<string>('Hotel Booking App');
   hotelDescription = signal<string>('Book your dream stay with us!');
+
   currentYear = signal<number>(new Date().getFullYear());
   checkInDate = signal<string | null>(null);
   checkOutDate = signal<string | null>(null);
   guestCount = signal<number>(1);
+  filteredMode = signal(false);
+  selectedPropertyDetail = signal<Property | null>(null);
+  searchCountry = signal<string>('');
+  searchCity = signal<string>('');
+
+  countryList = computed(() =>
+    [
+      ...new Set(
+        this.properties()
+          .map((p) => p.address?.country)
+          .filter(Boolean)
+      ),
+    ].sort()
+  );
+
+  cityList = computed(() =>
+    [
+      ...new Set(
+        this.properties()
+          .map((p) => p.address?.city)
+          .filter(Boolean)
+      ),
+    ].sort()
+  );
+
+  filteredCountryList = computed(() =>
+    this.countryList().filter((country) =>
+      country.toLowerCase().includes(this.searchCountry().toLowerCase().trim())
+    )
+  );
+
+  filteredCityList = computed(() =>
+    this.cityList().filter((city) =>
+      city.toLowerCase().includes(this.searchCity().toLowerCase().trim())
+    )
+  );
+
+  selectedCountry = signal<string | null>(null);
+  selectedCity = signal<string | null>(null);
 
   selectedProperty = computed(() =>
     this.properties().find((p) => p.id === this.selectedPropertyId())
@@ -30,25 +72,105 @@ export class ClientBookingService {
     this.units().filter((u) => u.property.id === this.selectedPropertyId())
   );
 
-  loadBookingData() {
+  // load all properties of all users with pagination
+  loadInitialData(page: number = 1, pageSize: number = 10) {
     this.httpService
-      .get<{ properties: Property[]; bookings: Booking[] }>(
-        `${environment.apiBaseUrl}/api/public/booking/testUser/`
+      .get<any>(
+        `${environment.apiBaseUrl}/api/public/booking/?page=${page}&page_size=${pageSize}`
       )
       .subscribe({
         next: (res) => {
-          this.properties.set(res.properties);
-          const allUnits = res.properties.flatMap((p) =>
-            p.units.map((unit) => ({
+          const properties = res.data.properties;
+          this.properties.set(properties);
+
+          const allUnits = properties.flatMap((p: any) =>
+            p.units.map((unit: any) => ({
               ...unit,
               propertyId: p.id,
             }))
           );
           this.units.set(allUnits);
-          this.bookings.set(res.bookings);
+          this.filteredMode.set(false);
         },
-        error: (err) => console.error('Error loading booking data', err),
+        error: (err) =>
+          console.error('Error loading paginated properties and units', err),
       });
+  }
+
+  filterPropertiesByLocation(
+    city: string | null,
+    country: string | null,
+    page = 1,
+    pageSize = 10
+  ) {
+    const params = new URLSearchParams();
+    if (city) params.set('city', city);
+    if (country) params.set('country', country);
+    params.set('page', page.toString());
+    params.set('page_size', pageSize.toString());
+
+    this.httpService
+      .get<any>(
+        `${environment.apiBaseUrl}/api/public/booking/?${params.toString()}`
+      )
+      .subscribe({
+        next: (res) => {
+          const properties = res.data.properties;
+          this.properties.set(properties);
+
+          const allUnits = properties.flatMap((p: any) =>
+            p.units.map((unit: any) => ({ ...unit, propertyId: p.id }))
+          );
+          this.units.set(allUnits);
+          this.filteredMode.set(true);
+        },
+        error: (err) => console.error('Error filtering properties', err),
+      });
+  }
+
+  loadPropertiesOnly() {
+    this.httpService
+      .get<{ owner: any; properties: Property[] }>(
+        `${environment.apiBaseUrl}/api/public/booking/testUser/`
+      )
+      .subscribe({
+        next: (res) => {
+          this.properties.set(res.properties);
+        },
+        error: (err) => console.error('Error loading properties', err),
+      });
+  }
+
+  fetchAvailableUnits() {
+    const checkIn = this.checkInDate();
+    const checkOut = this.checkOutDate();
+    const guests = this.guestCount();
+
+    if (!checkIn || !checkOut) return;
+
+    const params = new HttpParams()
+      .set('check_in', checkIn)
+      .set('check_out', checkOut)
+      .set('guests', guests.toString());
+
+    this.httpService
+      .get<Unit[]>(
+        `${
+          environment.apiBaseUrl
+        }/api/public/booking/testUser/available-units/?${params.toString()}`
+      )
+      .subscribe({
+        next: (units) => {
+          this.units.set(units);
+          this.filteredMode.set(true);
+        },
+        error: (err) => console.error('Error fetching available units', err),
+      });
+  }
+
+  resetFilters() {
+    this.loadInitialData();
+    this.filteredMode.set(false);
   }
 
   selectProperty(id: number) {
@@ -122,5 +244,23 @@ export class ClientBookingService {
       filtered
     );
     return filtered;
+  }
+
+  showPropertyDetails(property: Property) {
+    this.selectedPropertyDetail.set(property);
+  }
+
+  hidePropertyDetails() {
+    this.selectedPropertyDetail.set(null);
+  }
+
+  setSelectedCountry(country: string) {
+    this.selectedCountry.set(country);
+    this.searchCountry.set(country);
+  }
+
+  setSelectedCity(city: string) {
+    this.selectedCity.set(city);
+    this.searchCity.set(city);
   }
 }

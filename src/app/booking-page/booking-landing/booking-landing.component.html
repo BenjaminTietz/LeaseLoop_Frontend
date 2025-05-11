@@ -2,61 +2,156 @@
     <content>
         <!-- Header -->
         <div class="booking-header">
-            <h1> {{ bookingService.hotelName() }}</h1>
+            <h1> {{ bookingService.hotelName() }}
+            </h1>
             <p>{{bookingService.hotelDescription()}}</p>
-            <div class="btn">About</div>
-            <div class="btn">Contact</div>
+            <div (click)="this.navigationService.navigateTo('owner')" class="btn">Register your property
+            </div>
             <app-theme-button></app-theme-button>
         </div>
         <!-- Date selection -->
-        <section class="date-selector">
-            <div class="date-input">
-                <p>Check-in</p>
-                <input type="date" [value]="bookingService.checkInDate()" (input)="setCheckInFromEvent($event)" />
+        <section class="selector">
+            <div class="location-container">
+                <!-- Country Search Dropdown -->
+                <div class="custom-dropdown">
+                    <input type="text" placeholder="Search country..." [value]="bookingService.searchCountry()"
+                        (input)="onCountrySearch($event)" (focus)="showCountryDropdown.set(true)"
+                        (blur)="hideDropdown('country')" />
+                    @if (showCountryDropdown() && bookingService.filteredCountryList().length > 0) {
+                    <ul class="dropdown-list">
+                        @for (country of bookingService.filteredCountryList(); track country; let index = $index) {
+                        <li (mousedown)="onCountrySelectCustom(country)">
+                            {{ country }}
+                        </li>
+                        }
+                    </ul>
+                    }
+                </div>
+                <!-- City Search Dropdown -->
+                <div class="custom-dropdown">
+                    <input type="text" placeholder="Search city..." [value]="bookingService.searchCity()"
+                        (input)="onCitySearch($event)" (focus)="showCityDropdown.set(true)"
+                        (blur)="hideDropdown('city')" />
+                    @if (showCityDropdown() && bookingService.filteredCityList().length > 0) {
+                    <ul class="dropdown-list">
+                        @for (city of bookingService.filteredCityList(); track city; let index = $index) {
+                        <li (mousedown)="onCitySelectCustom(city)">
+                            {{ city }}
+                        </li>
+                        }
+                    </ul>
+                    }
+                </div>
             </div>
-            <div class="date-input">
-                <p>Check-out</p>
-                <input type="date" [value]="bookingService.checkOutDate()" (input)="setCheckOutFromEvent($event)" />
+            <div class="date-selector">
+                <div class="date-input">
+                    <p>Check-in</p>
+                    <input type="date" [value]="bookingService.checkInDate()" (input)="setCheckInFromEvent($event)" />
+                </div>
+                <div class="date-input">
+                    <p>Check-out</p>
+                    <input type="date" [value]="bookingService.checkOutDate()" (input)="setCheckOutFromEvent($event)" />
+                </div>
+                <div class="date-input guest-count">
+                    <p>Guests</p>
+                    <input type="number" [min]="1" [max]="maxGuestCapacity()" [value]="bookingService.guestCount()"
+                        (input)="setGuestCountFromEvent($event)" />
+                    @if (bookingService.guestCount() >= maxGuestCapacity()) {
+                    <p class="info">
+                        Max. guest capacity reached – please reduce guest count or change filters.
+                    </p>
+                    }
+                </div>
+                <button class="btn" (click)="searchAvailableUnits()">Search</button>
             </div>
-            <div class="date-input guest-count">
-                <p>Guests</p>
-                <input type="number" [min]="1" [max]="maxGuestCapacity()" [value]="bookingService.guestCount()"
-                    (input)="setGuestCountFromEvent($event)" />
-                @if (bookingService.guestCount() >= maxGuestCapacity()) {
-                <p class="info">
-                    Max. guest capacity reached – please reduce guest count or change filters.
-                </p>
+        </section>
+        <!-- Mainarea -->
+        <section
+            *ngIf="!bookingService.filteredMode() && !bookingService.selectedPropertyDetail(); else detailOrSearchView">
+            <h2>Properties</h2>
+            <div class="property-grid">
+                @for (property of bookingService.properties(); track property.id) {
+                <div class="property-card">
+                    <img *ngIf="property.images && property.images.length > 0; else noImage"
+                        [src]="property.images[0].image" [alt]="property.images[0].alt_text || property.name" />
+                    <ng-template #noImage>
+                        <img src="no_picture.png" alt="No image available" />
+                    </ng-template>
+                    <h3>{{ property.name }}</h3>
+                    <h2>{{ property.address.country }}</h2>
+                    <p>{{ property.address.city }}</p>
+                    <p>{{ property.units.length }} Unit{{ property.units.length > 1 ? 's' : '' }}</p>
+                    <button (click)="bookingService.showPropertyDetails(property)">View details</button>
+                </div>
                 }
             </div>
-            <button class="btn" (click)="searchAvailableUnits()">Search</button>
         </section>
-        <!-- Property Showcase -->
-        <section class="property-showcase">
-            <h2>Featured Properties</h2>
-            <app-property-slider></app-property-slider>
-        </section>
-
-        <!-- Unit Selector -->
-        @if (bookingService.selectedProperty()) {
-        <section class="unit-selector">
-            <h2>Available Units for {{ bookingService.selectedProperty()?.name }}</h2>
-            <app-unit-slider></app-unit-slider>
-        </section>
-        }
-
-        <!-- Optional: Calendar -->
-        <!-- <section class="availability-section">
-            <h2>Availability Overview</h2>
-            <app-availability-calendar></app-availability-calendar>
-        </section> -->
-
-        <!-- Guest + Booking Form (später) -->
-        <!-- <section class="guest-booking-form" *ngIf="bookingService.selectedUnit()">
-            <h2>Complete Your Booking</h2>
-            <app-guest-form></app-guest-form>
-        </section> -->
-
-        <!-- ✨ 7. Footer -->
+        <!-- Detailview or searchresults -->
+        <ng-template #detailOrSearchView>
+            <!-- Detailview -->
+            <section *ngIf="bookingService.selectedPropertyDetail() as property; else searchResultView"
+                class="property-detail">
+                <div class="property-header">
+                    <div class="text-block">
+                        <h2>{{ property.name }}</h2>
+                        <p>{{ property.address.city }}, {{ property.address.country }}</p>
+                        <p>{{ property.description }}</p>
+                    </div>
+                    <img *ngIf="property.images.length > 0" [src]="property.images[0].image"
+                        [alt]="property.images[0].alt_text || property.name" />
+                </div>
+                <h3>Units</h3>
+                <div class="unit-grid">
+                    @for (unit of bookingService.selectedPropertyDetail()?.units || []; track unit.id) {
+                    <div class="unit-card">
+                        <img *ngIf="unit.images.length > 0; else noUnitImage" [src]="unit.images[0].image"
+                            [alt]="unit.images[0].alt_text || unit.name" />
+                        <ng-template #noUnitImage>
+                            <img src="no_picture.png" alt="No image available" />
+                        </ng-template>
+                        <h4>{{ unit.name }}</h4>
+                        <p>{{ unit.description }}</p>
+                        <p>Sleeps up to {{ unit.max_capacity }}</p>
+                        <p>{{ unit.type | titlecase }}</p>
+                        <p>Starting from: </p><span>{{ unit.price_per_night }}</span>
+                        <button class="book-now">Check availability</button>
+                    </div>
+                    }
+                </div>
+                <button class="btn reset-btn" (click)="resetPropertyDetails()">Back to overview</button>
+            </section>
+            <!-- Searchresults -->
+            <ng-template #searchResultView>
+                @if (bookingService.filteredMode()) {
+                <section>
+                    <h2>Matching Properties</h2>
+                    <div class="property-grid">
+                        @for (property of bookingService.properties(); track property.id) {
+                        <div class="property-card">
+                            <img *ngIf="property.images.length > 0; else noImage" [src]="property.images[0].image"
+                                [alt]="property.images[0].alt_text || property.name" />
+                            <ng-template #noImage>
+                                <img src="no_picture.png" alt="No image available" />
+                            </ng-template>
+                            <h3>{{ property.name }}</h3>
+                            <p>{{ property.address.city }}, {{ property.address.country }}</p>
+                            <p>{{ property.units.length }} Unit{{ property.units.length > 1 ? 's' : '' }}</p>
+                            <button (click)="bookingService.showPropertyDetails(property)">View details</button>
+                        </div>
+                        }
+                    </div>
+                    <button class="btn reset-btn" (click)="resetFilters()">Reset filters</button>
+                </section>
+                } @else {
+                <section>
+                    <h2>Available Units</h2>
+                    <app-unit-slider [unitsInput]="bookingService.units()"></app-unit-slider>
+                    <button class="btn reset-btn" (click)="resetFilters()">Reset search</button>
+                </section>
+                }
+            </ng-template>
+        </ng-template>
+        <!-- Footer -->
         <footer class="booking-footer">
             <p>© {{ bookingService.currentYear() }} {{ bookingService.hotelName() }}. All rights reserved.</p>
         </footer>

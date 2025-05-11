@@ -29,7 +29,7 @@ import { BookingLandingComponent } from './booking-page/booking-landing/booking-
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'owner',
     component: LandingPageComponent,
     children: [
       { path: '', component: MainLandingComponent },
@@ -64,7 +64,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'booking-landing',
+    path: '',
     component: BookingLandingComponent,
     children: [],
   },

@@ -9,6 +9,8 @@
     <div class="slider-info">
         <h3>{{ current().name }}</h3>
         <p>{{ current().description }}</p>
+        <p>{{ current().address.country }}</p>
+        <p>{{ current().address.city }}</p>
 
         @if (!bookingService.selectedProperty() || bookingService.selectedProperty()?.id !== current().id)
         { <button (click)="bookNow()">

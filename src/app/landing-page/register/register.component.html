@@ -67,9 +67,10 @@
       </div>
 
       <div class="checkbox">
-        <input type="checkbox" aria-label="I accept the privacy policy checkbox" aria-label="" id="remember" name="remember" formControlName="checkbox">
+        <input type="checkbox" aria-label="I accept the privacy policy checkbox" aria-label="" id="remember"
+          name="remember" formControlName="checkbox">
         <label for="remember">I accept the <a class="legal-link"
-            (click)="navigator.navigateTo('privacy-policy')">privacy policy</a></label>
+            (click)="navigator.navigateTo('owner/privacy-policy')">privacy policy</a></label>
         @if(formService.getFormErrors(registerForm, 'checkbox')?.['required']) {
         <small>You must accept the privacy policy</small>
         }
@@ -81,15 +82,15 @@
     </form>
     }
     @if(auth.successMessage()!== null || auth.error()!==null) {
-      <form class="animated-form" >
-          <h2>{{ auth.successMessage() || auth.error()}}</h2>
-          @if(auth.successMessage()) {
-            <button (click)="auth.resetMessages(); navigator.navigateTo('/login')">Gotcha</button>
-          }
-          @if(auth.error()) {
-            <button (click)="auth.resetMessages()">Gotcha</button>
-          }
-      </form>
+    <form class="animated-form">
+      <h2>{{ auth.successMessage() || auth.error()}}</h2>
+      @if(auth.successMessage()) {
+      <button (click)="auth.resetMessages(); navigator.navigateTo(' owner/login')">Gotcha</button>
+      }
+      @if(auth.error()) {
+      <button (click)="auth.resetMessages()">Gotcha</button>
+      }
+    </form>
     }
   </content>
 </main>

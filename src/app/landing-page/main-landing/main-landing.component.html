@@ -4,7 +4,8 @@
             <div class="container">
                 <h1>Property Management System</h1>
                 <p>Manage your guesthouse or Airbnb with ease – bookings, invoices, seasonal prices & more.</p>
-                <button class="btn primary" (click)="this.navigator.navigateTo('register')">Start Free Trial</button>
+                <button class="btn primary" (click)="this.navigator.navigateTo('owner/register')">Start Free
+                    Trial</button>
 
             </div>
         </section>
@@ -28,17 +29,17 @@
             </div>
         </section>
         <section class="trial-section">
-                <h2>Try the Tool</h2>
-                <p>No registration needed – explore the demo environment now.</p>
-                <div class="button-container">
-                    @if(auth.sending()) {
-                        <h2>Loading demo...</h2>
-                        <app-progress-bar aria-label="Loading"></app-progress-bar>
-                    }@else {
-                        <button class="btn secondary" (click)="auth.loginDemo()">Explore Demo</button>
-                    }
-                    
-                </div>
+            <h2>Try the Tool</h2>
+            <p>No registration needed – explore the demo environment now.</p>
+            <div class="button-container">
+                @if(auth.sending()) {
+                <h2>Loading demo...</h2>
+                <app-progress-bar aria-label="Loading"></app-progress-bar>
+                }@else {
+                <button class="btn secondary" (click)="auth.loginDemo()">Explore Demo</button>
+                }
+
+            </div>
         </section>
     </content>
 </main>

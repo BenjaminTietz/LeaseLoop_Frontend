@@ -5,38 +5,23 @@ import { ClientBookingService } from '../../services/client-booking/client-booki
 import { UnitSliderComponent } from '../unit-slider/unit-slider.component';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
 import { CommonModule } from '@angular/common';
+import { NavigatorService } from '../../services/navigator/navigator.service';
 
 @Component({
   selector: 'app-booking-landing',
   standalone: true,
-  imports: [
-    AvailabilityCalendarComponent,
-    PropertySliderComponent,
-    UnitSliderComponent,
-    ThemeButtonComponent,
-    CommonModule,
-  ],
+  imports: [UnitSliderComponent, ThemeButtonComponent, CommonModule],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
 })
 export class BookingLandingComponent implements OnInit {
   bookingService = inject(ClientBookingService);
-
   currentIndex = signal(0);
-
-  properties = computed(() => this.bookingService.properties());
-
-  currentProperty = computed(() => this.properties()[this.currentIndex()]);
-
-  next() {
-    const nextIndex = (this.currentIndex() + 1) % this.properties().length;
-    this.currentIndex.set(nextIndex);
-  }
-
-  prev() {
-    const total = this.properties().length;
-    const newIndex = (this.currentIndex() - 1 + total) % total;
-    this.currentIndex.set(newIndex);
+  showCountryDropdown = signal(false);
+  showCityDropdown = signal(false);
+  navigationService = inject(NavigatorService);
+  ngOnInit() {
+    this.bookingService.loadInitialData();
   }
 
   setCheckInFromEvent(event: Event) {
@@ -64,16 +49,8 @@ export class BookingLandingComponent implements OnInit {
     this.bookingService.setGuestCount(isNaN(value) ? 1 : value);
   }
 
-  ngOnInit() {
-    this.bookingService.loadBookingData();
-  }
-
   searchAvailableUnits() {
-    const date = this.bookingService.checkInDate();
-    if (date) {
-      const availableUnits = this.bookingService.filterUnitsByCheckInDate(date);
-      this.bookingService.units.set(availableUnits);
-    }
+    this.bookingService.fetchAvailableUnits();
   }
 
   maxGuestCapacity(): number {
@@ -81,5 +58,47 @@ export class BookingLandingComponent implements OnInit {
       ...this.bookingService.units().map((u) => u.max_capacity),
       1
     );
+  }
+
+  resetPropertyDetails() {
+    this.bookingService.hidePropertyDetails();
+  }
+
+  resetFilters() {
+    this.bookingService.resetFilters();
+  }
+
+  onCountrySearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.bookingService.searchCountry.set(target.value);
+  }
+
+  onCitySearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.bookingService.searchCity.set(target.value);
+  }
+
+  onCountrySelectCustom(country: string) {
+    this.bookingService.setSelectedCountry(country);
+    this.filterByLocation();
+  }
+
+  onCitySelectCustom(city: string) {
+    this.bookingService.setSelectedCity(city);
+    this.filterByLocation();
+  }
+
+  filterByLocation() {
+    this.bookingService.filterPropertiesByLocation(
+      this.bookingService.selectedCity(),
+      this.bookingService.selectedCountry()
+    );
+  }
+
+  hideDropdown(type: 'country' | 'city') {
+    setTimeout(() => {
+      if (type === 'country') this.showCountryDropdown.set(false);
+      if (type === 'city') this.showCityDropdown.set(false);
+    }, 150);
   }
 }
