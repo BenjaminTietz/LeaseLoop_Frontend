@@ -5,6 +5,7 @@ import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-but
 import { CommonModule } from '@angular/common';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { LandingFooterComponent } from '../../shared/landing-components/landing-footer/landing-footer.component';
+import { LogoComponent } from '../../shared/landing-components/logo/logo.component';
 
 @Component({
   selector: 'app-booking-landing',
@@ -14,6 +15,7 @@ import { LandingFooterComponent } from '../../shared/landing-components/landing-
     ThemeButtonComponent,
     CommonModule,
     LandingFooterComponent,
+    LogoComponent,
   ],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
@@ -23,7 +25,7 @@ export class BookingLandingComponent implements OnInit {
   currentIndex = signal(0);
   showCountryDropdown = signal(false);
   showCityDropdown = signal(false);
-  navigationService = inject(NavigatorService);
+  navigator = inject(NavigatorService);
   ngOnInit() {
     this.bookingService.loadInitialData();
   }

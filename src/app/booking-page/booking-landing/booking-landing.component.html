@@ -2,9 +2,11 @@
     <content>
         <!-- Header -->
         <div class="booking-header">
-            <h1> LeaseLoop</h1>
+            <app-logo
+                [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
+                (click)="this.navigator.navigateTo('owner/')"></app-logo>
             <p>Your gateway to the perfect rental property</p>
-            <div (click)="this.navigationService.navigateTo('owner')" class="btn">Register your property
+            <div (click)="this.navigator.navigateTo('owner')" class="btn">Register your property
             </div>
             <app-theme-button></app-theme-button>
         </div>
