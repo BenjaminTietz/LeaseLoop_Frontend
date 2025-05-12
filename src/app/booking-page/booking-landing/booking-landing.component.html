@@ -2,9 +2,8 @@
     <content>
         <!-- Header -->
         <div class="booking-header">
-            <h1> {{ bookingService.hotelName() }}
-            </h1>
-            <p>{{bookingService.hotelDescription()}}</p>
+            <h1> LeaseLoop</h1>
+            <p>Your gateway to the perfect rental property</p>
             <div (click)="this.navigationService.navigateTo('owner')" class="btn">Register your property
             </div>
             <app-theme-button></app-theme-button>
@@ -152,8 +151,8 @@
             </ng-template>
         </ng-template>
         <!-- Footer -->
-        <footer class="booking-footer">
-            <p>© {{ bookingService.currentYear() }} {{ bookingService.hotelName() }}. All rights reserved.</p>
-        </footer>
+
+        <app-landing-footer></app-landing-footer>
+
     </content>
 </main>

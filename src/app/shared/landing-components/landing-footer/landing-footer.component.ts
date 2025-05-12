@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { NavigatorService } from '../../../services/navigator/navigator.service';
 import { CommonModule } from '@angular/common';
+import { ClientBookingService } from '../../../services/client-booking/client-booking.service';
 
 @Component({
   selector: 'app-landing-footer',
@@ -11,4 +12,5 @@ import { CommonModule } from '@angular/common';
 })
 export class LandingFooterComponent {
   navigator = inject(NavigatorService);
+  bookingService = inject(ClientBookingService);
 }
