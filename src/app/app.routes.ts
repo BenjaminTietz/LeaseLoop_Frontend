@@ -29,6 +29,7 @@ import { HelpPageComponent } from './dashboard/help-page/help-page.component';
 
 // Booking Page
 import { BookingLandingComponent } from './booking-page/booking-landing/booking-landing.component';
+import { ClientBookingFormComponent } from './booking-page/client-booking-form/client-booking-form.component';
 
 export const routes: Routes = [
   {
@@ -49,7 +50,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'dashboard',
+    path: 'owner/dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
     children: [
@@ -69,6 +70,12 @@ export const routes: Routes = [
   {
     path: '',
     component: BookingLandingComponent,
-    children: [],
+    children: [{ path: 'property/:id', component: BookingLandingComponent },
+     { path: 'property/:id/unit/:id', component: BookingLandingComponent},
+     
+    ],
+
   },
+  {path: 'book' , component : ClientBookingFormComponent}
+  
 ];

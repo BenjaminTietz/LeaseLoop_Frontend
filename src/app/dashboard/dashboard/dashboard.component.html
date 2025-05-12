@@ -7,4 +7,7 @@
         <app-theme-button></app-theme-button>
     </header>
     <router-outlet></router-outlet>
+    @if (shouldShowOverlay()) {
+        <app-fill-data-overlay></app-fill-data-overlay>
+      }
 </main>

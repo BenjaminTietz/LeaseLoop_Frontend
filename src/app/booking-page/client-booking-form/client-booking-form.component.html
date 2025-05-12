@@ -1,0 +1,66 @@
+<main>
+  <form  [formGroup]="clientBookingForm">
+    <div class="side-by-side-area">
+      <div class="input-area">
+        <label for="first_name">First name</label>
+        <div class="form-field">
+          <input type="text" placeholder="First name" formControlName="first_name">
+        </div>
+      </div>
+      <div class="input-area">
+        <label for="last_name">Last name</label>
+        <div class="form-field">
+          <input type="text" placeholder="Last name" formControlName="last_name">
+        </div>
+      </div>
+    </div>
+    <div class="input-area">
+      <label for="email">Email</label>
+      <div class="form-field">
+        <input type="email" placeholder="Email" formControlName="email">
+      </div>
+    </div>
+    <div class="side-by-side-area">
+      <div class="input-area width-75">
+        <label for="street">Street</label>
+        <div class="form-field">
+          <input type="text" placeholder="Street" formControlName="street">
+        </div>
+      </div>
+      <div class="input-area width-25">
+        <label for="house_number">House number</label>
+        <div class="form-field">
+          <input type="text" placeholder="House number" formControlName="house_number">
+        </div>
+      </div>
+    </div>
+    <div class="side-by-side-area">
+      <div class="input-area width-75">
+        <label for="city">City</label>
+        <div class="form-field">
+          <input type="text" placeholder="City" formControlName="city">
+        </div>
+      </div>
+      <div class="input-area width-25">
+        <label for="postal_code">Postal code</label>
+        <div class="form-field">
+          <input type="text" placeholder="Postal code" formControlName="postal_code">
+        </div>
+      </div>
+    </div>
+    <div class="side-by-side-area">
+      <div class="input-area width-50">
+        <label for="country">Country</label>
+        <div class="form-field">
+          <input type="text" placeholder="Country" formControlName="country">
+        </div>
+      </div>
+      <div class="input-area width-50">
+        <label for="phone">Phone</label>
+        <div class="form-field">
+          <input type="text" placeholder="Phone" formControlName="phone">
+        </div>
+      </div>
+    </div>
+  </form>
+</main>
