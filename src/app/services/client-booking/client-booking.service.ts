@@ -27,7 +27,7 @@ export class ClientBookingService {
   selectedPropertyDetail = signal<Property | null>(null);
   searchCountry = signal<string>('');
   searchCity = signal<string>('');
-
+  showPropertyDetail = signal(false);
   countryList = computed(() =>
     [
       ...new Set(
@@ -157,6 +157,11 @@ export class ClientBookingService {
   resetFilters() {
     this.loadInitialData();
     this.filteredMode.set(false);
+    this.searchCity.set('');
+    this.searchCountry.set('');
+    this.checkInDate.set('');
+    this.checkOutDate.set('');
+    this.guestCount.set(1);
   }
 
   selectProperty(id: number) {
@@ -234,11 +239,18 @@ export class ClientBookingService {
 
   showPropertyDetails(property: Property) {
     this.selectedPropertyDetail.set(property);
+
+    this.showPropertyDetail.set(true);
+    console.log('Selected property details:', property);
+    console.log('Show property detail:', this.showPropertyDetail());
+
     this.navigator.navigateTo(`/property/${property.id}/`);
+
   }
 
   hidePropertyDetails() {
     this.selectedPropertyDetail.set(null);
+    this.showPropertyDetail.set(false);
   }
 
   setSelectedCountry(country: string) {

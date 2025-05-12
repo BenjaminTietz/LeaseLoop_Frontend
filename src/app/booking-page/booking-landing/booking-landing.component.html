@@ -2,20 +2,30 @@
     <content>
         <!-- Header -->
         <div class="booking-header">
-            <h1> LeaseLoop</h1>
+            <app-logo
+                [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
+                (click)="this.navigator.navigateTo('/')"></app-logo>
             <p>Your gateway to the perfect rental property</p>
-            <div (click)="this.navigationService.navigateTo('owner')" class="btn">Register your property
+            <div (click)="this.navigator.navigateTo('owner')" class="btn">Register your property
             </div>
             <app-theme-button></app-theme-button>
         </div>
+        @if (!bookingService.showPropertyDetail()) {
+        <!-- Landing view above selector -->
+        <section class="landing-view">
+            <h1>Find your perfect rental property</h1>
+            <p>Explore our selection of properties and book your next stay with us.</p>
+            <div class="btn" (click)="this.navigator.navigateTo('owner')">Register your property</div>
+        </section>
         <!-- Date selection -->
         <section class="selector">
             <div class="location-container">
                 <!-- Country Search Dropdown -->
                 <div class="custom-dropdown">
-                    <input type="text" placeholder="Search country..." [value]="bookingService.searchCountry()"
-                        (input)="onCountrySearch($event)" (focus)="showCountryDropdown.set(true)"
-                        (blur)="hideDropdown('country')" />
+                    <label for="country">Choose Country</label>
+                    <input id="country" type="text" placeholder="Search country..."
+                        [value]="bookingService.searchCountry()" (input)="onCountrySearch($event)"
+                        (focus)="showCountryDropdown.set(true)" (blur)="hideDropdown('country')" />
                     @if (showCountryDropdown() && bookingService.filteredCountryList().length > 0) {
                     <ul class="dropdown-list">
                         @for (country of bookingService.filteredCountryList(); track country; let index = $index) {
@@ -27,8 +37,10 @@
                     }
                 </div>
                 <!-- City Search Dropdown -->
+                <p>or</p>
                 <div class="custom-dropdown">
-                    <input type="text" placeholder="Search city..." [value]="bookingService.searchCity()"
+                    <label for="city">Choose City</label>
+                    <input id="city" type="text" placeholder="Search city..." [value]="bookingService.searchCity()"
                         (input)="onCitySearch($event)" (focus)="showCityDropdown.set(true)"
                         (blur)="hideDropdown('city')" />
                     @if (showCityDropdown() && bookingService.filteredCityList().length > 0) {
@@ -64,6 +76,8 @@
                 <button class="btn" (click)="searchAvailableUnits()">Search</button>
             </div>
         </section>
+        }
+
         <!-- Mainarea -->
         <section
             *ngIf="!bookingService.filteredMode() && !bookingService.selectedPropertyDetail(); else detailOrSearchView">
