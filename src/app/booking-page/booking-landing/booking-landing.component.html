@@ -17,43 +17,30 @@
             <p>Explore our selection of properties and book your next stay with us.</p>
             <div class="btn" (click)="this.navigator.navigateTo('owner')">Register your property</div>
         </section>
-        <!-- Date selection -->
+        <!-- Selector selection -->
         <section class="selector">
-            <div class="location-container">
-                <!-- Country Search Dropdown -->
-                <div class="custom-dropdown">
-                    <label for="country">Choose Country</label>
-                    <input id="country" type="text" placeholder="Search country..."
-                        [value]="bookingService.searchCountry()" (input)="onCountrySearch($event)"
-                        (focus)="showCountryDropdown.set(true)" (blur)="hideDropdown('country')" />
-                    @if (showCountryDropdown() && bookingService.filteredCountryList().length > 0) {
-                    <ul class="dropdown-list">
-                        @for (country of bookingService.filteredCountryList(); track country; let index = $index) {
-                        <li (mousedown)="onCountrySelectCustom(country)">
-                            {{ country }}
-                        </li>
-                        }
-                    </ul>
-                    }
+            <!-- Combined Search Input -->
+            <div class="custom-dropdown">
+                <label for="location">Search City or Country</label>
+                <div class="input-wrapper">
+                    <input id="location" type="text" placeholder="Start typing..." [value]="searchInput()"
+                        (input)="onLocationInput($event)" (focus)="showLocationDropdown.set(true)"
+                        (blur)="onBlurDropdownClose()" />
+
+                    <span *ngIf="searchInput()" class="clear-icon" (mousedown)="clearSearchInput()">&#10005;</span>
                 </div>
-                <!-- City Search Dropdown -->
-                <p>or</p>
-                <div class="custom-dropdown">
-                    <label for="city">Choose City</label>
-                    <input id="city" type="text" placeholder="Search city..." [value]="bookingService.searchCity()"
-                        (input)="onCitySearch($event)" (focus)="showCityDropdown.set(true)"
-                        (blur)="hideDropdown('city')" />
-                    @if (showCityDropdown() && bookingService.filteredCityList().length > 0) {
-                    <ul class="dropdown-list">
-                        @for (city of bookingService.filteredCityList(); track city; let index = $index) {
-                        <li (mousedown)="onCitySelectCustom(city)">
-                            {{ city }}
-                        </li>
-                        }
-                    </ul>
+
+                @if (showLocationDropdown() && filteredLocations().length > 0) {
+                <ul class="dropdown-list">
+                    @for (location of filteredLocations(); track location) {
+                    <li (mousedown)="onLocationSelect(location)">
+                        {{ location }}
+                    </li>
                     }
-                </div>
+                </ul>
+                }
             </div>
+            <!-- Date selection -->
             <div class="date-selector">
                 <div class="date-input">
                     <p>Check-in</p>
@@ -82,9 +69,9 @@
         <section
             *ngIf="!bookingService.filteredMode() && !bookingService.selectedPropertyDetail(); else detailOrSearchView">
             <h2>Properties</h2>
-            <div class="property-grid">
+            <div class="grid">
                 @for (property of bookingService.properties(); track property.id) {
-                <div class="property-card">
+                <div class="card">
                     <img *ngIf="property.images && property.images.length > 0; else noImage"
                         [src]="property.images[0].image" [alt]="property.images[0].alt_text || property.name" />
                     <ng-template #noImage>
@@ -114,9 +101,9 @@
                         [alt]="property.images[0].alt_text || property.name" />
                 </div>
                 <h3>Units</h3>
-                <div class="unit-grid">
+                <div class="grid">
                     @for (unit of bookingService.selectedPropertyDetail()?.units || []; track unit.id) {
-                    <div class="unit-card">
+                    <div class="card">
                         <img *ngIf="unit.images.length > 0; else noUnitImage" [src]="unit.images[0].image"
                             [alt]="unit.images[0].alt_text || unit.name" />
                         <ng-template #noUnitImage>
@@ -138,9 +125,9 @@
                 @if (bookingService.filteredMode()) {
                 <section>
                     <h2>Matching Properties</h2>
-                    <div class="property-grid">
+                    <div class="grid">
                         @for (property of bookingService.properties(); track property.id) {
-                        <div class="property-card">
+                        <div class="card">
                             <img *ngIf="property.images.length > 0; else noImage" [src]="property.images[0].image"
                                 [alt]="property.images[0].alt_text || property.name" />
                             <ng-template #noImage>
@@ -165,8 +152,6 @@
             </ng-template>
         </ng-template>
         <!-- Footer -->
-
         <app-landing-footer></app-landing-footer>
-
     </content>
 </main>
