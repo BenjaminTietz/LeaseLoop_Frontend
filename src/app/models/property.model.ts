@@ -5,7 +5,7 @@ import { Unit } from './unit.model';
 export interface Property {
   active :boolean;
   id: number;
-  ownerId: number;
+  owner: number;
   name: string;
   address: Address
   description: string;

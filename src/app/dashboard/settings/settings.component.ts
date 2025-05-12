@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ChangePassFormComponent } from "./change-pass-form/change-pass-form.component";
 import { ChangeAdressFormComponent } from "./change-adress-form/change-adress-form.component";
 import { ChangeEmailFormComponent } from "./change-email-form/change-email-form.component";
@@ -7,7 +7,6 @@ import { SettingsService } from '../../services/settings-service/settings.servic
 import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
 import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
 import { MatIcon } from '@angular/material/icon';
-import { add } from 'date-fns';
 import { environment } from '../../../environments/environment';
 
 
@@ -24,9 +23,6 @@ export class SettingsComponent {
   changeImage = signal(false)
   changePersonals = signal(false)
   showFoto = signal(false)
-
-
-
   settingsService = inject(SettingsService)
 
   image = computed(() => {

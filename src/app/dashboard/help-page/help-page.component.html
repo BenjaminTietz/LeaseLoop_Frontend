@@ -34,5 +34,9 @@
             </div>
             }
         </div>
+        <button (click)="openContactForm()">Contact Support</button>
     </content>
+    @if(contactFormOpen()) {
+    <app-contact-form (close)="closeForm()"></app-contact-form>
+    }
 </main>

@@ -1,0 +1,33 @@
+<main >
+  <form [formGroup]="contactForm" [appClickOutside]="closeForm" (ngSubmit)="sendMessage()">
+    @if(sending()) {
+      <app-progress-bar aria-label="Loading"></app-progress-bar> 
+    }
+    <h1 class="form-title">Contact</h1>
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    <div class="input-area">
+      <label for="select_theme"></label>
+      <div class="form-field">
+      <select name="select_theme" id="select_theme" formControlName="theme">
+        <option value="" selected disabled>Select Theme</option>
+        @for(theme of themes(); track $index){
+        <option [ngValue]="theme">{{theme.charAt(0).toUpperCase() + theme.slice(1)}}</option>
+        }
+      </select>
+      @if(getSelectErrors()) {
+        <small>{{getSelectErrors()}}</small>
+      }
+      </div>
+    </div>
+    <div class="input-area ">
+      <label for="message">Message</label>
+      <div class="form-field textarea-field">
+        <textarea id="message" name="message" formControlName="message" required></textarea>
+        @if(getMessageErrors()) {
+        <small>{{getMessageErrors()}}</small>
+        }
+      </div>
+    </div>
+    <button (mouseenter)="formService.markAllAsTouched(contactForm)" (mouseleave)="formService.unmarkAllAsTouched(contactForm)" [disabled]="contactForm.invalid || sending()" type="submit">Send</button>
+  </form>
+</main>
