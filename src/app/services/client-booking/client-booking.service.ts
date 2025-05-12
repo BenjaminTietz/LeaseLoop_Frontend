@@ -19,10 +19,6 @@ export class ClientBookingService {
 
   selectedPropertyId = signal<number | null>(null);
 
-  //TODO: delete and hardcode in html template
-  hotelName = signal<string>('Hotel Booking App');
-  hotelDescription = signal<string>('Book your dream stay with us!');
-
   currentYear = signal<number>(new Date().getFullYear());
   checkInDate = signal<string | null>(null);
   checkOutDate = signal<string | null>(null);

@@ -118,11 +118,11 @@ main {
     }
 }
 
-.booking-footer {
-    @include display(flex, row, space-between, center);
-    margin-top: 20px;
+app-landing-footer {
+    margin-top: auto;
 }
 
+// TODO: rdundant use unit-card class in property-card and unit-card
 .property-grid {
     display: flex;
     flex-wrap: wrap;

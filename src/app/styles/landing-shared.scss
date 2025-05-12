@@ -2,7 +2,7 @@
 @use "../styles/checkbox.scss" as *;
 
 main {
-  height: calc(100vh - 134px)
+  height: calc(100vh - 160px)
 }
 
 content {
@@ -28,7 +28,7 @@ h1 {
   font-size: 54px;
 }
 
-h2{
+h2 {
   text-align: center;
 }
 
@@ -83,14 +83,15 @@ small {
   top: 100%;
 }
 
-.checkbox{
+.checkbox {
   @include display(flex, row, center, center);
   position: relative;
-  label{
+
+  label {
     cursor: pointer;
   }
 
-  a{
+  a {
     font-weight: bold;
     cursor: pointer;
 
@@ -127,10 +128,10 @@ small {
     opacity: 0.1;
     transform: scale(0.4);
   }
+
   100% {
     rotate: 0deg;
     opacity: 1;
     transform: scale(1);
   }
 }
-

@@ -4,11 +4,17 @@ import { UnitSliderComponent } from '../unit-slider/unit-slider.component';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
 import { CommonModule } from '@angular/common';
 import { NavigatorService } from '../../services/navigator/navigator.service';
+import { LandingFooterComponent } from '../../shared/landing-components/landing-footer/landing-footer.component';
 
 @Component({
   selector: 'app-booking-landing',
   standalone: true,
-  imports: [UnitSliderComponent, ThemeButtonComponent, CommonModule],
+  imports: [
+    UnitSliderComponent,
+    ThemeButtonComponent,
+    CommonModule,
+    LandingFooterComponent,
+  ],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
 })

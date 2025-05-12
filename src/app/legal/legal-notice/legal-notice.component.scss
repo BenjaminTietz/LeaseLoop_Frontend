@@ -1,10 +1,5 @@
 @use "../../styles/landing-shared" as *;
 
-
-main{
-    height:calc(100vh - 134px)
-}
-
 .links {
     display: flex;
     flex-direction: column;
