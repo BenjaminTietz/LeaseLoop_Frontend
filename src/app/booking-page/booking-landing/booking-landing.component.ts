@@ -22,9 +22,45 @@ import { LogoComponent } from '../../shared/landing-components/logo/logo.compone
 })
 export class BookingLandingComponent implements OnInit {
   bookingService = inject(ClientBookingService);
-  currentIndex = signal(0);
-  showCountryDropdown = signal(false);
-  showCityDropdown = signal(false);
+  showLocationDropdown = signal(false);
+  searchInput = signal<string>('');
+
+  filteredLocations = computed(() => {
+    const allLocations = [
+      ...this.bookingService.cityList(),
+      ...this.bookingService.countryList(),
+    ];
+    return allLocations.filter((loc) =>
+      loc.toLowerCase().includes(this.searchInput().toLowerCase())
+    );
+  });
+
+  onLocationInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchInput.set(value);
+    this.showLocationDropdown.set(!!value.trim());
+
+    if (!value.trim()) {
+      this.bookingService.resetFilters();
+    }
+  }
+
+  onLocationSelect(location: string) {
+    this.searchInput.set(location);
+    this.showLocationDropdown.set(false);
+    this.bookingService.filterPropertiesByLocation(location);
+  }
+
+  onBlurDropdownClose() {
+    setTimeout(() => this.showLocationDropdown.set(false), 150);
+  }
+
+  clearSearchInput() {
+    this.searchInput.set('');
+    this.showLocationDropdown.set(false);
+    this.bookingService.resetFilters();
+  }
+
   navigator = inject(NavigatorService);
   ngOnInit() {
     this.bookingService.loadInitialData();
@@ -72,39 +108,5 @@ export class BookingLandingComponent implements OnInit {
 
   resetFilters() {
     this.bookingService.resetFilters();
-  }
-
-  onCountrySearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.bookingService.searchCountry.set(target.value);
-  }
-
-  onCitySearch(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.bookingService.searchCity.set(target.value);
-  }
-
-  onCountrySelectCustom(country: string) {
-    this.bookingService.setSelectedCountry(country);
-    this.filterByLocation();
-  }
-
-  onCitySelectCustom(city: string) {
-    this.bookingService.setSelectedCity(city);
-    this.filterByLocation();
-  }
-
-  filterByLocation() {
-    this.bookingService.filterPropertiesByLocation(
-      this.bookingService.selectedCity(),
-      this.bookingService.selectedCountry()
-    );
-  }
-
-  hideDropdown(type: 'country' | 'city') {
-    setTimeout(() => {
-      if (type === 'country') this.showCountryDropdown.set(false);
-      if (type === 'city') this.showCityDropdown.set(false);
-    }, 150);
   }
 }

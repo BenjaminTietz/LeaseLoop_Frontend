@@ -23,8 +23,7 @@ export class ClientBookingService {
   guestCount = signal<number>(1);
   filteredMode = signal(false);
   selectedPropertyDetail = signal<Property | null>(null);
-  searchCountry = signal<string>('');
-  searchCity = signal<string>('');
+
   showPropertyDetail = signal(false);
   countryList = computed(() =>
     [
@@ -45,21 +44,6 @@ export class ClientBookingService {
       ),
     ].sort()
   );
-
-  filteredCountryList = computed(() =>
-    this.countryList().filter((country) =>
-      country.toLowerCase().includes(this.searchCountry().toLowerCase().trim())
-    )
-  );
-
-  filteredCityList = computed(() =>
-    this.cityList().filter((city) =>
-      city.toLowerCase().includes(this.searchCity().toLowerCase().trim())
-    )
-  );
-
-  selectedCountry = signal<string | null>(null);
-  selectedCity = signal<string | null>(null);
 
   selectedProperty = computed(() =>
     this.properties().find((p) => p.id === this.selectedPropertyId())
@@ -94,27 +78,24 @@ export class ClientBookingService {
       });
   }
 
-  filterPropertiesByLocation(
-    city: string | null,
-    country: string | null,
-    page = 1,
-    pageSize = 20
-  ) {
+  filterPropertiesByLocation(location: string | null, page = 1, pageSize = 20) {
     const params = new URLSearchParams();
-    if (city) params.set('city', city);
-    if (country) params.set('country', country);
+    if (location) {
+      if (this.cityList().includes(location)) {
+        params.set('city', location);
+      } else if (this.countryList().includes(location)) {
+        params.set('country', location);
+      }
+    }
     params.set('page', page.toString());
     params.set('page_size', pageSize.toString());
 
     this.httpService
-      .get<any>(
-        `${environment.apiBaseUrl}/api/public/booking/?${params.toString()}`
-      )
+      .get<any>(`${environment.apiBaseUrl}/api/public/booking/?${params}`)
       .subscribe({
         next: (res) => {
           const properties = res.data.properties;
           this.properties.set(properties);
-
           const allUnits = properties.flatMap((p: any) =>
             p.units.map((unit: any) => ({ ...unit, propertyId: p.id }))
           );
@@ -155,8 +136,6 @@ export class ClientBookingService {
   resetFilters() {
     this.loadInitialData();
     this.filteredMode.set(false);
-    this.searchCity.set('');
-    this.searchCountry.set('');
     this.checkInDate.set('');
     this.checkOutDate.set('');
     this.guestCount.set(1);
@@ -245,15 +224,5 @@ export class ClientBookingService {
   hidePropertyDetails() {
     this.selectedPropertyDetail.set(null);
     this.showPropertyDetail.set(false);
-  }
-
-  setSelectedCountry(country: string) {
-    this.selectedCountry.set(country);
-    this.searchCountry.set(country);
-  }
-
-  setSelectedCity(city: string) {
-    this.selectedCity.set(city);
-    this.searchCity.set(city);
   }
 }
