@@ -52,6 +52,10 @@ export class SettingsService {
     return this.mediaUrl + this.userLogo();
   })
 
+  isGuestEmail = computed(() => {
+    return this.loggedInUserData().email === 'guest@exampless.com';
+  })
+
   getStoredUser() {
     const userStr = localStorage.getItem('user') ?? sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;

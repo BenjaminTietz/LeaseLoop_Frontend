@@ -28,10 +28,14 @@
 
 
 
-    <button type="button" (click)="changeEmail()" [disabled]="emailForm.invalid || settingsService.sending()"
+    <button type="button" (click)="changeEmail()" [disabled]="emailForm.invalid || settingsService.sending() || settingsService.isGuestEmail()"
       (mouseenter)="formService.markAllAsTouched(emailForm)"
       (mouseleave)="formService.unmarkAllAsTouched(emailForm)">Change e-mail</button>
   </form>
+
+  @if(settingsService.isGuestEmail()) {
+  <strong>You can't change e-mail for guest account</strong>
+  }
 
   @if(settingsService.errorMessage() !== ''){
   <div class="error-popup">
