@@ -1,13 +1,18 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { SidenavComponent } from '../sidenav/sidenav.component';
-import { NavigationEnd, Router, RouterOutlet, withDebugTracing } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterOutlet,
+  withDebugTracing,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
 import { SidenavToggleComponent } from '../../shared/dashboard-components/sidenav-toggle/sidenav-toggle.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
 import { SettingsService } from '../../services/settings-service/settings.service';
-import { FillDataOverlayComponent } from "../fill-data-overlay/fill-data-overlay.component";
+import { FillDataOverlayComponent } from '../fill-data-overlay/fill-data-overlay.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,8 +24,8 @@ import { FillDataOverlayComponent } from "../fill-data-overlay/fill-data-overlay
     ThemeButtonComponent,
     SidenavToggleComponent,
     ClickOutsideDirective,
-    FillDataOverlayComponent
-],
+    FillDataOverlayComponent,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   animations: [
@@ -49,7 +54,7 @@ export class DashboardComponent {
 
   constructor() {
     this.settingsService.getUserFullData();
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.currentUrl.set(this.router.url);
       }
@@ -64,7 +69,11 @@ export class DashboardComponent {
     this.isSidebarOpen.set(false);
   };
 
-  isAllowedRoute = computed(() => this.currentUrl() === '/dashboard/settings' || this.currentUrl() === '/dashboard/help');
+  isAllowedRoute = computed(
+    () =>
+      this.currentUrl() === '/owner/dashboard/settings' ||
+      this.currentUrl() === '/owner/dashboard/help'
+  );
 
   shouldShowOverlay = computed(() => {
     const data = this.settingsService.newUserData();
