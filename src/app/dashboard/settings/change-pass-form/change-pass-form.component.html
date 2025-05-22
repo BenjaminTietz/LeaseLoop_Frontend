@@ -25,9 +25,12 @@
       </div>
 
     </div>
-    <button type="button" [disabled]="changePassForm.invalid || settingsService.sending()"
+    <button type="button" [disabled]="changePassForm.invalid || settingsService.sending() || settingsService.isGuestEmail()"
       (mouseenter)="formService.markAllAsTouched(changePassForm)"
-      (mouseleave)="formService.unmarkAllAsTouched(changePassForm)" (click)="changePassword()">Change password</button>
+      (mouseleave)="formService.unmarkAllAsTouched(changePassForm)" (click)="changePassword()">Change Password</button>
+      @if(settingsService.isGuestEmail()) {
+        <strong>You can't change password for guest account</strong>
+      }
     @if(settingsService.errorMessage() !== ''){
     <div class="error-popup">
       <h3>{{settingsService.errorMessage()}}</h3>
