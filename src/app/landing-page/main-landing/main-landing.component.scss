@@ -5,6 +5,10 @@ content {
     padding: 40px 40px
 }
 
+main{
+    height: unset;
+}
+
 
 p {
     font-size: 18px;
@@ -19,7 +23,7 @@ p {
 
 .top-section {
     text-align: center;
-    padding: 80px 20px;
+    padding: 40px 20px;
 
     h1 {
         font-size: 48px;
