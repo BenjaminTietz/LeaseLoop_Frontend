@@ -3,11 +3,12 @@ import { UnitsService } from '../../services/units-service/units.service';
 import { MatIcon } from '@angular/material/icon';
 import { UnitFormComponent } from "./unit-form/unit-form.component";
 import { CommonModule } from '@angular/common';
+import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 
 @Component({
   selector: 'app-units',
   standalone: true,
-  imports: [MatIcon, UnitFormComponent, CommonModule],
+  imports: [MatIcon, UnitFormComponent, CommonModule, PagingComponent],
   templateUrl: './units.component.html',
   styleUrl: './units.component.scss',
 })
@@ -17,7 +18,7 @@ export class UnitsComponent implements OnInit {
   formOpen = signal(false);
 
   ngOnInit(): void {
-    this.unitsService.loadUnits();
+    this.unitsService.loadPaginatedUnits(1);
   }
 
   openForm() {

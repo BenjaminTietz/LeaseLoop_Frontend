@@ -3,6 +3,7 @@ import { HttpService } from '../httpclient/http.service';
 import { ClientDto, Clients } from '../../models/clients.model';
 import { environment } from '../../../environments/environment';
 import { catchError, tap, throwError } from 'rxjs';
+import { PaginatedResponse } from '../../models/paginated-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,8 @@ export class ClientsService {
   selectedClient = signal<Clients | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
+  totalPages = signal(1);
+  currentPage = signal(1)
 
   /** Load all Clients assosiated tothe current user */
   loadClients() {
@@ -24,6 +27,20 @@ export class ClientsService {
         this.clients.set(clients);
       });
   }
+
+  loadPaginatedClients(page: number) {
+    this.httpService
+      .get<PaginatedResponse<Clients>>(
+        `${environment.apiBaseUrl}/api/clients/?page=${page}`
+      )
+      .subscribe((clients) => {
+        this.clients.set(clients.results);
+        this.totalPages.set(clients.total_pages);
+        this.currentPage.set(page);
+      });
+  }
+
+
 
   deleteClient(id: number) {
     this.httpService

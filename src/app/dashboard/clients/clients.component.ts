@@ -4,11 +4,12 @@ import { ClientFormComponent } from './client-form/client-form.component';
 import { Clients } from '../../models/clients.model';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [ClientFormComponent, MatIcon, CommonModule],
+  imports: [ClientFormComponent, MatIcon, CommonModule, PagingComponent],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
 })
@@ -17,7 +18,7 @@ export class ClientsComponent implements OnInit {
   formOpen = signal(false);
 
   ngOnInit(): void {
-    this.clientService.loadClients();
+    this.clientService.loadPaginatedClients(1);
   }
 
   openForm() {
