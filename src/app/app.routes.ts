@@ -30,6 +30,8 @@ import { HelpPageComponent } from './dashboard/help-page/help-page.component';
 // Booking Page
 import { BookingLandingComponent } from './booking-page/booking-landing/booking-landing.component';
 import { ClientBookingFormComponent } from './booking-page/client-booking-form/client-booking-form.component';
+import { UnitDetailViewComponent } from './booking-page/unit-detail-view/unit-detail-view.component';
+import { PropertyDetailViewComponent } from './booking-page/property-detail-view/property-detail-view.component';
 
 export const routes: Routes = [
   {
@@ -70,12 +72,13 @@ export const routes: Routes = [
   {
     path: '',
     component: BookingLandingComponent,
-    children: [{ path: 'property/:id', component: BookingLandingComponent },
-     { path: 'property/:id/unit/:id', component: BookingLandingComponent},
-     
+    children: [
+      { path: 'property/:propertyId', component: PropertyDetailViewComponent },
+      {
+        path: 'property/:propertyId/unit/:unitId',
+        component: UnitDetailViewComponent,
+      },
     ],
-
   },
-  {path: 'book' , component : ClientBookingFormComponent}
-  
+  { path: 'book', component: ClientBookingFormComponent },
 ];
