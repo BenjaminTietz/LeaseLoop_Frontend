@@ -117,7 +117,9 @@
                         <p>Sleeps up to {{ unit.max_capacity }}</p>
                         <p>{{ unit.type | titlecase }}</p>
                         <p>Starting from: </p><span>{{ unit.price_per_night }}</span>
-                        <button class="book-now">Check availability</button>
+                        <button class="book-now"
+                            (click)="navigator.navigateTo('property/' + bookingService.selectedPropertyDetail()?.id + '/unit/' + unit.id)">Check
+                            availability</button>
                     </div>
                     }
                 </div>
@@ -157,4 +159,7 @@
         <!-- Footer -->
         <app-landing-footer></app-landing-footer>
     </content>
+
+
+
 </main>
