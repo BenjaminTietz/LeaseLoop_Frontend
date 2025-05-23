@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { LandingFooterComponent } from '../../shared/landing-components/landing-footer/landing-footer.component';
 import { LogoComponent } from '../../shared/landing-components/logo/logo.component';
+import { ImageSliderComponent } from '../../shared/booking-page/image-slider/image-slider.component';
 
 @Component({
   selector: 'app-booking-landing',
@@ -16,6 +17,7 @@ import { LogoComponent } from '../../shared/landing-components/logo/logo.compone
     CommonModule,
     LandingFooterComponent,
     LogoComponent,
+    ImageSliderComponent,
   ],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
