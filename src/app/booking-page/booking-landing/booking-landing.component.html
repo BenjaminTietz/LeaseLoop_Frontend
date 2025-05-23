@@ -6,160 +6,100 @@
                 [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
                 (click)="this.navigator.navigateTo('/')"></app-logo>
             <p>Your gateway to the perfect rental property</p>
-            <div (click)="this.navigator.navigateTo('owner')" class="btn">Register your property
-            </div>
+            <div (click)="this.navigator.navigateTo('owner')" class="btn">Register your property</div>
             <app-theme-button></app-theme-button>
         </div>
-        @if (!bookingService.showPropertyDetail()) {
-        <!-- Landing view above selector -->
-        <section class="landing-view">
-            <h1>Find your perfect rental property</h1>
-            <p>Explore our selection of properties and book your next stay with us.</p>
-            <div class="btn" (click)="this.navigator.navigateTo('owner')">Register your property</div>
-        </section>
-        <!-- Selector selection -->
-        <section class="selector">
-            <!-- Combined Search Input -->
-            <div class="custom-dropdown">
-                <label for="location">Search City or Country</label>
-                <div class="input-wrapper">
-                    <input id="location" type="text" placeholder="Start typing..." [value]="searchInput()"
-                        (input)="onLocationInput($event)" (focus)="showLocationDropdown.set(true)"
-                        (blur)="onBlurDropdownClose()" />
 
-                    <span *ngIf="searchInput()" class="clear-icon" (mousedown)="clearSearchInput()">&#10005;</span>
-                </div>
+        <!-- Router Outlet -->
+        <router-outlet></router-outlet>
 
-                @if (showLocationDropdown() && filteredLocations().length > 0) {
-                <ul class="dropdown-list">
-                    @for (location of filteredLocations(); track location) {
-                    <li (mousedown)="onLocationSelect(location)">
-                        {{ location }}
-                    </li>
-                    }
-                </ul>
-                }
-            </div>
-            <!-- Date selection -->
-            <div class="date-selector">
-                <div class="date-input">
-                    <p>Check-in</p>
-                    <input type="date" [value]="bookingService.checkInDate()" (input)="setCheckInFromEvent($event)" />
-                </div>
-                <div class="date-input">
-                    <p>Check-out</p>
-                    <input type="date" [value]="bookingService.checkOutDate()" (input)="setCheckOutFromEvent($event)" />
-                </div>
-                <div class="date-input guest-count">
-                    <p>Guests</p>
-                    <input type="number" [min]="1" [max]="maxGuestCapacity()" [value]="bookingService.guestCount()"
-                        (input)="setGuestCountFromEvent($event)" />
-                    @if (bookingService.guestCount() >= maxGuestCapacity()) {
-                    <p class="info">
-                        Max. guest capacity reached – please reduce guest count or change filters.
-                    </p>
-                    }
-                </div>
-                <button class="btn" (click)="searchAvailableUnits()">Search</button>
-            </div>
-        </section>
-        }
-
-        <!-- Mainarea -->
-        <section
-            *ngIf="!bookingService.filteredMode() && !bookingService.selectedPropertyDetail(); else detailOrSearchView">
-            <h2>Properties</h2>
-            <div class="grid">
-                @for (property of bookingService.properties(); track property.id) {
-                <div class="card">
-                    <img *ngIf="property.images && property.images.length > 0; else noImage"
-                        [src]="property.images[0].image" [alt]="property.images[0].alt_text || property.name" />
-                    <ng-template #noImage>
-                        <img src="no_picture.png" alt="No image available" />
-                    </ng-template>
-                    <h3>{{ property.name }}</h3>
-                    <h2>{{ property.address.country }}</h2>
-                    <p>{{ property.address.city }}</p>
-                    <p>{{ property.units.length }} Unit{{ property.units.length > 1 ? 's' : '' }}</p>
-                    <button (click)="bookingService.showPropertyDetails(property)">View details</button>
-                </div>
-                }
-            </div>
-        </section>
-        <!-- Detailview or searchresults -->
-        <ng-template #detailOrSearchView>
-            <!-- Detailview -->
-            <section *ngIf="bookingService.selectedPropertyDetail() as property; else searchResultView"
-                class="property-detail">
-                <div class="property-header">
-                    <div class="text-block">
-                        <h2>{{ property.name }}</h2>
-                        <p>{{ property.address.city }}, {{ property.address.country }}</p>
-                        <p>{{ property.description }}</p>
-                    </div>
-                    <!-- <img *ngIf="property.images.length > 0" [src]="property.images[0].image"
-                        [alt]="property.images[0].alt_text || property.name" /> -->
-                    <app-image-slider *ngIf="property.images.length > 0" [images]="property.images" [autoPlay]="true"
-                        [interval]="5000" />
-
-                </div>
-                <h3>Units</h3>
-                <div class="grid">
-                    @for (unit of bookingService.selectedPropertyDetail()?.units || []; track unit.id) {
-                    <div class="card">
-                        <img *ngIf="unit.images.length > 0; else noUnitImage" [src]="unit.images[0].image"
-                            [alt]="unit.images[0].alt_text || unit.name" />
-                        <ng-template #noUnitImage>
-                            <img src="no_picture.png" alt="No image available" />
-                        </ng-template>
-                        <h4>{{ unit.name }}</h4>
-                        <p>{{ unit.description }}</p>
-                        <p>Sleeps up to {{ unit.max_capacity }}</p>
-                        <p>{{ unit.type | titlecase }}</p>
-                        <p>Starting from: </p><span>{{ unit.price_per_night }}</span>
-                        <button class="book-now"
-                            (click)="navigator.navigateTo('property/' + bookingService.selectedPropertyDetail()?.id + '/unit/' + unit.id)">Check
-                            availability</button>
-                    </div>
-                    }
-                </div>
-                <button class="btn reset-btn" (click)="resetPropertyDetails()">Back to overview</button>
+        <!-- Conditional Main Landing Content -->
+        <ng-container
+            *ngIf="!bookingService.selectedPropertyDetail() && !navigator.actualRoute().includes('/unit/') && !navigator.actualRoute().includes('/property/')">
+            <!-- Landing view above selector -->
+            <section class="landing-view">
+                <h1>Find your perfect rental property</h1>
+                <p>Explore our selection of properties and book your next stay with us.</p>
+                <div class="btn" (click)="this.navigator.navigateTo('owner')">Register your property</div>
             </section>
-            <!-- Searchresults -->
-            <ng-template #searchResultView>
-                @if (bookingService.filteredMode()) {
-                <section>
-                    <h2>Matching Properties</h2>
-                    <div class="grid">
-                        @for (property of bookingService.properties(); track property.id) {
-                        <div class="card">
-                            <img *ngIf="property.images.length > 0; else noImage" [src]="property.images[0].image"
-                                [alt]="property.images[0].alt_text || property.name" />
-                            <ng-template #noImage>
-                                <img src="no_picture.png" alt="No image available" />
-                            </ng-template>
-                            <h3>{{ property.name }}</h3>
-                            <p>{{ property.address.city }}, {{ property.address.country }}</p>
-                            <p>{{ property.units.length }} Unit{{ property.units.length > 1 ? 's' : '' }}</p>
-                            <button (click)="bookingService.showPropertyDetails(property)">View details</button>
-                        </div>
+
+            <!-- Selector selection -->
+            <section class="selector">
+                <!-- Combined Search Input -->
+                <div class="custom-dropdown">
+                    <label for="location">Search City or Country</label>
+                    <div class="input-wrapper">
+                        <input id="location" type="text" placeholder="Start typing..." [value]="searchInput()"
+                            (input)="onLocationInput($event)" (focus)="showLocationDropdown.set(true)"
+                            (blur)="onBlurDropdownClose()" />
+
+                        <span *ngIf="searchInput()" class="clear-icon" (mousedown)="clearSearchInput()">&#10005;</span>
+                    </div>
+
+                    @if (showLocationDropdown() && filteredLocations().length > 0) {
+                    <ul class="dropdown-list">
+                        @for (location of filteredLocations(); track location) {
+                        <li (mousedown)="onLocationSelect(location)">{{ location }}</li>
+                        }
+                    </ul>
+                    }
+                </div>
+
+                <!-- Date selection -->
+                <div class="date-selector">
+                    <div class="date-input">
+                        <p>Check-in</p>
+                        <input type="date" [value]="bookingService.checkInDate()"
+                            (input)="setCheckInFromEvent($event)" />
+                    </div>
+                    <div class="date-input">
+                        <p>Check-out</p>
+                        <input type="date" [value]="bookingService.checkOutDate()"
+                            (input)="setCheckOutFromEvent($event)" />
+                    </div>
+                    <div class="date-input guest-count">
+                        <p>Guests</p>
+                        <input type="number" [min]="1" [max]="maxGuestCapacity()" [value]="bookingService.guestCount()"
+                            (input)="setGuestCountFromEvent($event)" />
+                        @if (bookingService.guestCount() >= maxGuestCapacity()) {
+                        <p class="info">Max. guest capacity reached – please reduce guest count or change filters.</p>
                         }
                     </div>
-                    <button class="btn reset-btn" (click)="resetFilters()">Reset filters</button>
-                </section>
-                } @else {
+                    <button class="btn" (click)="searchAvailableUnits()">Search</button>
+                </div>
+            </section>
+
+            <!-- Mainarea -->
+            <section *ngIf="!bookingService.filteredMode(); else filteredView">
+                <h2>Properties</h2>
+                <div class="grid">
+                    @for (property of bookingService.properties(); track property.id) {
+                    <div class="card">
+                        <img *ngIf="property.images && property.images.length > 0; else noImage"
+                            [src]="property.images[0].image" [alt]="property.images[0].alt_text || property.name" />
+                        <ng-template #noImage>
+                            <img src="no_picture.png" alt="No image available" />
+                        </ng-template>
+                        <h3>{{ property.name }}</h3>
+                        <h2>{{ property.address.country }}</h2>
+                        <p>{{ property.address.city }}</p>
+                        <p>{{ property.units.length }} Unit{{ property.units.length > 1 ? 's' : '' }}</p>
+                        <button (click)="navigator.navigateTo('property/' + property.id)">View details</button>
+                    </div>
+                    }
+                </div>
+            </section>
+
+            <ng-template #filteredView>
                 <section>
                     <h2>Available Units</h2>
                     <app-unit-slider [unitsInput]="bookingService.units()"></app-unit-slider>
                     <button class="btn reset-btn" (click)="resetFilters()">Reset search</button>
                 </section>
-                }
             </ng-template>
-        </ng-template>
+        </ng-container>
+
         <!-- Footer -->
         <app-landing-footer></app-landing-footer>
     </content>
-
-
-
 </main>
