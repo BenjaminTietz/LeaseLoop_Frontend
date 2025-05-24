@@ -49,12 +49,12 @@
                 <div class="date-selector">
                     <div class="date-input">
                         <p>Check-in</p>
-                        <input type="date" [value]="bookingService.checkInDate()"
+                        <input type="date" [min]="today" [value]="bookingService.checkInDate()"
                             (input)="setCheckInFromEvent($event)" />
                     </div>
                     <div class="date-input">
                         <p>Check-out</p>
-                        <input type="date" [value]="bookingService.checkOutDate()"
+                        <input type="date" [min]="today" [value]="bookingService.checkOutDate()"
                             (input)="setCheckOutFromEvent($event)" />
                     </div>
                     <div class="date-input guest-count">
@@ -92,11 +92,29 @@
 
             <ng-template #filteredView>
                 <section>
-                    <h2>Available Units</h2>
-                    <app-unit-slider [unitsInput]="bookingService.units()"></app-unit-slider>
+                    <h2>Available Properties</h2>
+                    <div class="grid">
+                        @for (property of bookingService.properties(); track property.id) {
+                        <div class="card">
+                            <ng-container *ngIf="property.images && property.images.length > 0; else noImage">
+                                <img [src]="property.images[0].image"
+                                    [alt]="property.images[0].alt_text || property.name" />
+                            </ng-container>
+                            <ng-template #noImage>
+                                <img src="no_picture.png" alt="No image available" />
+                            </ng-template>
+
+                            <h3>{{ property.name }}</h3>
+                            <p>{{ property.address.city }}, {{ property.address.country }}</p>
+                            <p>{{ property.units.length }} Unit{{ property.units.length > 1 ? 's' : '' }}</p>
+                            <button (click)="navigator.navigateTo('property/' + property.id)">View details</button>
+                        </div>
+                        }
+                    </div>
                     <button class="btn reset-btn" (click)="resetFilters()">Reset search</button>
                 </section>
             </ng-template>
+
         </ng-container>
 
         <!-- Footer -->
