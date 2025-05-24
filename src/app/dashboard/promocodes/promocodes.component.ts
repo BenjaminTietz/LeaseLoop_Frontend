@@ -4,11 +4,12 @@ import { PromocodesFormComponent } from './promocodes-form/promocodes-form.compo
 import { PromoCode } from '../../models/promocode.model';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 
 @Component({
   selector: 'app-promocodes',
   standalone: true,
-  imports: [PromocodesFormComponent, MatIcon, CommonModule],
+  imports: [PromocodesFormComponent, MatIcon, CommonModule, PagingComponent],
   templateUrl: './promocodes.component.html',
   styleUrl: './promocodes.component.scss',
 })
@@ -21,7 +22,7 @@ export class PromocodesComponent implements OnInit {
   }
 
   loadPromocodes() {
-    this.pcs.loadPromocodes();
+    this.pcs.loadPaginatedPromoCodes(1);
   }
 
   openForm() {

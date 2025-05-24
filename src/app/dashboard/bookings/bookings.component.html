@@ -59,6 +59,7 @@
         </tbody>
       </table>
     </div>
+      <app-paging [currentPage]="bs.currentPage()" [totalPages]="bs.totalPages()" (pageChanged)="bs.loadPaginatedBookings($event)"></app-paging>
   </content>
   @if (this.dashboardService.isbookingPopupOpen()) {
   <app-booking-popup></app-booking-popup>

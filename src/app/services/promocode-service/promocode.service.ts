@@ -3,6 +3,7 @@ import { HttpService } from '../httpclient/http.service';
 import { PromoCode, PromoDto } from '../../models/promocode.model';
 import { environment } from '../../../environments/environment';
 import { catchError, tap, throwError } from 'rxjs';
+import { PaginatedResponse } from '../../models/paginated-response.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,6 +13,8 @@ export class PromocodeService {
   selectedPromocode = signal<PromoCode | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
+  totalPages = signal(1);
+  currentPage = signal(1);
 
   /** Load all promocodes assoziated to current user / property */
   loadPromocodes() {
@@ -20,6 +23,23 @@ export class PromocodeService {
       .subscribe({
         next: (data) => this.promocodes.set(data),
         error: (error) => console.error('Failed to load promocodes', error),
+      });
+  }
+
+  loadPaginatedPromoCodes(page:number){
+    this.sending.set(true);
+    this.httpService
+      .get<PaginatedResponse<PromoCode>>(`${environment.apiBaseUrl}/api/promocodes/?page=${page}`)
+      .subscribe({
+        next: (data) => {
+          this.promocodes.set(data.results);
+          this.totalPages.set(data.total_pages);
+          this.currentPage.set(page);
+          this.sending.set(false);
+        },
+        error: (error) => {
+          console.error('Failed to load promocodes', error);
+        },
       });
   }
 
@@ -49,12 +69,7 @@ export class PromocodeService {
       .post<PromoCode>(`${environment.apiBaseUrl}/api/promocodes/`, data)
       .subscribe({
         next: (service) => {
-          const current = this.promocodes();
-          this.promocodes.set([...current, service]);
-
-          this.sending.set(false);
-          this.successful.set(true);
-          this.selectedPromocode.set(null);
+          this.loadPaginatedPromoCodes(1)
         },
         error: (err) => {
           console.error('Failed to create promocode:', err);
@@ -75,13 +90,7 @@ export class PromocodeService {
       )
       .subscribe({
         next: (service) => {
-          const current = this.promocodes();
-          this.promocodes.set(
-            current.map((s) => (s.id === service.id ? service : s))
-          );
-          this.sending.set(false);
-          this.successful.set(true);
-          this.selectedPromocode.set(null);
+          this.loadPaginatedPromoCodes(1)
         },
         error: (err) => {
           console.error('Failed to create promocode:', err);

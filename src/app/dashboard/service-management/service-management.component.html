@@ -33,6 +33,7 @@
                 </tbody>
             </table>
         </div>
+            <app-paging [currentPage]="sms.currentPage()" [totalPages]="sms.totalPages()" (pageChanged)="sms.loadPaginatedService($event)"></app-paging>
     </content>
     @if(this.formOpen()) {
     <app-service-form (close)="this.formOpen.set(false)"></app-service-form>

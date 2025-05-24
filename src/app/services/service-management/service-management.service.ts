@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { catchError } from 'rxjs/operators';
 import { throwError, tap } from 'rxjs';
 import { HttpService } from '../httpclient/http.service';
+import { PaginatedResponse } from '../../models/paginated-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class ServiceManagementService {
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
   sortServices = (s: Service[]) => s.slice().sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
-
+  totalPages = signal(1);
+  currentPage = signal(1)
   /**
    * Load all services from the server.
    *
@@ -35,6 +37,21 @@ export class ServiceManagementService {
       });
   }
 
+  loadPaginatedService(page: number) {
+    this.httpService
+      .get<PaginatedResponse<Service>>(`${environment.apiBaseUrl}/api/services/?page=${page}`)
+      .subscribe({
+        next: (data) => {
+          this.services.set(this.sortServices(data.results));
+          this.totalPages.set(data.total_pages);
+          this.currentPage.set(page);
+        },
+        error: (error) => {
+          console.error('Failed to load services', error);
+        },
+      });
+  }
+
   /**
    * Creates a new service with the given data.
    *
@@ -51,7 +68,7 @@ export class ServiceManagementService {
       .post<Service>(`${environment.apiBaseUrl}/api/services/`, data)
       .subscribe({
         next: (service) => {
-          this.services.set(this.sortServices([...this.services(), service]));
+          this.loadPaginatedService(1);
           this.setResponse(false, true, null);
         },
         error: (err) => {
@@ -80,7 +97,7 @@ export class ServiceManagementService {
       .patch<Service>(`${environment.apiBaseUrl}/api/service/${id}/`, data)
       .subscribe({
         next: (service) => {
-          this.services.set(this.sortServices([...this.services(), service]));
+          this.loadPaginatedService(1);
           this.setResponse(false, true, null);
         },
         error: (err) => {
@@ -106,7 +123,7 @@ export class ServiceManagementService {
       .delete(`${environment.apiBaseUrl}/api/service/${id}/`)
       .subscribe({
         next: (service) => {
-          this.services.set(this.sortServices([...this.services()]));
+          this.loadPaginatedService(1);
           this.setResponse(false, true, null);
         },
         error: (err) => {
