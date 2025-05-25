@@ -3,6 +3,7 @@ import { HttpService } from '../httpclient/http.service';
 import { Unit } from '../../models/unit.model';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PaginatedResponse } from '../../models/paginated-response.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,6 +15,9 @@ export class UnitsService {
   successful = signal<boolean>(false);
   selectedUnit = signal<Unit | null>(null);
   deletedImageIds = signal<number[]>([]);
+  totalPages = signal(1);
+  currentPage = signal(1)
+
 
   /** Load all units (admin or general fetch) */
   loadUnits() {
@@ -23,6 +27,21 @@ export class UnitsService {
             this.units.set(data.slice().sort((a, b) => {
               return (b.active ? 1 : 0) - (a.active ? 1 : 0);
             }));
+            this.setLoading(false);
+          },
+          error: this.handleError('Failed to load Ünits')
+      });
+  }
+
+  loadPaginatedUnits(page: number) {
+    this.setLoading(true);
+        this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}`).subscribe({
+          next: (data) => {
+            this.units.set(data.results.slice().sort((a, b) => {
+              return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+            }));
+            this.totalPages.set(data.total_pages);
+            this.currentPage.set(page);
             this.setLoading(false);
           },
           error: this.handleError('Failed to load Ünits')
@@ -79,7 +98,7 @@ export class UnitsService {
     this.httpService.delete<Unit>(this.getUrl(`units/${id}`)).subscribe({
       next: () => {
         this.selectedUnit.set(null);
-        this.loadUnits();
+        this.loadPaginatedUnits(this.currentPage());
         this.successful.set(true);
       },
       error: this.handleError('Delete property failed')
@@ -117,7 +136,7 @@ export class UnitsService {
 
   onSuccess() {
     this.successful.set(true);
-    this.loadUnits();
+    this.loadPaginatedUnits(this.currentPage());
     this.setLoading(false);
   }
 

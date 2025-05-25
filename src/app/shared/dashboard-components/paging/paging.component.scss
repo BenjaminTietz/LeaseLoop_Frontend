@@ -1,0 +1,33 @@
+@use '../../../styles/mixins.scss' as *;
+*{
+  margin: 0
+}
+
+.pagination{
+  @include display(flex, row, center, center);
+  gap: 10px;
+}
+
+nav{
+  margin-top: 20px;
+}
+
+span{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 20px;
+  @include display(flex, row, center, center);
+  &.active{
+    background-color: white;
+    color: black;
+  }
+  &:hover{
+    background-color: white;
+    color: black;
+  }
+}
+
+button{
+  padding: 4px 10px;
+}

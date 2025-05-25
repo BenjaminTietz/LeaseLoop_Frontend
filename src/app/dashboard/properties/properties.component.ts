@@ -5,10 +5,11 @@ import { MatIcon } from '@angular/material/icon';
 import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 import { CommonModule } from '@angular/common';
 import { Property } from '../../models/property.model';
+import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 @Component({
   selector: 'app-properties',
   standalone: true,
-  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent, CommonModule],
+  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent, CommonModule, PagingComponent],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })
@@ -23,7 +24,7 @@ export class PropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.propertyService.loadProperties();
+    this.propertyService.loadPaginatedProperties(1);
   }
 
   openEditForm(property : Property) {

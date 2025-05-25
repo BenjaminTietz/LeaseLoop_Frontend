@@ -31,6 +31,7 @@
                 </tbody>
             </table>
         </div>
+        <app-paging [currentPage]="clientService.currentPage()" [totalPages]="clientService.totalPages()" (pageChanged)="clientService.loadPaginatedClients($event)"></app-paging>
     </content>
     @if(formOpen()) {
     <app-client-form (close)="formOpen.set(false)"></app-client-form>

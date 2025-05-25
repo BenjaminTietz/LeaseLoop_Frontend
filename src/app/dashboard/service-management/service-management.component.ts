@@ -6,11 +6,12 @@ import { HttpService } from '../../services/httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import { Service, ServiceDto } from '../../models/service.model';
 import { MatIcon } from '@angular/material/icon';
+import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 
 @Component({
   selector: 'app-service-management',
   standalone: true,
-  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon],
+  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon, PagingComponent],
   templateUrl: './service-management.component.html',
   styleUrl: './service-management.component.scss',
 })
@@ -45,7 +46,7 @@ export class ServiceManagementComponent implements OnInit {
   }
 
   loadServices() {
-    this.sms.loadService()
+    this.sms.loadPaginatedService(1);
   }
 
   // TODO: Ask Team about using AuthInterceptor for token management

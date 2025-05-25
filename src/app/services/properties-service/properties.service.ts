@@ -3,6 +3,7 @@ import { HttpService } from '../httpclient/http.service';
 import { Property } from '../../models/property.model';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { PaginatedResponse } from '../../models/paginated-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesService {
@@ -14,6 +15,8 @@ export class PropertiesService {
   successful = signal<boolean>(false);
   http = inject(HttpClient)
   deletedImageIds = signal<number[]>([]);
+  totalPages = signal(1);
+  currentPage = signal(1);
   
 
 
@@ -24,6 +27,21 @@ export class PropertiesService {
         this.properties.set(data.slice().sort((a, b) => {
           return (b.active ? 1 : 0) - (a.active ? 1 : 0)
         }));
+        this.setLoading(false);
+      },
+      error: this.handleError('Failed to load properties')
+    });
+  }
+
+  loadPaginatedProperties(page: number){
+    this.setLoading(true);
+    this.httpService.get<PaginatedResponse<Property>>(`${environment.apiBaseUrl}/api/properties/?page=${page}`).subscribe({
+      next: (data) => {
+        this.properties.set(data.results.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0)
+        }));
+        this.totalPages.set(data.total_pages);
+        this.currentPage.set(page);
         this.setLoading(false);
       },
       error: this.handleError('Failed to load properties')
@@ -66,7 +84,7 @@ export class PropertiesService {
     this.httpService.delete<Property>(this.getUrl(`properties/${id}`)).subscribe({
       next: () => {
         this.selectedProperty.set(null);
-        this.loadProperties();
+        this.loadPaginatedProperties(1);
         this.successful.set(true);
       },
       error: this.handleError('Delete property failed')
@@ -146,7 +164,7 @@ export class PropertiesService {
   }
 
   onSuccess() {
-    this.loadProperties();
+    this.loadPaginatedProperties(1);
     this.successful.set(true);
     this.setLoading(false);
   }

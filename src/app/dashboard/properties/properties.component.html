@@ -40,7 +40,7 @@
                 </tbody>
             </table>
         </div>
-        
+            <app-paging [currentPage]="propertyService.currentPage()" [totalPages]="propertyService.totalPages()" (pageChanged)="propertyService.loadPaginatedProperties($event)"></app-paging>
     </content>
     @if(formOpen()) {
         <app-property-form (close)="formOpen.set(false)"></app-property-form>

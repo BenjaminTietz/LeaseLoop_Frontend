@@ -6,11 +6,12 @@ import { MatIcon } from '@angular/material/icon';
 import { BookingFormComponent } from "./booking-form/booking-form.component";
 import { Booking } from '../../models/booking.model';
 import { CommonModule } from '@angular/common';
+import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [BookingPopupComponent, MatIcon, BookingFormComponent, CommonModule],
+  imports: [BookingPopupComponent, MatIcon, BookingFormComponent, CommonModule, PagingComponent],
   templateUrl: './bookings.component.html',
   styleUrl: './bookings.component.scss',
 })
@@ -21,7 +22,7 @@ export class BookingsComponent implements OnInit {
   formOpen = signal(false);
 
   ngOnInit() {
-    this.bs.loadBooking();
+    this.bs.loadPaginatedBookings(1);
   }
 
   openForm() {

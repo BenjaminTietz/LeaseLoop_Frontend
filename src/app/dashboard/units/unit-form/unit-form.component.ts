@@ -133,7 +133,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
       ]).then(() => {
         this.unitService.deletedImageIds.set([]);
         this.unitService.selectedUnit.set(null);
-        this.unitService.loadUnits();
+        this.unitService.loadPaginatedUnits(1);
         this.closeForm();
       });
     });
@@ -148,7 +148,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     enableBackgroundScroll();
     this.unitService.selectedUnit.set(null);
     this.unitService.deletedImageIds.set([]);
-    this.unitService.loadUnits();
+    this.unitService.loadPaginatedUnits(1);
     this.close.emit()
   }
 

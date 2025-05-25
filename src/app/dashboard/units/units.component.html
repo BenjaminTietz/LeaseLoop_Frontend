@@ -36,6 +36,7 @@
                 </tbody>
             </table>
         </div>
+            <app-paging [currentPage]="unitsService.currentPage()" [totalPages]="unitsService.totalPages()" (pageChanged)="unitsService.loadPaginatedUnits($event)"></app-paging>
         @if(formOpen()){
             <app-unit-form (close)="formOpen.set(false)"></app-unit-form>
         }
