@@ -1,21 +1,23 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
-import { UnitSliderComponent } from '../unit-slider/unit-slider.component';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
 import { CommonModule } from '@angular/common';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { LandingFooterComponent } from '../../shared/landing-components/landing-footer/landing-footer.component';
 import { LogoComponent } from '../../shared/landing-components/logo/logo.component';
+import { ImageSliderComponent } from '../../shared/booking-page/image-slider/image-slider.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-booking-landing',
   standalone: true,
   imports: [
-    UnitSliderComponent,
     ThemeButtonComponent,
     CommonModule,
     LandingFooterComponent,
     LogoComponent,
+    ImageSliderComponent,
+    RouterOutlet,
   ],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
@@ -24,6 +26,7 @@ export class BookingLandingComponent implements OnInit {
   bookingService = inject(ClientBookingService);
   showLocationDropdown = signal(false);
   searchInput = signal<string>('');
+  today = new Date().toISOString().split('T')[0];
 
   filteredLocations = computed(() => {
     const allLocations = [

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnitSliderComponent } from './unit-slider.component';
+import { UnitDetailViewComponent } from './unit-detail-view.component';
 
-describe('UnitSliderComponent', () => {
-  let component: UnitSliderComponent;
-  let fixture: ComponentFixture<UnitSliderComponent>;
+describe('UnitDetailViewComponent', () => {
+  let component: UnitDetailViewComponent;
+  let fixture: ComponentFixture<UnitDetailViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UnitSliderComponent]
+      imports: [UnitDetailViewComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UnitSliderComponent);
+    fixture = TestBed.createComponent(UnitDetailViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
