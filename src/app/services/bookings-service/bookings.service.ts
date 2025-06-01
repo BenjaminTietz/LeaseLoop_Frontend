@@ -28,9 +28,9 @@ export class BookingsService {
       });
   }
 
-  loadPaginatedBookings(page: number) {
+  loadPaginatedBookings(page: number, searchTerm: string = '') {
     this.httpService
-      .get<PaginatedResponse<Booking>>(`${environment.apiBaseUrl}/api/bookings/?page=${page}`)
+      .get<PaginatedResponse<Booking>>(`${environment.apiBaseUrl}/api/bookings/?page=${page}&search=${searchTerm}`)
       .subscribe({
         next: (data) => {
           this.bookings.set(data.results);

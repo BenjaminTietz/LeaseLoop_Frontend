@@ -6,6 +6,7 @@
                 <mat-icon>add</mat-icon>
                 <span>New Client</span>
             </button>
+            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search clients" ></app-search-input>
         </div>
         <div class="table-wrapper">
             <table class="table">
@@ -31,7 +32,7 @@
                 </tbody>
             </table>
         </div>
-        <app-paging [currentPage]="clientService.currentPage()" [totalPages]="clientService.totalPages()" (pageChanged)="clientService.loadPaginatedClients($event)"></app-paging>
+        <app-paging [currentPage]="clientService.currentPage()" [totalPages]="clientService.totalPages()" (pageChanged)="clientService.loadPaginatedClients($event, searchInput())"></app-paging>
     </content>
     @if(formOpen()) {
     <app-client-form (close)="formOpen.set(false)"></app-client-form>

@@ -33,9 +33,9 @@ export class UnitsService {
       });
   }
 
-  loadPaginatedUnits(page: number) {
+  loadPaginatedUnits(page: number, searchTerm: string = '') {
     this.setLoading(true);
-        this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}`).subscribe({
+        this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}`).subscribe({
           next: (data) => {
             this.units.set(data.results.slice().sort((a, b) => {
               return (b.active ? 1 : 0) - (a.active ? 1 : 0);

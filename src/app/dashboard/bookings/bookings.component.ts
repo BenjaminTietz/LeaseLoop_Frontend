@@ -7,11 +7,12 @@ import { BookingFormComponent } from "./booking-form/booking-form.component";
 import { Booking } from '../../models/booking.model';
 import { CommonModule } from '@angular/common';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
+import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
 
 @Component({
   selector: 'app-bookings',
   standalone: true,
-  imports: [BookingPopupComponent, MatIcon, BookingFormComponent, CommonModule, PagingComponent],
+  imports: [BookingPopupComponent, MatIcon, BookingFormComponent, CommonModule, PagingComponent, SearchInputComponent],
   templateUrl: './bookings.component.html',
   styleUrl: './bookings.component.scss',
 })
@@ -20,9 +21,20 @@ export class BookingsComponent implements OnInit {
   dashboardService = inject(DashboardService);
 
   formOpen = signal(false);
+  searchInput = signal('');
 
   ngOnInit() {
     this.bs.loadPaginatedBookings(1);
+    setTimeout(() => {
+      console.log(this.bs.bookings());
+      
+    }, 3000);
+    
+  }
+
+  search(searchTerm: string) {
+    this.searchInput.set(searchTerm);
+    this.bs.loadPaginatedBookings(1, searchTerm);
   }
 
   openForm() {

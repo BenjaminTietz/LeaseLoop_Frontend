@@ -12,11 +12,21 @@ main {
     @include display(flex, row, space-between, center);
     margin-bottom: 20px;
     padding: 60px 40px;
+    width: 100%;
 
     h1 {
         font-size: 32px;
+        margin: 0;
+
+    }
+    button{
+        margin: 0;
     }
 
+}
+
+app-search-input{
+    margin:0
 }
 
 .table-wrapper {

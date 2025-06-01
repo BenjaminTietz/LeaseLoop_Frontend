@@ -28,10 +28,10 @@ export class ClientsService {
       });
   }
 
-  loadPaginatedClients(page: number) {
+  loadPaginatedClients(page: number, searchTerm: string) {
     this.httpService
       .get<PaginatedResponse<Clients>>(
-        `${environment.apiBaseUrl}/api/clients/?page=${page}`
+        `${environment.apiBaseUrl}/api/clients/?page=${page}&search=${searchTerm}`
       )
       .subscribe((clients) => {
         this.clients.set(clients.results);
