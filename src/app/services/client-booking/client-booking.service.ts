@@ -12,7 +12,7 @@ import { NavigatorService } from '../navigator/navigator.service';
 })
 export class ClientBookingService {
   httpService = inject(HttpService);
-  navigator  = inject(NavigatorService);
+  navigator = inject(NavigatorService);
   properties = signal<Property[]>([]);
   units = signal<Unit[]>([]);
   bookings = signal<Booking[]>([]);
@@ -224,11 +224,14 @@ export class ClientBookingService {
     console.log('Show property detail:', this.showPropertyDetail());
 
     this.navigator.navigateTo(`/property/${property.id}/`);
-
   }
 
   hidePropertyDetails() {
     this.selectedPropertyDetail.set(null);
     this.showPropertyDetail.set(false);
   }
+
+  getPropertyById = (id: number) => {
+    return this.properties().find((p) => p.id === id);
+  };
 }
