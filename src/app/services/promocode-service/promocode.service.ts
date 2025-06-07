@@ -26,16 +26,18 @@ export class PromocodeService {
       });
   }
 
-  loadPaginatedPromoCodes(page:number){
+  loadPaginatedPromoCodes(page:number, searchTerm: string = '') {
     this.sending.set(true);
     this.httpService
-      .get<PaginatedResponse<PromoCode>>(`${environment.apiBaseUrl}/api/promocodes/?page=${page}`)
+      .get<PaginatedResponse<PromoCode>>(`${environment.apiBaseUrl}/api/promocodes/?page=${page}&search=${searchTerm}`)
       .subscribe({
         next: (data) => {
           this.promocodes.set(data.results);
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
           this.sending.set(false);
+          console.log(this.promocodes());
+          
         },
         error: (error) => {
           console.error('Failed to load promocodes', error);

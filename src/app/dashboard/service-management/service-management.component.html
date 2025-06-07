@@ -6,6 +6,7 @@
                 <mat-icon>add</mat-icon>
                 <span>New Service</span>
             </button>
+            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search services" ></app-search-input>
         </div>
         <div class="table-wrapper">
             <table class="table">
@@ -33,7 +34,7 @@
                 </tbody>
             </table>
         </div>
-            <app-paging [currentPage]="sms.currentPage()" [totalPages]="sms.totalPages()" (pageChanged)="sms.loadPaginatedService($event)"></app-paging>
+            <app-paging [currentPage]="sms.currentPage()" [totalPages]="sms.totalPages()" (pageChanged)="sms.loadPaginatedService($event, searchInput())"></app-paging>
     </content>
     @if(this.formOpen()) {
     <app-service-form (close)="this.formOpen.set(false)"></app-service-form>
