@@ -37,6 +37,6 @@
             <app-paging [currentPage]="sms.currentPage()" [totalPages]="sms.totalPages()" (pageChanged)="sms.loadPaginatedService($event, searchInput())"></app-paging>
     </content>
     @if(this.formOpen()) {
-    <app-service-form (close)="this.formOpen.set(false)"></app-service-form>
+    <app-service-form (close)="closeForm()"></app-service-form>
     }
 </main>

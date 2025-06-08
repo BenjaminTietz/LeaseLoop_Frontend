@@ -19,9 +19,9 @@ export class ChangePassFormComponent {
   settingsService = inject(SettingsService)
 
   changePassForm = new FormBuilder().nonNullable.group({
-    old_password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/)]],
-    new_password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/)]],
-    confirm_password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/)]],
+    old_password: ['', [Validators.required, Validators.pattern(this.formService.passwordPattern)]],
+    new_password: ['', [Validators.required, Validators.pattern(this.formService.passwordPattern)]],
+    confirm_password: ['', [Validators.required, Validators.pattern(this.formService.passwordPattern)]],
   }, { validators: this.passwordMatchValidator()} )
 
   constructor() {}

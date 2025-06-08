@@ -25,11 +25,6 @@ export class BookingsComponent implements OnInit {
 
   ngOnInit() {
     this.bs.loadPaginatedBookings(1);
-    setTimeout(() => {
-      console.log(this.bs.bookings());
-      
-    }, 3000);
-    
   }
 
   search(searchTerm: string) {
@@ -45,6 +40,7 @@ export class BookingsComponent implements OnInit {
 
   closeForm() {
     this.formOpen.set(false);
+    this.bs.loadPaginatedBookings(this.bs.currentPage(), this.searchInput());
   }
 
   openEditForm(booking: Booking) {

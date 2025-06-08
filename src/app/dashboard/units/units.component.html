@@ -39,7 +39,7 @@
         </div>
             <app-paging [currentPage]="unitsService.currentPage()" [totalPages]="unitsService.totalPages()" (pageChanged)="unitsService.loadPaginatedUnits($event, searchInput())"></app-paging>
         @if(formOpen()){
-            <app-unit-form (close)="formOpen.set(false)"></app-unit-form>
+            <app-unit-form (close)="closeForm()"></app-unit-form>
         }
     </content>
 </main>

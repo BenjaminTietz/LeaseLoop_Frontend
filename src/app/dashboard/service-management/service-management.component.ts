@@ -75,4 +75,9 @@ export class ServiceManagementComponent implements OnInit {
         },
       });
   }
+
+  closeForm(){
+    this.formOpen.set(false);
+    this.sms.loadPaginatedService(this.sms.currentPage(), this.searchInput());
+  }
 }

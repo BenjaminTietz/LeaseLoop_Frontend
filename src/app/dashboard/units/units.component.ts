@@ -39,4 +39,9 @@ export class UnitsComponent implements OnInit {
     this.unitsService.successful.set(false);
     this.unitsService.selectedUnit.set(unit)
   }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.unitsService.loadPaginatedUnits(this.unitsService.currentPage(), this.searchInput());
+  }
 }

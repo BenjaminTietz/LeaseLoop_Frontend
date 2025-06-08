@@ -48,7 +48,7 @@ export class ClientFormComponent {
       postal_code: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{6,15}$')]],
+      phone: ['', [Validators.required, Validators.pattern(this.formService.phonePattern)]],
     }),
   });
 

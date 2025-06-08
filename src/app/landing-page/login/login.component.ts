@@ -26,7 +26,7 @@ export class LoginComponent {
       '',
       [
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'),
+        Validators.pattern(this.formService.emailPattern),
       ],
     ],
     password: [
@@ -35,7 +35,7 @@ export class LoginComponent {
         Validators.required,
         Validators.minLength(8),
         Validators.pattern(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/
+          this.formService.passwordPattern
         ),
         Validators.maxLength(50),
       ],

@@ -44,6 +44,6 @@
             <app-paging [currentPage]="propertyService.currentPage()" [totalPages]="propertyService.totalPages()" (pageChanged)="propertyService.loadPaginatedProperties($event, searchInput())"></app-paging>
     </content>
     @if(formOpen()) {
-        <app-property-form (close)="formOpen.set(false)"></app-property-form>
+        <app-property-form (close)="closeForm()"></app-property-form>
     }
 </main>

@@ -24,17 +24,15 @@ export class RegisterComponent {
   passVisible = signal(false);
 
   registerForm = inject(FormBuilder).nonNullable.group({
-    first_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[a-zA-Z ]+$')]],
-    last_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[a-zA-Z ]+$')]],
-    email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')]],
+    first_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(this.formService.namePattern)]],
+    last_name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(this.formService.namePattern)]],
+    email: ['', [Validators.required, Validators.pattern(this.formService.emailPattern)]],
     password: [
       '',
       [
         Validators.required,
         Validators.minLength(8),
-        Validators.pattern(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/
-        ),
+        Validators.pattern( this.formService.passwordPattern),
       ],
     ],
     checkbox : [false, [Validators.requiredTrue]]

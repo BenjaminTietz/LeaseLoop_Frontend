@@ -39,4 +39,9 @@ export class ClientsComponent implements OnInit {
     this.formOpen.set(true);
     this.clientService.successful.set(false);
   }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.clientService.loadPaginatedClients(this.clientService.currentPage(), this.searchInput());
+  }
 }

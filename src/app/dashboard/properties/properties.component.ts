@@ -42,4 +42,9 @@ export class PropertiesComponent implements OnInit {
     this.propertyService.successful.set(false);
     this.propertyService.selectedProperty.set(property);
   }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.propertyService.loadPaginatedProperties(this.propertyService.currentPage(), this.searchInput());
+  }
 }

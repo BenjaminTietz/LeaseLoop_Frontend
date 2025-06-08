@@ -35,6 +35,6 @@
         <app-paging [currentPage]="clientService.currentPage()" [totalPages]="clientService.totalPages()" (pageChanged)="clientService.loadPaginatedClients($event, searchInput())"></app-paging>
     </content>
     @if(formOpen()) {
-    <app-client-form (close)="formOpen.set(false)"></app-client-form>
+    <app-client-form (close)="closeForm()"></app-client-form>
     }
 </main>

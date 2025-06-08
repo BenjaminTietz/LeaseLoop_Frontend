@@ -5,6 +5,12 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 })
 export class FormService {
 
+  phonePattern= '^^\\+?\\d(?:[\\d ]{9,34})$';
+  emailPattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+  passwordPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/';
+  namePattern = '^[A-Za-z]+(-[A-Za-z]+)?$';
+  pricePattern = '^[0-9]*[.,]?[0-9]{0,2}$';
+
   constructor() { }
 
   markAllAsTouched(form: AbstractControl) {

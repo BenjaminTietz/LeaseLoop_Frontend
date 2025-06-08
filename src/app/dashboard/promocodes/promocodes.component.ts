@@ -43,4 +43,9 @@ export class PromocodesComponent implements OnInit {
     this.formOpen.set(true);
     this.pcs.successful.set(false);
   }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.pcs.loadPaginatedPromoCodes(this.pcs.currentPage(), this.searchInput());
+  }
 }

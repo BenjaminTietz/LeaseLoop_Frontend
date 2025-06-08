@@ -78,7 +78,6 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     //this.unitService.clearDeletedImages();
     disableBackgroundScroll();
-    this.propertyService.loadProperties();
     const selected = this.unitService.selectedUnit();
     
 
@@ -148,7 +147,6 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     enableBackgroundScroll();
     this.unitService.selectedUnit.set(null);
     this.unitService.deletedImageIds.set([]);
-    this.unitService.loadPaginatedUnits(1);
     this.close.emit()
   }
 
