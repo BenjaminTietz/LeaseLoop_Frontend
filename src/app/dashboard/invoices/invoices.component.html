@@ -2,6 +2,7 @@
     <content>
         <div class="header">
             <h1>Invoices</h1>
+            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search invoices" ></app-search-input>
         </div>
         <div class="table-wrapper">
             @if(invoiceService.sending()) {
@@ -38,5 +39,6 @@
                 </tbody>
             </table>
         </div>
+        <app-paging [currentPage]="this.invoiceService.currentPage()" [totalPages]="this.invoiceService.totalPages()" (pageChanged)="this.invoiceService.getInvoices($event, searchInput())"></app-paging>
     </content>
 </main>

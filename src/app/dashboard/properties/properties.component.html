@@ -7,6 +7,7 @@
                 <mat-icon>add</mat-icon>
                 <span >New Property</span> 
             </button>
+            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search properties" ></app-search-input>
         </div>
         <div class="table-wrapper">
             @if(propertyService.sending()){
@@ -40,9 +41,9 @@
                 </tbody>
             </table>
         </div>
-            <app-paging [currentPage]="propertyService.currentPage()" [totalPages]="propertyService.totalPages()" (pageChanged)="propertyService.loadPaginatedProperties($event)"></app-paging>
+            <app-paging [currentPage]="propertyService.currentPage()" [totalPages]="propertyService.totalPages()" (pageChanged)="propertyService.loadPaginatedProperties($event, searchInput())"></app-paging>
     </content>
     @if(formOpen()) {
-        <app-property-form (close)="formOpen.set(false)"></app-property-form>
+        <app-property-form (close)="closeForm()"></app-property-form>
     }
 </main>

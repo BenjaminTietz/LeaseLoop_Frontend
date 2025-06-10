@@ -33,9 +33,9 @@ export class PropertiesService {
     });
   }
 
-  loadPaginatedProperties(page: number){
+  loadPaginatedProperties(page: number, searchTerm: string = '') {
     this.setLoading(true);
-    this.httpService.get<PaginatedResponse<Property>>(`${environment.apiBaseUrl}/api/properties/?page=${page}`).subscribe({
+    this.httpService.get<PaginatedResponse<Property>>(`${environment.apiBaseUrl}/api/properties/?page=${page}&search=${searchTerm}`).subscribe({
       next: (data) => {
         this.properties.set(data.results.slice().sort((a, b) => {
           return (b.active ? 1 : 0) - (a.active ? 1 : 0)
@@ -43,6 +43,8 @@ export class PropertiesService {
         this.totalPages.set(data.total_pages);
         this.currentPage.set(page);
         this.setLoading(false);
+        console.log(this.properties());
+        
       },
       error: this.handleError('Failed to load properties')
     });

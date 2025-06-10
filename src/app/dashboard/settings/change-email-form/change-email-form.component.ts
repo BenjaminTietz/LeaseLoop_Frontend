@@ -25,9 +25,9 @@ export class ChangeEmailFormComponent {
   emailSentResponse = signal('')
 
   emailForm = new FormBuilder().nonNullable.group({
-    actual_email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$'), this.matchCurrentEmailValidator(this.settingsService.userEmail())]],
-    actual_password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[^\s]{8,}$/)]],
-    new_email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')]],
+    actual_email: ['', [Validators.required, Validators.pattern(this.formService.emailPattern), this.matchCurrentEmailValidator(this.settingsService.userEmail())]],
+    actual_password: ['', [Validators.required, Validators.pattern(this.formService.passwordPattern)]],
+    new_email: ['', [Validators.required, Validators.pattern(this.formService.emailPattern)]],
   })
 
   get actualEmailErrors(){

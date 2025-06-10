@@ -6,6 +6,7 @@
                 <mat-icon>add</mat-icon>
                 <span>New Promocode</span>
             </button>
+            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search promocodes" ></app-search-input>
         </div>
         <div class="table-wrapper">
             <table class="table">
@@ -33,9 +34,9 @@
                 </tbody>
             </table>
         </div>
-        <app-paging [currentPage]="this.pcs.currentPage()" [totalPages]="this.pcs.totalPages()" (pageChanged)="this.pcs.loadPaginatedPromoCodes($event)"></app-paging>
+        <app-paging [currentPage]="this.pcs.currentPage()" [totalPages]="this.pcs.totalPages()" (pageChanged)="this.pcs.loadPaginatedPromoCodes($event, searchInput())"></app-paging>
     </content>
     @if(this.formOpen()) {
-    <app-promocodes-form (close)="this.formOpen.set(false)"></app-promocodes-form>
+    <app-promocodes-form (close)="closeForm()"></app-promocodes-form>
     }
 </main>

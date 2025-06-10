@@ -46,7 +46,7 @@ export class ServiceFormComponent implements OnInit {
       [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
     ],
     type: ['' as ServiceType, Validators.required],
-    price: [0,[ Validators.required, Validators.pattern('^[0-9]*[.,]?[0-9]{0,2}$')]],
+    price: [0,[ Validators.required, Validators.pattern(this.formService.pricePattern)]],
     property: [0 as number  | undefined, Validators.required],
     active: [true, Validators.required],
   });

@@ -7,11 +7,12 @@ import { environment } from '../../../environments/environment';
 import { Service, ServiceDto } from '../../models/service.model';
 import { MatIcon } from '@angular/material/icon';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
+import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
 
 @Component({
   selector: 'app-service-management',
   standalone: true,
-  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon, PagingComponent],
+  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon, PagingComponent, SearchInputComponent],
   templateUrl: './service-management.component.html',
   styleUrl: './service-management.component.scss',
 })
@@ -22,6 +23,7 @@ export class ServiceManagementComponent implements OnInit {
   httpService = inject(HttpService);
   http = inject(HttpService);
   formOpen = signal<boolean>(false);
+  searchInput = signal('');
 
   ngOnInit(): void {
     this.loadServices();
@@ -37,6 +39,11 @@ export class ServiceManagementComponent implements OnInit {
     this.sms.selectedService.set(service);
     this.formOpen.set(true);
     this.sms.successful.set(false);
+  }
+
+  search(searchTerm: string) {
+    this.searchInput.set(searchTerm);
+    this.sms.loadPaginatedService(1, searchTerm);
   }
 
   openForm(){
@@ -67,5 +74,10 @@ export class ServiceManagementComponent implements OnInit {
           console.error(err);
         },
       });
+  }
+
+  closeForm(){
+    this.formOpen.set(false);
+    this.sms.loadPaginatedService(this.sms.currentPage(), this.searchInput());
   }
 }

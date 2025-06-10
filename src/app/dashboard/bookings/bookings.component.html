@@ -6,6 +6,7 @@
         <mat-icon>add</mat-icon>
         <span>New Booking</span>
       </button>
+      <app-search-input (searchTerm)="this.search($event)"  placeholder="Search bookings" ></app-search-input>
     </div>
     <div class="table-wrapper">
       <table class="table">
@@ -15,7 +16,7 @@
             <th>Name</th>
             <th>Guests</th>
             <th>Property</th>
-            <th>Room</th>
+            <th>Unit</th>
             <th>Arrival Date</th>
             <th>Departure Date</th>
             <th>Booked Service</th>
@@ -59,7 +60,7 @@
         </tbody>
       </table>
     </div>
-      <app-paging [currentPage]="bs.currentPage()" [totalPages]="bs.totalPages()" (pageChanged)="bs.loadPaginatedBookings($event)"></app-paging>
+      <app-paging [currentPage]="bs.currentPage()" [totalPages]="bs.totalPages()" (pageChanged)="bs.loadPaginatedBookings($event, searchInput())"></app-paging>
   </content>
   @if (this.dashboardService.isbookingPopupOpen()) {
   <app-booking-popup></app-booking-popup>

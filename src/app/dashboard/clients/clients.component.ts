@@ -5,20 +5,27 @@ import { Clients } from '../../models/clients.model';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
+import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [ClientFormComponent, MatIcon, CommonModule, PagingComponent],
+  imports: [ClientFormComponent, MatIcon, CommonModule, PagingComponent, SearchInputComponent],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
 })
 export class ClientsComponent implements OnInit {
   clientService = inject(ClientsService);
   formOpen = signal(false);
+  searchInput = signal('');
 
   ngOnInit(): void {
-    this.clientService.loadPaginatedClients(1);
+    this.clientService.loadPaginatedClients(1, '');
+  }
+
+  search(searchTerm: string) {
+    this.searchInput.set(searchTerm);
+    this.clientService.loadPaginatedClients(1, searchTerm);
   }
 
   openForm() {
@@ -31,5 +38,10 @@ export class ClientsComponent implements OnInit {
     this.clientService.selectedClient.set(client);
     this.formOpen.set(true);
     this.clientService.successful.set(false);
+  }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.clientService.loadPaginatedClients(this.clientService.currentPage(), this.searchInput());
   }
 }

@@ -33,7 +33,7 @@ import { Address } from '../../../models/adress.model';
   templateUrl: './client-form.component.html',
   styleUrl: './client-form.component.scss',
 })
-export class ClientFormComponent implements OnInit {
+export class ClientFormComponent {
   formService = inject(FormService);
   clientService = inject(ClientsService);
   @Output() close = new EventEmitter();
@@ -48,7 +48,7 @@ export class ClientFormComponent implements OnInit {
       postal_code: ['', Validators.required],
       city: ['', Validators.required],
       country: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern('^\\+?[0-9]{6,15}$')]],
+      phone: ['', [Validators.required, Validators.pattern(this.formService.phonePattern)]],
     }),
   });
 
@@ -89,9 +89,6 @@ export class ClientFormComponent implements OnInit {
     this.clientService.selectedClient.set(null);
   };
 
-  ngOnInit(): void {
-    this.clientService.loadClients();
-  }
 
   createClient() {
     const raw = this.serviceForm.value;

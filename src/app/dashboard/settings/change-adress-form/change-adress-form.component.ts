@@ -28,8 +28,8 @@ export class ChangeAdressFormComponent {
 
   userForm = new FormBuilder().nonNullable.group({
     tax_id: [this.userData().tax_id || '', [Validators.required]],
-    first_name: [this.userData().first_name || '', [Validators.required, Validators.pattern('^[A-Za-z]+(-[A-Za-z]+)?$')]],
-    last_name: [ this.userData().last_name || '', [Validators.required, Validators.pattern('^[A-Za-z]+(-[A-Za-z]+)?$')]],	
+    first_name: [this.userData().first_name || '', [Validators.required, Validators.pattern(this.formService.namePattern)]],
+    last_name: [ this.userData().last_name || '', [Validators.required, Validators.pattern(this.formService.namePattern)]],	
     address : new FormBuilder().nonNullable.group({
       street: [ this.userData().address.street || '', [Validators.required]],
       house_number: [ this.userData().address.house_number || '', [Validators.required]],

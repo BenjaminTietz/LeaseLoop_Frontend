@@ -37,14 +37,16 @@ export class ServiceManagementService {
       });
   }
 
-  loadPaginatedService(page: number) {
+  loadPaginatedService(page: number, searchTerm: string = '') {
     this.httpService
-      .get<PaginatedResponse<Service>>(`${environment.apiBaseUrl}/api/services/?page=${page}`)
+      .get<PaginatedResponse<Service>>(`${environment.apiBaseUrl}/api/services/?page=${page}&search=${searchTerm}`)
       .subscribe({
         next: (data) => {
           this.services.set(this.sortServices(data.results));
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
+          console.log(this.services());
+          
         },
         error: (error) => {
           console.error('Failed to load services', error);

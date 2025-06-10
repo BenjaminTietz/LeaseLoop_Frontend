@@ -6,17 +6,23 @@ import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-
 import { CommonModule } from '@angular/common';
 import { Property } from '../../models/property.model';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
+import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
 @Component({
   selector: 'app-properties',
   standalone: true,
-  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent, CommonModule, PagingComponent],
+  imports: [PropertyFormComponent, MatIcon, ProgressBarComponent, CommonModule, PagingComponent, SearchInputComponent],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',
 })
 export class PropertiesComponent implements OnInit {
   propertyService = inject(PropertiesService); 
   formOpen = signal(false);
+  searchInput = signal('');
 
+  search(searchTerm: string) {
+    this.searchInput.set(searchTerm);
+    this.propertyService.loadPaginatedProperties(1, searchTerm);
+  }
   openForm() {
     this.formOpen.set(true);
     this.propertyService.selectedProperty.set(null);
@@ -25,11 +31,20 @@ export class PropertiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.propertyService.loadPaginatedProperties(1);
+    setTimeout(() => {
+      console.log(this.propertyService.properties());
+      
+    }, 3000);
   }
 
   openEditForm(property : Property) {
     this.formOpen.set(true);
     this.propertyService.successful.set(false);
     this.propertyService.selectedProperty.set(property);
+  }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.propertyService.loadPaginatedProperties(this.propertyService.currentPage(), this.searchInput());
   }
 }

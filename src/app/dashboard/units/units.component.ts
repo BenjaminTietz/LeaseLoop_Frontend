@@ -4,11 +4,12 @@ import { MatIcon } from '@angular/material/icon';
 import { UnitFormComponent } from "./unit-form/unit-form.component";
 import { CommonModule } from '@angular/common';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
+import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
 
 @Component({
   selector: 'app-units',
   standalone: true,
-  imports: [MatIcon, UnitFormComponent, CommonModule, PagingComponent],
+  imports: [MatIcon, UnitFormComponent, CommonModule, PagingComponent, SearchInputComponent],
   templateUrl: './units.component.html',
   styleUrl: './units.component.scss',
 })
@@ -16,9 +17,15 @@ import { PagingComponent } from "../../shared/dashboard-components/paging/paging
 export class UnitsComponent implements OnInit {
   unitsService = inject(UnitsService);
   formOpen = signal(false);
+  searchInput = signal('');
 
   ngOnInit(): void {
     this.unitsService.loadPaginatedUnits(1);
+  }
+
+  search(searchTerm: string) {
+    this.searchInput.set(searchTerm);
+    this.unitsService.loadPaginatedUnits(1, searchTerm);
   }
 
   openForm() {
@@ -31,5 +38,10 @@ export class UnitsComponent implements OnInit {
     this.formOpen.set(true);
     this.unitsService.successful.set(false);
     this.unitsService.selectedUnit.set(unit)
+  }
+
+  closeForm() {
+    this.formOpen.set(false);
+    this.unitsService.loadPaginatedUnits(this.unitsService.currentPage(), this.searchInput());
   }
 }
