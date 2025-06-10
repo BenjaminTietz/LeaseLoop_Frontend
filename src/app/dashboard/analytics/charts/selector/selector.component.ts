@@ -12,14 +12,9 @@ import { AnalyticsService } from '../../../../services/analytics-service/analyti
   templateUrl: './selector.component.html',
   styleUrl: './selector.component.scss',
 })
-export class SelectorComponent implements OnInit {
+export class SelectorComponent {
   propertyService = inject(PropertiesService);
   analyticsService = inject(AnalyticsService);
   UnitService = inject(UnitsService);
   constructor() {}
-
-  ngOnInit(): void {
-    this.UnitService.loadUnits();
-    this.propertyService.loadProperties();
-  }
 }

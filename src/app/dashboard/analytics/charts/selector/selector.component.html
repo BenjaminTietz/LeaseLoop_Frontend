@@ -21,25 +21,4 @@
             </select>
         </div>
     </div>
-    <div class="input-container">
-        <label>Property:</label>
-        <select [ngModel]="analyticsService.selectedProperty()"
-            (ngModelChange)="analyticsService.selectedProperty.set($event)">
-            @for (property of this.propertyService.properties(); track property.id; let index = $index) {
-            <option value="{{property.id}}">{{property.name}}</option>
-            } @if (this.propertyService.properties().length == 0) {
-            <option value="all">No Properties</option>
-            }
-        </select>
-    </div>
-    <div class="input-container">
-        <label>Unit:</label>
-        <select [ngModel]="analyticsService.selectedUnit()" (ngModelChange)="analyticsService.selectedUnit.set($event)">
-            @for (unit of this.UnitService.units(); track unit.id; let index = $index) {
-            <option value="{{unit.id}}">{{unit.name}}</option>
-            } @if (this.UnitService.units().length == 0) {
-            <option value="all">No Units</option>
-            }
-        </select>
-    </div>
 </div>
