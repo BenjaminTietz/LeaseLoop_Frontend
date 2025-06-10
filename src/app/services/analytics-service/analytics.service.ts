@@ -21,6 +21,11 @@ export class AnalyticsService {
   dateTo = signal<string>('2026-12-31');
   selectedPeriod = signal<'day' | 'week' | 'month' | 'year'>('month');
 
+  /**
+   * Updates all analytics data by calling all the respective methods
+   * @param from start date of the period
+   * @param to end date of the period
+   */
   public updateAllAnalytics(from: string, to: string) {
     this.getRevenueData(from, to);
     this.getBookingData(from, to);
@@ -29,6 +34,11 @@ export class AnalyticsService {
     this.getCancelledBookingsData(from, to);
   }
 
+  /**
+   * Fetches revenue data for a given period and updates the revenueData signal with the result
+   * @param from start date of the period
+   * @param to end date of the period
+   */
   public getRevenueData(from: string, to: string): void {
     this.sending.set(true);
     const url = this.buildUrl('/api/analytics/revenue/', from, to);
@@ -43,6 +53,15 @@ export class AnalyticsService {
     });
   }
 
+  /**
+   * Fetches revenue data grouped by category for a given period and updates the revenueGroupedData signal.
+   * Initiates an HTTP GET request to the '/api/analytics/revenue-by/' endpoint with the provided date range.
+   * If data is retrieved successfully, it maps the result to an array of objects containing 'name' and 'revenue' fields.
+   * Updates the revenueGroupedData signal with the mapped data. If an error occurs or no data is returned,
+   * the revenueGroupedData signal is set to an empty array.
+   * @param from - The start date of the period in 'YYYY-MM-DD' format.
+   * @param to - The end date of the period in 'YYYY-MM-DD' format.
+   */
   public getRevenueGroupedData(from: string, to: string) {
     this.sending.set(true);
     const url = this.buildUrl('/api/analytics/revenue-by/', from, to);
@@ -66,6 +85,14 @@ export class AnalyticsService {
     });
   }
 
+  /**
+   * Fetches booking data for a given period and updates the bookingData signal with the result.
+   * Initiates an HTTP GET request to the '/api/analytics/bookings/' endpoint using the provided date range.
+   * If the data is retrieved successfully, it updates the bookingData signal with the received data.
+   * If an error occurs during the request, an error message is logged, and the sending signal is set to false.
+   * @param from - The start date of the period in 'YYYY-MM-DD' format.
+   * @param to - The end date of the period in 'YYYY-MM-DD' format.
+   */
   public getBookingData(from: string, to: string) {
     this.sending.set(true);
     const url = this.buildUrl('/api/analytics/bookings/', from, to);
@@ -80,6 +107,14 @@ export class AnalyticsService {
     });
   }
 
+  /**
+   * Fetches service data for a given period and updates the serviceData signal with the result.
+   * Initiates an HTTP GET request to the '/api/analytics/services/' endpoint using the provided date range.
+   * If the data is retrieved successfully, it updates the serviceData signal with the received data.
+   * If an error occurs during the request, an error message is logged, and the sending signal is set to false.
+   * @param from - The start date of the period in 'YYYY-MM-DD' format.
+   * @param to - The end date of the period in 'YYYY-MM-DD' format.
+   */
   public getServiceData(from: string, to: string) {
     this.sending.set(true);
     const url = this.buildUrl('/api/analytics/services/', from, to);
@@ -94,12 +129,28 @@ export class AnalyticsService {
     });
   }
 
+  /**
+   * Builds a URL by concatenating the given endpoint with the environment's API base URL
+   * and appending the given from and to dates as query parameters.
+   * @param endpoint the API endpoint to call
+   * @param from the start date of the period in 'YYYY-MM-DD' format
+   * @param to the end date of the period in 'YYYY-MM-DD' format
+   * @returns the built URL
+   */
   public buildUrl(endpoint: string, from: string, to: string): string {
     const base = `${environment.apiBaseUrl}${endpoint}`;
     const params = new URLSearchParams({ from, to });
     return `${base}?${params.toString()}`;
   }
 
+  /**
+   * Fetches cancelled bookings data for a given period and updates the cancelledBookingsData signal with the result.
+   * Initiates an HTTP GET request to the '/api/analytics/cancelled-bookings/' endpoint using the provided date range.
+   * If the data is retrieved successfully, it updates the cancelledBookingsData signal with the received data.
+   * If an error occurs during the request, an error message is logged.
+   * @param from - The start date of the period in 'YYYY-MM-DD' format.
+   * @param to - The end date of the period in 'YYYY-MM-DD' format.
+   */
   public getCancelledBookingsData(from: string, to: string) {
     const url = this.buildUrl('/api/analytics/cancelled-bookings/', from, to);
     this.http.get<any>(url).subscribe({

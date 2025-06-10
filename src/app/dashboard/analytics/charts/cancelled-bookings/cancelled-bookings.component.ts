@@ -130,11 +130,15 @@ export class CancelledBookingsComponent {
     };
   });
 
+  /**
+   * @constructor
+   *
+   * Initialize the component by fetching data on cancelled bookings for the
+   * current date range.
+   */
   constructor() {
     const from = this.analyticsService.dateFrom();
     const to = this.analyticsService.dateTo();
-    const property = this.analyticsService.selectedProperty();
-    const unit = this.analyticsService.selectedUnit();
     this.analyticsService.getCancelledBookingsData(from, to);
   }
 }

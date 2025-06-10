@@ -99,11 +99,15 @@ export class ServiceChartComponent implements OnInit {
 
   constructor() {}
 
+  /**
+   * Initializes the component by fetching service data for a specified date range.
+   * Retrieves the 'from' and 'to' dates from the AnalyticsService and
+   * uses them to request the service data, which is used for rendering the chart.
+   */
+
   ngOnInit(): void {
     const from = this.analyticsService.dateFrom();
     const to = this.analyticsService.dateTo();
-    const property = this.analyticsService.selectedProperty();
-    const unit = this.analyticsService.selectedUnit();
     this.analyticsService.getServiceData(from, to);
   }
 }

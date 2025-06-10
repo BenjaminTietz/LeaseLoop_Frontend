@@ -118,15 +118,21 @@ export class RevenueChartComponent {
     };
   });
 
+  /**
+   * Calls getRevenueGroupedData when component is initialized.
+   * getRevenueGroupedData fetches revenue grouped by date from backend and updates the component's state.
+   */
   ngOnInit(): void {
     const from = this.analyticsService.dateFrom();
     const to = this.analyticsService.dateTo();
-    const property = this.analyticsService.selectedProperty();
-    const unit = this.analyticsService.selectedUnit();
-
     this.analyticsService.getRevenueGroupedData(from, to);
   }
 
+  /**
+   * Watches for changes in grouped revenue data and current theme.
+   * Updates component's state with new categories and series data when grouped revenue data changes.
+   * Updates component's theme when current theme changes.
+   */
   constructor() {
     effect(
       () => {

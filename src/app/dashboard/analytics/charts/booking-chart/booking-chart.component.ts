@@ -38,14 +38,23 @@ export class BookingChartComponent {
 
   clickOutside = () => this.selectedLabel.set(null);
   selectedLabel = signal<string | null>(null);
+  /**
+   * Retrieves booking data for the given date range on component initialization.
+   * @internal
+   */
   ngOnInit(): void {
     const from = this.analyticsService.dateFrom();
     const to = this.analyticsService.dateTo();
-    const property = this.analyticsService.selectedProperty();
-    const unit = this.analyticsService.selectedUnit();
     this.analyticsService.getBookingData(from, to);
   }
 
+  /**
+   * Generates an array of colors with a spectrum of hues. The colors will have
+   * the same saturation and lightness, but will have a range of hues from 0 to
+   * 360 degrees, divided into the given count of segments.
+   * @param count The number of colors to generate. Must be a positive integer.
+   * @returns An array of strings, each representing a color in the HSL format.
+   */
   generateSpectrumColors(count: number): string[] {
     const colors: string[] = [];
     const saturation = 70;
