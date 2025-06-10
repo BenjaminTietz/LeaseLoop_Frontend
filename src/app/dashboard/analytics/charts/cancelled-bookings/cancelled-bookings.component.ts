@@ -72,7 +72,7 @@ export class CancelledBookingsComponent {
           show: false,
         },
         zoom: {
-          enabled: false
+          enabled: false,
         },
       },
       xaxis: {
@@ -102,10 +102,10 @@ export class CancelledBookingsComponent {
       tooltip: {
         shared: true,
         intersect: false,
-        theme: this.dark()? 'dark' : 'light',
+        theme: this.dark() ? 'dark' : 'light',
         marker: {
           fillColors: this.dark() ? ['#179E7F'] : ['#FFD006'],
-        }
+        },
       },
       yaxis: [
         {
@@ -135,6 +135,6 @@ export class CancelledBookingsComponent {
     const to = this.analyticsService.dateTo();
     const property = this.analyticsService.selectedProperty();
     const unit = this.analyticsService.selectedUnit();
-    this.analyticsService.getCancelledBookingsData(from, to, property, unit);
+    this.analyticsService.getCancelledBookingsData(from, to);
   }
 }
