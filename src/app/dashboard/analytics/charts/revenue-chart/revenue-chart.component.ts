@@ -102,6 +102,9 @@ export class RevenueChartComponent {
         style: {
           colors: dark ? ['white'] : ['black'],
         },
+        formatter: function (val: number) {
+          return `${val.toFixed(0)} €`;
+        },
       },
       grid: {
         strokeDashArray: 4,
@@ -110,6 +113,9 @@ export class RevenueChartComponent {
         theme: dark ? 'dark' : 'light',
         marker: {
           fillColors: dark ? ['#179E7F'] : ['#FFD006'],
+        },
+        y: {
+          formatter: (val: number) => `${val.toFixed(2)} €`,
         },
       },
       theme: {
