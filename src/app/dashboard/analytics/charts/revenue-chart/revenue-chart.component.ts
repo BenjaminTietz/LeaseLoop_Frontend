@@ -56,14 +56,12 @@ export class RevenueChartComponent {
         {
           name: 'Revenue',
           data: data.map((item) => parseFloat(item.revenue.toFixed(2))),
-
         },
       ],
       chart: {
         type: 'bar',
         height: 350,
         toolbar: { show: false },
-        
       },
       xaxis: {
         type: 'category',
@@ -72,7 +70,7 @@ export class RevenueChartComponent {
           style: {
             colors: dark ? 'white' : 'black',
           },
-        }
+        },
       },
       yaxis: {
         labels: {
@@ -93,7 +91,6 @@ export class RevenueChartComponent {
         show: true,
         width: 2,
         colors: ['transparent'],
-        
       },
       fill: {
         colors: dark ? ['#179E7F'] : ['#FFD006'],
@@ -113,7 +110,7 @@ export class RevenueChartComponent {
         theme: dark ? 'dark' : 'light',
         marker: {
           fillColors: dark ? ['#179E7F'] : ['#FFD006'],
-        }
+        },
       },
       theme: {
         mode: dark ? 'dark' : 'light',
@@ -121,31 +118,41 @@ export class RevenueChartComponent {
     };
   });
 
-
+  /**
+   * Calls getRevenueGroupedData when component is initialized.
+   * getRevenueGroupedData fetches revenue grouped by date from backend and updates the component's state.
+   */
   ngOnInit(): void {
     const from = this.analyticsService.dateFrom();
     const to = this.analyticsService.dateTo();
-    const property = this.analyticsService.selectedProperty();
-    const unit = this.analyticsService.selectedUnit();
-
-    this.analyticsService.getRevenueGroupedData(from, to, property, unit);
-
+    this.analyticsService.getRevenueGroupedData(from, to);
   }
 
+  /**
+   * Watches for changes in grouped revenue data and current theme.
+   * Updates component's state with new categories and series data when grouped revenue data changes.
+   * Updates component's theme when current theme changes.
+   */
   constructor() {
-    effect(() => {
-      const isDark = this.themeService.currentTheme() === 'dark';
-      const groupedRevenue = this.analyticsService.revenueGroupedData();
+    effect(
+      () => {
+        const isDark = this.themeService.currentTheme() === 'dark';
+        const groupedRevenue = this.analyticsService.revenueGroupedData();
 
-      if (!groupedRevenue || !Array.isArray(groupedRevenue) || groupedRevenue.length === 0) {
-        return;
-      }
+        if (
+          !groupedRevenue ||
+          !Array.isArray(groupedRevenue) ||
+          groupedRevenue.length === 0
+        ) {
+          return;
+        }
 
-      const categories = groupedRevenue.map((item) => item.name);
-      const seriesData = groupedRevenue.map((item) =>
-        parseFloat(item.revenue.toFixed(2))
-      );
-
-    }, { allowSignalWrites: true });
+        const categories = groupedRevenue.map((item) => item.name);
+        const seriesData = groupedRevenue.map((item) =>
+          parseFloat(item.revenue.toFixed(2))
+        );
+      },
+      { allowSignalWrites: true }
+    );
   }
 }

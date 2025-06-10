@@ -9,11 +9,15 @@
 }
 
 .date-container {
-    @include display(flex, column, center, center);
+    @include display(flex, row, center, center);
+    flex: 1;
+    flex-wrap: wrap;
     gap: 20px;
+    max-width: 90%;
 
     .input-container {
         @include display(flex, row, center, center);
+        flex-wrap: wrap;
         gap: 20px;
         width: 250px;
     }
