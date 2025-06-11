@@ -183,10 +183,20 @@ export class AuthService {
   }
 
   loginDemo() {
-    this.loginData.set({
-      email: 'guest@exampless.com',
-      password: 'guest1234BB!!',
-    });
-    this.login();
+    this.httpService.post<{ message: string }>(`${this.apiUrl}/api/demo-init/`, {}).subscribe({
+      next: (response) => {
+        this.handleSuccess(response.message);
+      },
+      error: (error) => {
+        this.handleError(error, 'Demo failed. Please try again.');
+      },
+      complete: () => {
+        this.loginData.set({
+          email: 'guest@exampless.com',
+          password: 'guest1234BB!!',
+        });
+        this.login();
+      }
+    })
   }
 }

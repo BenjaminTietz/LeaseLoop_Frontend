@@ -36,8 +36,6 @@ export class PromocodeService {
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
           this.sending.set(false);
-          console.log(this.promocodes());
-          
         },
         error: (error) => {
           console.error('Failed to load promocodes', error);
