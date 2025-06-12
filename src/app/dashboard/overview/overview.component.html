@@ -1,4 +1,7 @@
 <main>
+    @if(!this.dashboardService.dashboardStats()){
+    <app-no-data message="Please create your first booking to be able to see the dashboard"></app-no-data>
+    }
     <content>
         <section class="features-section">
             <div class="container">

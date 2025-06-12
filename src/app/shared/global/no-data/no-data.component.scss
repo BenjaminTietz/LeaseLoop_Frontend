@@ -1,0 +1,17 @@
+@use '../../../styles/mixins.scss' as *;
+
+div{
+  height: 200px;
+  width: 90%;
+  margin: auto;
+  @include display(flex, row, center, center); 
+  @include position(fixed, $top: 50%, $left: 50%);
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: var(--color-text-base);
+  background-color: var(--color-bg-surface);
+  border-radius: 30px;
+  box-shadow: 0 2px 10px var(--color-text-base);
+  padding: 20px;
+  text-align: center;
+}
