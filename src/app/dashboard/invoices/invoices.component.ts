@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-invoices',
@@ -15,6 +16,7 @@ import { SearchInputComponent } from "../../shared/dashboard-components/search-i
 export class InvoicesComponent implements OnInit {
   invoiceService = inject(InvoiceService);
   searchInput = signal('');
+  BASE_URL = environment.mediaBaseUrl;
 
   ngOnInit(): void {
     this.invoiceService.getInvoices();

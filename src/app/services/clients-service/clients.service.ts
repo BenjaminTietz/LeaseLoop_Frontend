@@ -28,7 +28,7 @@ export class ClientsService {
       });
   }
 
-  loadPaginatedClients(page: number, searchTerm: string) {
+  loadPaginatedClients(page: number, searchTerm: string = '') {
     this.httpService
       .get<PaginatedResponse<Clients>>(
         `${environment.apiBaseUrl}/api/clients/?page=${page}&search=${searchTerm}`

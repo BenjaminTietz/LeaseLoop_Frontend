@@ -220,7 +220,7 @@ export class BookingFormComponent {
   }
 
   loadAllData(){
-    this.bookingService.loadBooking();
+    this.bookingService.loadPaginatedBookings(this.bookingService.currentPage()); 
     this.propertyService.loadProperties();
     this.clientService.loadClients();
     this.promoService.loadPromocodes();

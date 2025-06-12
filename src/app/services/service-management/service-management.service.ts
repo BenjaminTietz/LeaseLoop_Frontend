@@ -45,8 +45,6 @@ export class ServiceManagementService {
           this.services.set(this.sortServices(data.results));
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
-          console.log(this.services());
-          
         },
         error: (error) => {
           console.error('Failed to load services', error);

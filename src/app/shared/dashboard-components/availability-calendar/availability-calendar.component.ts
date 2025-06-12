@@ -86,7 +86,7 @@ export class AvailabilityCalendarComponent {
   );
 
   filteredBookings = computed(() => {
-    const unitIds = this.units().map((u) => u.id);
+    const unitIds = this.unitService.units().map((u) => u.id);
     return this.bookingService
       .bookings()
       .filter((b) => unitIds.includes(b.unit.id));
@@ -200,22 +200,22 @@ export class AvailabilityCalendarComponent {
    * @returns A string representing the color code for bookings.
    */
 
-  getBookingColor(unitId: any, day: Date) {
-    const booking = this.filteredBookings().find(
-      (b) =>
-        b.unit.id === unitId &&
-        this.dayString(day) < b.check_in &&
-        this.dayString(day) < b.check_out
+  getBookingColor(unitId: number, day: Date): string | undefined {
+  const dayTime = day.getTime();
+  const booking = this.filteredBookings().find((b) => {
+    const checkIn = this.normalizeDate(b.check_in);
+    const checkOut = this.normalizeDate(b.check_out);
+    return (
+      b.unit.id === unitId &&
+      dayTime >= checkIn.getTime() &&
+      dayTime < checkOut.getTime()
     );
-    if(booking?.status === 'confirmed') {
-      return 'green';
-    }
-    if(booking?.status === 'pending') {
-      return '#FFC810';
-    }
-    return 'red';
-    
-  }
+  });
+
+  if (booking?.status === 'confirmed') return 'green';
+  if (booking?.status === 'pending') return '#FFC810';
+  return undefined;
+}
 
   /**
    * Gets the name of the booking guest for a given unit and day.
@@ -234,17 +234,23 @@ export class AvailabilityCalendarComponent {
   }
 
   onBookingClick(unitId: number, day: Date): void {
-    const booking = this.filteredBookings().find(
-      (b) =>
+  const dayTime = day.getTime();
+  const booking = this.filteredBookings().find(
+    (b) => {
+      const checkIn = this.normalizeDate(b.check_in);
+      const checkOut = this.normalizeDate(b.check_out);
+      return (
         b.unit.id === unitId &&
-        this.dayString(day) < b.check_in &&
-        this.dayString(day) < b.check_out
-    );
-    if (booking) {
-      this.dashboardService.showBooking.set(booking);
-      this.dashboardService.isbookingPopupOpen.set(true);
+        dayTime >= checkIn.getTime() &&
+        dayTime < checkOut.getTime()
+      );
     }
+  );
+  if (booking) {
+    this.dashboardService.showBooking.set(booking);
+    this.dashboardService.isbookingPopupOpen.set(true);
   }
+}
 
   onSelectChange(event: Event) {
     const select = event.target as HTMLSelectElement;
