@@ -87,11 +87,17 @@ export class ServiceChartComponent implements OnInit {
           marker: {
             fillColors: this.dark() ? ['#179E7F'] : ['#FFD006'],
           },
+          y: {
+            formatter: (val: number) => `${val.toFixed(0)} times`,
+          },
         },
         dataLabels: {
           enabled: true,
           style: {
             colors: this.dark() ? ['white'] : ['black'],
+          },
+          formatter: function (val: number) {
+            return `${val.toFixed(0)} times`;
           },
         },
       }

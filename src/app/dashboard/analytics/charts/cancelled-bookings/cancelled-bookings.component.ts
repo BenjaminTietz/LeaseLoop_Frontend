@@ -122,7 +122,7 @@ export class CancelledBookingsComponent {
             text: 'Cancellation Rate (%)',
           },
           labels: {
-            formatter: (val) => `${val.toFixed(1)}%`,
+            formatter: (val) => `${val.toFixed(0)}`,
           },
           max: 100,
         },
