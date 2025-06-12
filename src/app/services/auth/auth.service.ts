@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpService } from '../httpclient/http.service';
+import { HttpClient } from '@angular/common/http';
 import { NavigatorService } from '../navigator/navigator.service';
 
 export interface User {
@@ -15,7 +15,7 @@ export interface User {
 })
 export class AuthService {
   private apiUrl = environment.apiBaseUrl;
-  httpService = inject(HttpService);
+  http = inject(HttpClient);
   navigator = inject(NavigatorService);
   loginData = signal({});
   resetToken = signal('');
@@ -36,7 +36,7 @@ export class AuthService {
 
   login() {
     this.sending.set(true);
-    this.httpService
+    this.http
       .post<{ message: string }>(`${this.apiUrl}/auth/login/`, this.loginData())
       .subscribe({
         next: (response) => this.successfulLogin(response),
@@ -66,7 +66,7 @@ export class AuthService {
     const remembertoken = localStorage.getItem('token');
     if (!remembertoken) return;
     this.sending.set(true);
-    this.httpService
+    this.http
       .post<{ remembertoken: string; message: string }>(
         `${this.apiUrl}/auth/remember-login/`,
         { token: remembertoken }
@@ -88,7 +88,7 @@ export class AuthService {
 
   register() {
     this.sending.set(true);
-    this.httpService
+    this.http
       .post<{ message: string }>(
         `${this.apiUrl}/auth/register/`,
         this.registerData()
@@ -102,7 +102,7 @@ export class AuthService {
 
   sendResetPasswordEmail() {
     this.sending.set(true);
-    this.httpService
+    this.http
       .post<{ message: string }>(`${this.apiUrl}/auth/forgot-password/`, {
         email: this.forgotEmail(),
       })
@@ -118,7 +118,7 @@ export class AuthService {
 
   resetPassword() {
     this.sending.set(true);
-    this.httpService
+    this.http
       .post<{ message: string }>(
         `${this.apiUrl}/auth/reset-password/${this.resetToken()}/`,
         this.resetData()
@@ -145,7 +145,7 @@ export class AuthService {
 
   activateAccount(uid: string, token: string): void {
     this.sending.set(true);
-    this.httpService
+    this.http
       .get<{ message: string }>(
         `${this.apiUrl}/auth/activate-account/${uid}/${token}/`
       )
@@ -188,6 +188,5 @@ export class AuthService {
           password: 'guest1234BB!!',
         });
         this.login();
-   
   }
 }
