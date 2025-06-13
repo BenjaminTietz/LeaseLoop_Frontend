@@ -42,20 +42,6 @@
 
             <app-availability-calendar></app-availability-calendar>
         </section>
-        <!-- <section class="rooms-section">
-            <div class="container">
-                <h2>Rooms</h2>
-                <div class="room-container">
-                    @for (unit of this.unitService.units(); track unit.id; let index = $index) {
-                    <div class="room-card">
-                        <h3>{{ unit.name }}</h3>
-                        <p>{{unit.status}}</p>
-                        <p>{{unit.property.name}}</p>
-                    </div>
-                    }
-                </div>
-            </div>
-        </section> -->
     </content>
     @if (this.dashboardService.isbookingPopupOpen()) {
     <app-booking-popup></app-booking-popup>
