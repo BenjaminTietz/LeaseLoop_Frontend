@@ -1,7 +1,7 @@
 <main>
     @if(!this.dashboardService.dashboardStats()){
     <app-no-data message="Please create your first booking to be able to see the dashboard"></app-no-data>
-    }
+    }@else{
     <content>
         <section class="features-section">
             <div class="container">
@@ -46,4 +46,5 @@
     @if (this.dashboardService.isbookingPopupOpen()) {
     <app-booking-popup></app-booking-popup>
     }
+}
 </main>

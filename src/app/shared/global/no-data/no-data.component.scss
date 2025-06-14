@@ -4,9 +4,8 @@ div{
   height: 200px;
   width: 90%;
   margin: auto;
-  @include display(flex, row, center, center); 
-  @include position(fixed, $top: 50%, $left: 50%);
-  transform: translate(-50%, -50%);
+  @include display(flex, row, center, center);
+  margin-top: 40vh;
   font-size: 24px;
   color: var(--color-text-base);
   background-color: var(--color-bg-surface);
