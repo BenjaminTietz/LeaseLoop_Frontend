@@ -19,6 +19,15 @@
         }
       </div>
     </div>
+    <div class="input-area">
+        <label for email >Contact Email</label>
+        <div class="form-field">
+          <input type="email" id="email" placeholder="Email" formControlName="email" required />
+          @if(getEmailErrors()) {
+          <small>{{getEmailErrors()}}</small>
+          }
+        </div>
+      </div>
     <div formGroupName="address" class="address-form">
       <div class="form-input-wrapper">
         <div class="input-area width-75">
@@ -54,6 +63,7 @@
         <small>{{getCityErrors()}}</small>
         }
       </div>
+      
       <div class="form-input-wrapper">
         <div class="input-area width-50">
           <label for="country">Country</label>

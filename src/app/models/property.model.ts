@@ -8,6 +8,7 @@ export interface Property {
   owner: number;
   name: string;
   address: Address
+  email: string
   description: string;
   images: PropertyImage[];
   units: Unit[];
