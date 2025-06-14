@@ -1,6 +1,8 @@
+@if (this.analyticsService.bookingData().length > 0) {
 <div class="chart-container" *ngIf="slices() as segments">
     <svg viewBox="0 0 240 240" class="pie" [appClickOutside]="clickOutside">
-        <path *ngFor="let slice of segments;  let i = index" [attr.d]="slice.d" [attr.fill]="slice.color" [ngClass]="'slice-' + i" class="slice"
+        <path *ngFor="let slice of segments;  let i = index" [attr.d]="slice.d" [attr.fill]="slice.color"
+            [ngClass]="'slice-' + i" class="slice"
             [attr.stroke]="hoveredSlice() === i || selectedLabel() === slice.label ? '#fff' : 'none'"
             [attr.stroke-width]="hoveredSlice() === i || selectedLabel() === slice.label ? 2 : 0"
             [style.opacity]="!selectedLabel() || selectedLabel() === slice.label ? 1 : 0.3"
@@ -8,20 +10,13 @@
             style="transform-origin: 120px 120px; transition: all 0.3s ease;"
             (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)" (mouseleave)="onSliceLeave()"
             (click)="selectSlice(slice.label)" />
-            <ng-container *ngFor="let slice of segments">
-                <text class="text"
-                (mouseenter)="onSliceEnter(segments.indexOf(slice), $event, slice.label, slice.value)" (mouseleave)="onSliceLeave()"
-                  *ngIf="slice.textPos"
-                  [attr.x]="slice.textPos.x"
-                  [attr.y]="slice.textPos.y"
-                  text-anchor="middle"
-                  alignment-baseline="middle"
-                  font-size="10"
-                  fill="white"
-                >
-                  {{ slice.percent }}%
-                </text>
-              </ng-container>            
+        <ng-container *ngFor="let slice of segments">
+            <text class="text" (mouseenter)="onSliceEnter(segments.indexOf(slice), $event, slice.label, slice.value)"
+                (mouseleave)="onSliceLeave()" *ngIf="slice.textPos" [attr.x]="slice.textPos.x"
+                [attr.y]="slice.textPos.y" text-anchor="middle" alignment-baseline="middle" font-size="10" fill="white">
+                {{ slice.percent }}%
+            </text>
+        </ng-container>
     </svg>
 
     <div class="legend">
@@ -39,3 +34,35 @@
         {{ tooltip()?.label }}: {{ tooltip()?.value }}
     </div>
 </div>
+
+} @else {
+<div class="no-data-container">
+    <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+        <style>
+            .icon {
+                fill: none;
+                stroke: #2a2a2a;
+                stroke-width: 4;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            .text {
+                fill: #2a2a2a;
+                font-family: Arial, sans-serif;
+                font-size: 18px;
+                text-anchor: middle;
+            }
+        </style>
+        <rect width="100%" height="100%" fill="#f9f9f9" />
+        <!-- Document icon -->
+        <rect x="100" y="40" width="80" height="100" rx="6" ry="6" class="icon" />
+        <polyline points="100,40 140,40 140,70 180,70" class="icon" />
+        <!-- Prohibited circle -->
+        <circle cx="180" cy="120" r="24" class="icon" />
+        <line x1="166" y1="106" x2="194" y2="134" class="icon" />
+        <!-- Text -->
+        <text x="150" y="170" class="text">Sorry, no data available</text>
+    </svg>
+</div>
+}
