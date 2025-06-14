@@ -49,8 +49,8 @@ export class SettingsService {
   })
 
   logoPath = computed(() => {
-    return this.mediaUrl + this.userLogo();
-  })
+  return this.userLogo() && this.userLogo() !== 'null' ? this.mediaUrl + this.userLogo() : '';
+  });
 
   isGuestEmail = computed(() => {
     return this.loggedInUserData().email === 'guest@exampless.com';

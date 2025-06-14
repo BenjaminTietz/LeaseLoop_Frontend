@@ -239,7 +239,7 @@ export class BookingFormComponent {
     deposit_paid : [this.bookingService.selectedBooking()?.deposit_paid || false, Validators.required],
     deposit_amount: [this.bookingService.selectedBooking()?.deposit_amount || 0, Validators.min(0)],
     promo_code: [this.bookingService.selectedBooking()?.promo_code?.id ?? null, Validators.nullValidator],
-    services: [this.bookingService.selectedBooking()?.services.map(s => s.id) || [], Validators.required],
+    services: [this.bookingService.selectedBooking()?.services.map(s => s.id) || []],
     status: [this.bookingService.selectedBooking()?.status || 'pending', Validators.required],
   });
 

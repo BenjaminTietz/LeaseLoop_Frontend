@@ -48,8 +48,8 @@
                 No booked services
               }
                </td>
-            <td>{{ booking.total_price }} €</td>
-            <td>@if (booking.deposit_paid) {✔ {{ booking.deposit_amount }} €} @else {X}</td>
+            <td>{{ booking.total_price.toFixed(2) }} €</td>
+            <td>@if (booking.deposit_paid) {✔ {{ booking.deposit_amount.toFixed(2) }} €} @else {X}</td>
             
             <td> <button class="btn" (click)="openEditForm(booking)">Edit</button></td>
             <td> <button class="btn" (click)="this.dashboardService.showBooking.set(booking);
