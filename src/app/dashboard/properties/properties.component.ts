@@ -31,10 +31,6 @@ export class PropertiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.propertyService.loadPaginatedProperties(1);
-    setTimeout(() => {
-      console.log(this.propertyService.properties());
-      
-    }, 3000);
   }
 
   openEditForm(property : Property) {
