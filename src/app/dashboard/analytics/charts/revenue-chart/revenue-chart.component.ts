@@ -31,7 +31,7 @@ import { ThemeService } from '../../../../services/theme-service/theme.service';
   styleUrl: './revenue-chart.component.scss',
 })
 export class RevenueChartComponent {
-  private analyticsService = inject(AnalyticsService);
+  public analyticsService = inject(AnalyticsService);
   private themeService = inject(ThemeService);
 
   chartOptions = computed<{

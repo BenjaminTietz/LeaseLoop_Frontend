@@ -27,30 +27,10 @@ export class AnalyticsService {
    * @param to end date of the period
    */
   public updateAllAnalytics(from: string, to: string) {
-    this.getRevenueData(from, to);
     this.getBookingData(from, to);
     this.getServiceData(from, to);
     this.getRevenueGroupedData(from, to);
     this.getCancelledBookingsData(from, to);
-  }
-
-  /**
-   * Fetches revenue data for a given period and updates the revenueData signal with the result
-   * @param from start date of the period
-   * @param to end date of the period
-   */
-  public getRevenueData(from: string, to: string): void {
-    this.sending.set(true);
-    const url = this.buildUrl('/api/analytics/revenue/', from, to);
-    this.http.get<any[]>(url).subscribe({
-      next: (data) => {
-        this.revenueData.set(data ?? []), this.sending.set(false);
-      },
-      error: (err) => {
-        console.error('Error fetching revenue data:', err);
-        this.sending.set(false);
-      },
-    });
   }
 
   /**

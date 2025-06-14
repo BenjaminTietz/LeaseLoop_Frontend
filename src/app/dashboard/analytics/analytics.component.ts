@@ -16,7 +16,8 @@ import { ServiceChartComponent } from './charts/service-chart/service-chart.comp
 import { RevenueChartComponent } from './charts/revenue-chart/revenue-chart.component';
 import { SelectorComponent } from './charts/selector/selector.component';
 import { CancelledBookingsComponent } from './charts/cancelled-bookings/cancelled-bookings.component';
-import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-bar.component";
+import { ProgressBarComponent } from '../../shared/global/progress-bar/progress-bar.component';
+import { NoDataComponent } from '../../shared/global/no-data/no-data.component';
 @Component({
   selector: 'app-analytics',
   standalone: true,
@@ -29,16 +30,18 @@ import { ProgressBarComponent } from "../../shared/global/progress-bar/progress-
     SelectorComponent,
     CancelledBookingsComponent,
     SelectorComponent,
-    ProgressBarComponent
-],
+    ProgressBarComponent,
+    NoDataComponent,
+  ],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.scss',
 })
 export class AnalyticsComponent implements OnInit {
-  analyticsService = inject(AnalyticsService);
+  public analyticsService = inject(AnalyticsService);
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit(): void {
+    console.log(this.analyticsService.revenueGroupedData());
   }
-
-  ngOnInit(): void {}
 }

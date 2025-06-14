@@ -1,6 +1,7 @@
 <div class="chart-container" *ngIf="slices() as segments">
     <svg viewBox="0 0 240 240" class="pie" [appClickOutside]="clickOutside">
-        <path *ngFor="let slice of segments;  let i = index" [attr.d]="slice.d" [attr.fill]="slice.color" [ngClass]="'slice-' + i" class="slice"
+        <path *ngFor="let slice of segments;  let i = index" [attr.d]="slice.d" [attr.fill]="slice.color"
+            [ngClass]="'slice-' + i" class="slice"
             [attr.stroke]="hoveredSlice() === i || selectedLabel() === slice.label ? '#fff' : 'none'"
             [attr.stroke-width]="hoveredSlice() === i || selectedLabel() === slice.label ? 2 : 0"
             [style.opacity]="!selectedLabel() || selectedLabel() === slice.label ? 1 : 0.3"
@@ -8,20 +9,13 @@
             style="transform-origin: 120px 120px; transition: all 0.3s ease;"
             (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)" (mouseleave)="onSliceLeave()"
             (click)="selectSlice(slice.label)" />
-            <ng-container *ngFor="let slice of segments">
-                <text class="text"
-                (mouseenter)="onSliceEnter(segments.indexOf(slice), $event, slice.label, slice.value)" (mouseleave)="onSliceLeave()"
-                  *ngIf="slice.textPos"
-                  [attr.x]="slice.textPos.x"
-                  [attr.y]="slice.textPos.y"
-                  text-anchor="middle"
-                  alignment-baseline="middle"
-                  font-size="10"
-                  fill="white"
-                >
-                  {{ slice.percent }}%
-                </text>
-              </ng-container>            
+        <ng-container *ngFor="let slice of segments">
+            <text class="text" (mouseenter)="onSliceEnter(segments.indexOf(slice), $event, slice.label, slice.value)"
+                (mouseleave)="onSliceLeave()" *ngIf="slice.textPos" [attr.x]="slice.textPos.x"
+                [attr.y]="slice.textPos.y" text-anchor="middle" alignment-baseline="middle" font-size="10" fill="white">
+                {{ slice.percent }}%
+            </text>
+        </ng-container>
     </svg>
 
     <div class="legend">
