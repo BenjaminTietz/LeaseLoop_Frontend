@@ -30,6 +30,7 @@ export class PropertyFormComponent {
     name: ['' , Validators.required],
     description: ['', Validators.required],
     active: [true, Validators.required],
+    email: ['', [Validators.required, Validators.pattern(this.formService.emailPattern)]],
     address: new FormBuilder().nonNullable.group({
       street: ['', Validators.required],
       house_number: ['', Validators.required],
@@ -57,7 +58,8 @@ export class PropertyFormComponent {
         name: selected.name,
         address: selected.address,
         description: selected.description,
-        active: selected.active
+        active: selected.active,
+        email: selected.email
       });
     }
   }
@@ -161,6 +163,14 @@ export class PropertyFormComponent {
     return null;
   }
 
+  getEmailErrors(){
+    let email = this.propertyForm.get('email');
+    const emailRequired = email?.errors?.['required'] && (email?.touched || email?.dirty);
+    const emailInvalid = email?.errors?.['pattern'] && (email?.touched || email?.dirty);
+    if (emailRequired) { return 'Email is required'; }
+    if (emailInvalid) { return 'Wrong email format'; }
+    return null;
+  }
  
  
   

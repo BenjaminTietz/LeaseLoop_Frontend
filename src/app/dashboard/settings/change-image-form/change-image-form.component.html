@@ -24,7 +24,7 @@
   </div>
 
   <div class="preview">
-    <img [src]="imagePreview() || settingsService.logoPath()" alt="Profilbild">
+    <img [src]="image()" alt="Profilbild">
   </div>
 
   <button type="button" (click)="changeImage()" [disabled]="!imagePreview()">Change image</button>

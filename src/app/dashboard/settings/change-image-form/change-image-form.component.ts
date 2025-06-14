@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Output, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
 import { SettingsService } from '../../../services/settings-service/settings.service';
@@ -15,6 +15,7 @@ export class ChangeImageFormComponent {
   settingsService = inject(SettingsService)
   imagePreview = signal('')
   imageFile = signal<File>(new File([], ''))
+  image = computed(() =>  this.imagePreview() || this.settingsService.logoPath() || 'favicon.ico');
 
   constructor() {
     this.settingsService.getLogo()

@@ -49,16 +49,17 @@ export class PropertiesService {
   }
 
   createProperty(formData: FormData, images: File[], descriptions: string[]) {
-    this.setLoading(true);
-    this.http.post<Property>(this.getUrl('properties'), formData, this.getAuthOptions())
-      .subscribe({
-        next: (property) => {
-          this.uploadImages(images, descriptions);
-          this.onSuccess();
-        },
-        error: this.handleError('Create property failed')
-      });
-  }
+  this.setLoading(true);
+  this.http.post<Property>(this.getUrl('properties'), formData, this.getAuthOptions())
+    .subscribe({
+      next: (property) => {
+        this.selectedProperty.set(property);
+        this.uploadImages(images, descriptions);
+        this.onSuccess();
+      },
+      error: this.handleError('Create property failed')
+    });
+}
 
   updateProperty(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
     this.setLoading(true);
