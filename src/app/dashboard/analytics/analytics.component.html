@@ -1,26 +1,28 @@
 <main>
     <content>
         @if(analyticsService.sending()){
-            <app-progress-bar></app-progress-bar>
+        <app-progress-bar></app-progress-bar>
         }
-            <div>
-                <h1>Analytics</h1>
-                <app-selector></app-selector>
-            </div>
-    
-            <h2>Revenue Overview</h2>
-            <app-revenue-chart></app-revenue-chart>
-    
-            <h2>Bookings Overview</h2>
-            <app-booking-chart></app-booking-chart>
-    
-            <h2>Servic Overview</h2>
-            <app-service-chart></app-service-chart>
-    
-            <h2>Cancelled Bookings</h2>
-            <app-cancelled-bookings></app-cancelled-bookings>
-        
-        
-        
+        <div>
+            <h1>Analytics</h1>
+            <app-selector></app-selector>
+        </div>
+        @if(this.analyticsService.revenueGroupedData().length > 0) {
+        <h2>Revenue Overview</h2>
+        <app-revenue-chart></app-revenue-chart>
+
+        <h2>Bookings Overview</h2>
+        <app-booking-chart></app-booking-chart>
+
+        <h2>Servic Overview</h2>
+        <app-service-chart></app-service-chart>
+
+        <h2>Cancelled Bookings</h2>
+        <app-cancelled-bookings></app-cancelled-bookings>
+        } @else {
+        <div class="no-data">
+            <app-no-data message="Please select a different period"></app-no-data>
+        </div>
+        }
     </content>
 </main>

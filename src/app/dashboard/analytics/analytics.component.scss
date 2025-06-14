@@ -1,27 +1,30 @@
 @use "../../styles/mixins" as *;
 @use '../../styles/dashboard-component.scss' as *;
 
-content{
-    
+content {
     border-radius: 12px;
     background: var(--color-bg-surface);
     box-shadow: 0 0 0 1px #ddd;
     position: relative;
 }
 
-app-selector{
+app-selector {
     width: 100%;
 }
 
-app-revenue-chart, app-service-chart, app-booking-chart, app-cancelled-bookings{
+app-revenue-chart,
+app-service-chart,
+app-booking-chart,
+app-cancelled-bookings {
     display: flex;
     width: 100%;
 }
 
-h2, h1{
+h2,
+h1 {
     padding-left: 30px;
 }
 
-h1{
-    padding-top:30px
+h1 {
+    padding-top: 30px
 }
