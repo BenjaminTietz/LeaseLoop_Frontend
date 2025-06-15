@@ -176,7 +176,7 @@
         </select>
       </div>
     </div>
-
+    @if(promoService.promocodes().length > 0){
     <div class="input-area">
       <label for="promo_code">Promo code</label>
       <div class="form-field">
@@ -188,7 +188,9 @@
         </select>
       </div>
     </div>
+    }
 
+    @if(serviceService.services().length > 0){
     <div class="input-area" formGroupName="services">
       <label for="service">Services</label>
       @for(service of serviceService.services(); track $index){
@@ -201,6 +203,7 @@
       </div>
       }
     </div>
+    }
 
     <div class="button-area">
       @if(bookingService.selectedBooking() !== null) {

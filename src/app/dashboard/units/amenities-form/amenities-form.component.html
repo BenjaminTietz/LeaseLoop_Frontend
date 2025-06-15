@@ -1,0 +1,15 @@
+@for (amenity of amenityKeys; track $index) {
+  <div class="input-field">
+  <div class="form-field">
+  <label>
+    <input type="checkbox" [(ngModel)]="amenityStates[amenity]">
+    {{ amenity }}
+  </label>
+  </div>
+  </div>
+}
+<button (click)="selectAll()">Select All</button>
+<button (click)="deselectAll()">Deselect All</button>
+<button (click)="save()">Save Selected</button>
+<button (click)="cancel()">Cancel</button>
+

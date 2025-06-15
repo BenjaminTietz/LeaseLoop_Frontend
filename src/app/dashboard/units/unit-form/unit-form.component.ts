@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, effect, EventEmitter, inject, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
 import { MatIcon } from '@angular/material/icon';
 import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
@@ -10,11 +10,12 @@ import { PropertiesService } from '../../../services/properties-service/properti
 import { PropertyShort } from '../../../models/service.model';
 import { disableBackgroundScroll, enableBackgroundScroll } from '../../../utils/scroll.utils';
 import { CommonModule } from '@angular/common';
+import { AmenitiesFormComponent } from "../amenities-form/amenities-form.component";
 
 @Component({
   selector: 'app-unit-form',
   standalone: true,
-  imports: [ClickOutsideDirective, MatIcon, ProgressBarComponent, ReactiveFormsModule, ImageUploadComponent, CommonModule],
+  imports: [ClickOutsideDirective, MatIcon, ProgressBarComponent, ReactiveFormsModule, ImageUploadComponent, CommonModule, AmenitiesFormComponent],
   templateUrl: './unit-form.component.html',
   styleUrl: './unit-form.component.scss'
 })
@@ -30,6 +31,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
 
   unitTypes = ['apartment', 'villa', 'house', 'studio', 'suite', 'cabin', 'condo', 'townhouse']
   unitStatus = ['available', 'booked', 'unavailable', 'booked', 'maintenance']
+  amenitiesOpen = signal(false)
 
 
   unitCapacityValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -164,5 +166,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     return null;
   }
   
-  
+  openAmenities(){
+    this.amenitiesOpen.set(true);
+  }
 }
