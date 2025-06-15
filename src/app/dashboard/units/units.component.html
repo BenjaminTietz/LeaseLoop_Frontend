@@ -6,7 +6,7 @@
                 <mat-icon>add</mat-icon>
                 <span>New Unit</span>
             </button>
-            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search units" ></app-search-input>
+            <app-search-input (searchTerm)="this.search($event)" placeholder="Search units"></app-search-input>
         </div>
         <div class="table-wrapper">
             <table class="table">
@@ -23,12 +23,13 @@
                 </thead>
                 <tbody>
                     @for (unit of this.unitsService.units(); track $index) {
-                    <tr >
-                        <td> <mat-icon [ngClass]="unit.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
+                    <tr>
+                        <td> <mat-icon [ngClass]="unit.active ? 'active' : 'inactive'">radio_button_checked</mat-icon>
+                        </td>
                         <td>{{unit.property.name}}</td>
                         <td>{{unit.name}}</td>
                         <td>{{unit.capacity}}</td>
-                        <td>{{unit.price_per_night}}</td>
+                        <td>{{unit.price_per_night}} €</td>
                         <td>{{unit.status}}</td>
                         <td> <button class="btn" (click)="openEditForm(unit)">Edit</button> </td>
                     </tr>
@@ -37,9 +38,10 @@
                 </tbody>
             </table>
         </div>
-            <app-paging [currentPage]="unitsService.currentPage()" [totalPages]="unitsService.totalPages()" (pageChanged)="unitsService.loadPaginatedUnits($event, searchInput())"></app-paging>
+        <app-paging [currentPage]="unitsService.currentPage()" [totalPages]="unitsService.totalPages()"
+            (pageChanged)="unitsService.loadPaginatedUnits($event, searchInput())"></app-paging>
         @if(formOpen()){
-            <app-unit-form (close)="closeForm()"></app-unit-form>
+        <app-unit-form (close)="closeForm()"></app-unit-form>
         }
     </content>
 </main>
