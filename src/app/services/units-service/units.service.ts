@@ -22,30 +22,30 @@ export class UnitsService {
   /** Load all units (admin or general fetch) */
   loadUnits() {
     this.setLoading(true);
-        this.httpService.get<Unit[]>(`${environment.apiBaseUrl}/api/units/`).subscribe({
-          next: (data) => {
-            this.units.set(data.slice().sort((a, b) => {
-              return (b.active ? 1 : 0) - (a.active ? 1 : 0);
-            }));
-            this.setLoading(false);
-          },
-          error: this.handleError('Failed to load Ünits')
-      });
+    this.httpService.get<Unit[]>(`${environment.apiBaseUrl}/api/units/`).subscribe({
+      next: (data) => {
+        this.units.set(data.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+        }));
+        this.setLoading(false);
+      },
+      error: this.handleError('Failed to load Ünits')
+    });
   }
 
   loadPaginatedUnits(page: number, searchTerm: string = '') {
     this.setLoading(true);
-        this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}`).subscribe({
-          next: (data) => {
-            this.units.set(data.results.slice().sort((a, b) => {
-              return (b.active ? 1 : 0) - (a.active ? 1 : 0);
-            }));
-            this.totalPages.set(data.total_pages);
-            this.currentPage.set(page);
-            this.setLoading(false);
-          },
-          error: this.handleError('Failed to load Ünits')
-      });
+    this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}`).subscribe({
+      next: (data) => {
+        this.units.set(data.results.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+        }));
+        this.totalPages.set(data.total_pages);
+        this.currentPage.set(page);
+        this.setLoading(false);
+      },
+      error: this.handleError('Failed to load Ünits')
+    });
   }
 
   /** Get all units for a specific property */
@@ -57,45 +57,45 @@ export class UnitsService {
 
   /** Create a unit */
   createUnit(formData: FormData, images: File[], descriptions: string[]) {
-      this.setLoading(true);
-      this.http.post<Unit>(this.getUrl('units'), formData, this.getAuthOptions())
-        .subscribe({
+    this.setLoading(true);
+    this.http.post<Unit>(this.getUrl('units'), formData, this.getAuthOptions())
+      .subscribe({
 
-          next: (unit) => {
-            this.uploadImages(unit.id, images, descriptions);
-            this.onSuccess();
-          },
-          error: this.handleError('Create Unit failed')
-        });
-    }
+        next: (unit) => {
+          this.uploadImages(unit.id, images, descriptions);
+          this.onSuccess();
+        },
+        error: this.handleError('Create Unit failed')
+      });
+  }
 
   /** Update a unit */
   updateUnit(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
-      const id = this.selectedUnit()?.id;
-      if (!id) return;
-      this.setLoading(true);
-      this.http.patch<Unit>(this.getUrl(`units/${id}`), formData, this.getAuthOptions())
-        .subscribe({
-          next: () => {
-            if (Array.isArray(newImages) && newImages.length > 0) {
-              this.uploadImages(id, newImages, descriptions ?? []);
-            }
-            this.successful.set(true);
-          },
-          error: this.handleError('Update unit failed'),
-          complete: () => {
-            this.setLoading(false);
-            onComplete?.();
+    const id = this.selectedUnit()?.id;
+    if (!id) return;
+    this.setLoading(true);
+    this.http.patch<Unit>(this.getUrl(`unit/${id}`), formData, this.getAuthOptions())
+      .subscribe({
+        next: () => {
+          if (Array.isArray(newImages) && newImages.length > 0) {
+            this.uploadImages(id, newImages, descriptions ?? []);
           }
-        });
-    }
+          this.successful.set(true);
+        },
+        error: this.handleError('Update unit failed'),
+        complete: () => {
+          this.setLoading(false);
+          onComplete?.();
+        }
+      });
+  }
 
   /** Delete a unit */
 
   deleteUnit() {
     const id = this.selectedUnit()?.id;
     if (!id) return;
-    this.httpService.delete<Unit>(this.getUrl(`units/${id}`)).subscribe({
+    this.httpService.delete<Unit>(this.getUrl(`unit/${id}`)).subscribe({
       next: () => {
         this.selectedUnit.set(null);
         this.loadPaginatedUnits(this.currentPage());
@@ -141,7 +141,7 @@ export class UnitsService {
   }
 
   uploadImages(unitId: number, files: File[], descriptions: string[] = []) {
-    if(!files || files.length == 0) return;
+    if (!files || files.length == 0) return;
     files.forEach((file, i) => {
       const form = new FormData();
       form.append('unit', String(unitId));
@@ -155,8 +155,8 @@ export class UnitsService {
   }
 
   getAuthOptions() {
-      const token = this.httpService.getToken();
-      return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
+    const token = this.httpService.getToken();
+    return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
   }
 
   updateImageDescription(id: number, desc: string): Promise<void> {
@@ -170,6 +170,21 @@ export class UnitsService {
           reject(err);
         }
       });
+    });
+  }
+
+  patchAmenities(amenities: number[]) {
+    const id = this.selectedUnit()?.id;
+    if (!id) return;
+    this.http.patch(this.getUrl(`unit/${id}`), { amenities }, this.getAuthOptions()).subscribe({
+      next: () => {
+        this.loadPaginatedUnits(this.currentPage());
+        const current = this.selectedUnit();
+        if (current) {
+          this.selectedUnit.set({ ...current, amenities });
+        }
+      },
+      error: this.handleError('Update unit failed')
     });
   }
 }

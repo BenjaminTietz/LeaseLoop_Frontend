@@ -14,6 +14,7 @@ export interface Unit {
   images: UnitImage[];
   active: boolean;
   deleted: boolean;
+  amenities: number[];
 }
 
 export interface PropertyShort {
