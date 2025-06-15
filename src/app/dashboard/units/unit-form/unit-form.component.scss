@@ -3,3 +3,11 @@
 app-image-upload{
   width: 100%;
 }
+
+.amenities-text{
+  font-size: 20px;
+  font-weight: bold;
+  &:hover{
+    cursor: pointer;
+  }
+}

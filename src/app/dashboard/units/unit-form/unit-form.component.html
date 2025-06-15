@@ -123,6 +123,13 @@
           </select>
         </div>
       </div>
+
+      <div class="input-area">
+        <label for="amenities">Amenities</label>
+        <div class="form-field" (click)="openAmenities()">
+        <span class="amenities-text">Select Amenities</span>
+        </div>
+      </div>
     </div>
 
     <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
@@ -144,5 +151,9 @@
       </button>
       }
     </div>
+
+    @if(amenitiesOpen()) {
+      <app-amenities-form></app-amenities-form>
+    }
   </form>
 </main>

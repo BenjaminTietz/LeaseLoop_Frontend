@@ -16,6 +16,30 @@ interface PropertyData {
   units: Record<string, UnitData>;
 }
 
+interface SlicePath  {
+  type: 'path';
+  d: string;
+  color: string;
+  label: string;
+  value: number;
+  percent: string;
+  textPos: { x: number; y: number } | null;
+};
+
+interface SliceCircle  {
+  type: 'circle';
+  cx: number;
+  cy: number;
+  r: number;
+  color: string;
+  label: string;
+  value: number;
+  percent: string;
+  textPos: { x: number; y: number } | null;
+};
+
+type Slice = SlicePath | SliceCircle;
+
 @Component({
   selector: 'app-booking-chart',
   standalone: true,
@@ -104,52 +128,70 @@ export class BookingChartComponent {
     return result;
   });
 
-  slices = computed(() => {
-    const total = this.total();
-    const data = [...this.chartData()].sort((a, b) => a.value - b.value);
-    let startAngle = 0;
+slices = computed<Slice[]>(() => {
+  const total = this.total();
+  const data = [...this.chartData()].sort((a, b) => a.value - b.value);
 
-    return data.map((item, index) => {
-      const value = item.value;
-      const angle = (value / total) * 360;
-      const endAngle = startAngle + angle;
+  const centerX = 120;
+  const centerY = 120;
+  const radius = 100;
 
-      const centerX = 120;
-      const centerY = 120;
-      const radius = 100;
-
-      const largeArc = angle > 180 ? 1 : 0;
-
-      const x1 = centerX + radius * Math.cos((Math.PI * startAngle) / 180);
-      const y1 = centerY + radius * Math.sin((Math.PI * startAngle) / 180);
-      const x2 = centerX + radius * Math.cos((Math.PI * endAngle) / 180);
-      const y2 = centerY + radius * Math.sin((Math.PI * endAngle) / 180);
-
-      const d = `M${centerX},${centerY} L${x1},${y1} A${radius},${radius} 0 ${largeArc} 1 ${x2},${y2} Z`;
-
-      const midAngle = startAngle + angle / 2;
-      const labelRadius = 85;
-      const textX =
-        centerX + labelRadius * Math.cos((Math.PI * midAngle) / 180);
-      const textY =
-        centerY + labelRadius * Math.sin((Math.PI * midAngle) / 180);
-
-      const percent = ((value / total) * 100).toFixed(1);
-      const percentValue = parseFloat(percent);
-      const showText = percentValue >= 3;
-
-      startAngle = endAngle;
-
-      return {
-        d,
-        color: this.colors()[index],
+  if (data.length === 1) {
+    const item = data[0];
+    return [
+      {
+        type: 'circle',
+        cx: centerX,
+        cy: centerY,
+        r: radius,
+        color: this.colors()[0],
         label: item.label,
         value: item.value,
-        percent,
-        textPos: showText ? { x: textX, y: textY } : null,
-      };
-    });
+        percent: '100.0',
+        textPos: { x: centerX, y: centerY },
+      },
+    ];
+  }
+
+  let startAngle = 0;
+
+  return data.map((item, index) => {
+    const value = item.value;
+    const angle = (value / total) * 360;
+    const endAngle = startAngle + angle;
+
+    const largeArc = angle > 180 ? 1 : 0;
+
+    const x1 = centerX + radius * Math.cos((Math.PI * startAngle) / 180);
+    const y1 = centerY + radius * Math.sin((Math.PI * startAngle) / 180);
+    const x2 = centerX + radius * Math.cos((Math.PI * endAngle) / 180);
+    const y2 = centerY + radius * Math.sin((Math.PI * endAngle) / 180);
+
+    const d = `M${centerX},${centerY} L${x1},${y1} A${radius},${radius} 0 ${largeArc} 1 ${x2},${y2} Z`;
+
+    const midAngle = startAngle + angle / 2;
+    const labelRadius = 85;
+    const textX = centerX + labelRadius * Math.cos((Math.PI * midAngle) / 180);
+    const textY = centerY + labelRadius * Math.sin((Math.PI * midAngle) / 180);
+
+    const percent = ((value / total) * 100).toFixed(1);
+    const percentValue = parseFloat(percent);
+    const showText = percentValue >= 3;
+
+    startAngle = endAngle;
+
+    return {
+      type: 'path',
+      d,
+      color: this.colors()[index],
+      label: item.label,
+      value: item.value,
+      percent,
+      textPos: showText ? { x: textX, y: textY } : null,
+    };
   });
+});
+
 
   hoveredSlice = signal<number | null>(null);
 
