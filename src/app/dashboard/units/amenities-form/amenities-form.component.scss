@@ -1,2 +1,66 @@
 @use '../../../styles/dashboard-forms.scss' as *;
 @use '../../../styles/checkbox.scss' as *;
+@use '../../../styles/mixins.scss' as *;
+
+
+.category-wrapper {
+  @include display(flex, column, flex-start, flex-start);
+  max-width: 800px;
+  width: 100%;
+  gap: 10px;
+  max-height: 75vh;
+  @include position(fixed, $top: 50%, $right: 50%);
+  transform: translate(50%, -50%);
+  background-color: var(--color-bg-body);
+  padding: 60px 20px 20px 20px;
+  border-radius:  20px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.category-dropdown {
+  @include display(flex, column, flex-start, flex-start);
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dropdown-header {
+  @include display(flex, row, space-between, center);
+  width: 100%;
+  cursor: pointer;
+  padding: 10px;
+  max-height: 80%;
+  border-radius: 5px;
+  background-color: var(--color-bg-body);
+  &:hover {
+    background-color: var(--color-bg-surface);
+  }
+
+}
+
+.dropdown-content {
+  @include display(flex, column, flex-start, flex-start);
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+label {
+  cursor: pointer;
+  @include display(flex, row, flex-start, center);
+  gap: 10px;
+  padding: 10px 20px;
+  width: 100%;
+  border-radius: 5px;
+  &:hover {
+    background-color: var(--color-bg-surface);
+    cursor: pointer;
+  }
+}
+
+strong,
+span,
+input {
+  margin: 0px;
+}

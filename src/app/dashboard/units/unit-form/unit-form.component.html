@@ -153,7 +153,9 @@
     </div>
 
     @if(amenitiesOpen()) {
-      <app-amenities-form></app-amenities-form>
+      <app-amenities-form [selectedAmenities]="amenities()" (selectedAmenitiesChange)="
+    unitForm.patchValue({ amenities: $event }); amenities.set($event)" 
+    [appClickOutside]="closeAmenities" (closeAmenitiesForm)="closeAmenities()"></app-amenities-form>
     }
   </form>
 </main>

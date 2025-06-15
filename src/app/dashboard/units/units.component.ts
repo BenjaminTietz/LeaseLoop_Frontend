@@ -5,6 +5,7 @@ import { UnitFormComponent } from "./unit-form/unit-form.component";
 import { CommonModule } from '@angular/common';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
+import { AmenitiesService } from '../../services/amenities-service/amenities.service';
 
 @Component({
   selector: 'app-units',
@@ -16,6 +17,7 @@ import { SearchInputComponent } from "../../shared/dashboard-components/search-i
 
 export class UnitsComponent implements OnInit {
   unitsService = inject(UnitsService);
+  amenitiesService = inject(AmenitiesService);
   formOpen = signal(false);
   searchInput = signal('');
 

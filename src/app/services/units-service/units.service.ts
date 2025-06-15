@@ -21,23 +21,30 @@ export class UnitsService {
   /** Load all units (admin or general fetch) */
   loadUnits() {
     this.setLoading(true);
-    this.httpService
-      .get<Unit[]>(`${environment.apiBaseUrl}/api/units/`)
-      .subscribe({
-        next: (data) => {
-          this.units.set(
-            data.slice().sort((a, b) => {
-              return (b.active ? 1 : 0) - (a.active ? 1 : 0);
-            })
-          );
-          this.setLoading(false);
-        },
-        error: this.handleError('Failed to load Ünits'),
-      });
+    this.httpService.get<Unit[]>(`${environment.apiBaseUrl}/api/units/`).subscribe({
+      next: (data) => {
+        this.units.set(data.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+        }));
+        this.setLoading(false);
+      },
+      error: this.handleError('Failed to load Ünits')
+    });
   }
 
   loadPaginatedUnits(page: number, searchTerm: string = '') {
     this.setLoading(true);
+    this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}`).subscribe({
+      next: (data) => {
+        this.units.set(data.results.slice().sort((a, b) => {
+          return (b.active ? 1 : 0) - (a.active ? 1 : 0);
+        }));
+        this.totalPages.set(data.total_pages);
+        this.currentPage.set(page);
+        this.setLoading(false);
+      },
+      error: this.handleError('Failed to load Ünits')
+    });
     this.httpService
       .get<PaginatedResponse<Unit>>(
         `${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}`
@@ -55,41 +62,21 @@ export class UnitsService {
         },
         error: this.handleError('Failed to load Ünits'),
       });
-  }
 
-  /** Get all units for a specific property */
-  getUnitsForProperty(propertyId: number) {
-    return this.http.get<Unit[]>(
-      `${environment.apiBaseUrl}/api/properties/${propertyId}/units/`
-    );
-  }
-
-  /** Create a unit */
-  createUnit(formData: FormData, images: File[], descriptions: string[]) {
-    this.setLoading(true);
-    this.http
-      .post<Unit>(this.getUrl('units'), formData, this.getAuthOptions())
+    this.http.post<Unit>(this.getUrl('units'), formData, this.getAuthOptions())
       .subscribe({
-        next: (unit) => {
-          this.uploadImages(unit.id, images, descriptions);
-          this.onSuccess();
-        },
-        error: this.handleError('Create Unit failed'),
-      });
-  }
+
+
+
+        error: this.handleError('Create Unit failed')
 
   /** Update a unit */
-  updateUnit(
-    formData: FormData,
-    newImages: File[] = [],
-    descriptions: string[] = [],
-    onComplete?: () => void
-  ) {
+
+  updateUnit(formData: FormData, newImages: File[] = [], descriptions: string[] = [], onComplete?: () => void) {
     const id = this.selectedUnit()?.id;
     if (!id) return;
     this.setLoading(true);
-    this.http
-      .patch<Unit>(this.getUrl(`unit/${id}`), formData, this.getAuthOptions())
+    this.http.patch<Unit>(this.getUrl(`unit/${id}`), formData, this.getAuthOptions())
       .subscribe({
         next: () => {
           if (Array.isArray(newImages) && newImages.length > 0) {
@@ -101,9 +88,8 @@ export class UnitsService {
         complete: () => {
           this.setLoading(false);
           onComplete?.();
-        },
-      });
-  }
+
+        }
 
   /** Delete a unit */
 
@@ -173,10 +159,8 @@ export class UnitsService {
 
   getAuthOptions() {
     const token = this.httpService.getToken();
-    return token
-      ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) }
-      : {};
-  }
+    return token ? { headers: new HttpHeaders().set('Authorization', `Token ${token}`) } : {};
+
 
   updateImageDescription(id: number, desc: string): Promise<void> {
     const formData = new FormData();
@@ -191,6 +175,21 @@ export class UnitsService {
             reject(err);
           },
         });
+    });
+  }
+
+  patchAmenities(amenities: number[]) {
+    const id = this.selectedUnit()?.id;
+    if (!id) return;
+    this.http.patch(this.getUrl(`unit/${id}`), { amenities }, this.getAuthOptions()).subscribe({
+      next: () => {
+        this.loadPaginatedUnits(this.currentPage());
+        const current = this.selectedUnit();
+        if (current) {
+          this.selectedUnit.set({ ...current, amenities });
+        }
+      },
+      error: this.handleError('Update unit failed')
     });
   }
 }

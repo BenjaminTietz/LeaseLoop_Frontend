@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, inject, OnDestroy, OnInit, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, signal } from '@angular/core';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
 import { MatIcon } from '@angular/material/icon';
 import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
@@ -32,6 +32,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   unitTypes = ['apartment', 'villa', 'house', 'studio', 'suite', 'cabin', 'condo', 'townhouse']
   unitStatus = ['available', 'booked', 'unavailable', 'booked', 'maintenance']
   amenitiesOpen = signal(false)
+  amenities = signal<number[]>(this.unitService.selectedUnit()?.amenities || []);
 
 
   unitCapacityValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -59,7 +60,8 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     property: [null as PropertyShort | null, Validators.required],
     type : ['apartment', Validators.required],
     status : ['available', Validators.required],
-    active : [true, Validators.required]
+    active : [true, Validators.required],
+    amenities: [[] as number[]]
   }, { validators: this.unitCapacityValidator });
 
   constructor() {
@@ -78,7 +80,6 @@ export class UnitFormComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    //this.unitService.clearDeletedImages();
     disableBackgroundScroll();
     const selected = this.unitService.selectedUnit();
     
@@ -94,16 +95,20 @@ export class UnitFormComponent implements OnInit, OnDestroy {
         max_capacity: selected.max_capacity,
         type: selected.type,
         status: selected.status,
-        active: selected.active
+        active: selected.active,
+        amenities: selected.amenities
       });
     }    
   }
 
   createUnit() {
-    const { property, ...rest } = this.unitForm.value;
+    const { property, amenities, ...rest } = this.unitForm.value;
     const formData = new FormData();
     Object.entries(rest).forEach(([key, value]) => {
       formData.append(key, String(value ?? ''));
+    });
+    (amenities || []).forEach(id => {
+      formData.append('amenities', String(id)); 
     });
     formData.append('property_id', (property as PropertyShort).id.toString());
     formData.append('property', JSON.stringify(property));
@@ -111,15 +116,19 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   }
 
   updateUnit() { 
-    const { property, ...rest } = this.unitForm.value;
-    const formData = new FormData();
-  
-    Object.entries(rest).forEach(([key, value]) => {
-      formData.append(key, String(value ?? ''));
-    });
-  
-    formData.append('property_id', (property as PropertyShort).id.toString());
-    formData.append('unit', JSON.stringify(property));
+  const { property, amenities, ...rest } = this.unitForm.value;
+  const formData = new FormData();
+
+  Object.entries(rest).forEach(([key, value]) => {
+    formData.append(key, String(value ?? ''));
+  });
+
+  formData.append('property_id', (property as PropertyShort).id.toString());
+  formData.append('unit', JSON.stringify(property));
+
+  (amenities || []).forEach(id => {
+    formData.append('amenities', String(id)); 
+  });
   
     const imageIdsToDelete = [...this.unitService.deletedImageIds()];
   
@@ -168,5 +177,11 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   
   openAmenities(){
     this.amenitiesOpen.set(true);
+  }
+  
+  closeAmenities = () => {
+    this.amenitiesOpen.set(false);
+    this.unitService.patchAmenities(this.unitForm.value.amenities as number[]);
+    this.unitForm.patchValue({ amenities: this.amenities() });
   }
 }
