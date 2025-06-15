@@ -42,6 +42,9 @@ export class AnalyticsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    console.log(this.analyticsService.revenueGroupedData());
+    this.analyticsService.updateAllAnalytics(
+      this.analyticsService.dateFrom(),
+      this.analyticsService.dateTo()
+    );
   }
 }
