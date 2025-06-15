@@ -17,9 +17,8 @@ export class AnalyticsService {
   bookingData = signal<PropertyBookingStats[]>([]);
   cancelledBookingsData = signal<any>(null);
   sending = signal<boolean>(false);
-  dateFrom = signal<string>('2023-01-01');
-  dateTo = signal<string>('2026-12-31');
-  selectedPeriod = signal<'day' | 'week' | 'month' | 'year'>('month');
+  dateFrom = signal<string>('');
+  dateTo = signal<string>('');
 
   /**
    * Updates all analytics data by calling all the respective methods
@@ -138,5 +137,23 @@ export class AnalyticsService {
       error: (err) =>
         console.error('Error fetching cancelled bookings data:', err),
     });
+  }
+
+  /**
+   * Sets the default date range for analytics to the current year,
+   * with dateFrom as January 1st and dateTo as today.
+   * Also triggers updateAllAnalytics with the new range.
+   */
+  public setDefaultDateRange() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    const from = `${currentYear}-01-01`;
+    const to = today.toISOString().split('T')[0];
+
+    this.dateFrom.set(from);
+    this.dateTo.set(to);
+
+    this.updateAllAnalytics(from, to);
   }
 }
