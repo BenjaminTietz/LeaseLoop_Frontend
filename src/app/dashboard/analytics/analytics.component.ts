@@ -42,9 +42,6 @@ export class AnalyticsComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.analyticsService.updateAllAnalytics(
-      this.analyticsService.dateFrom(),
-      this.analyticsService.dateTo()
-    );
+    this.analyticsService.setDefaultDateRange();
   }
 }
