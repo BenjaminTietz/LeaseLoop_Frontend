@@ -38,6 +38,16 @@ export class BookingLandingComponent implements OnInit {
     );
   });
 
+  readonly searchIsComplete = computed(
+    () =>
+      this.searchInput().trim() &&
+      this.bookingService.checkInDate() &&
+      this.bookingService.checkOutDate() &&
+      this.bookingService.guestCount() > 0 &&
+      this.bookingService.properties().length > 0 &&
+      this.bookingService.filteredMode()
+  );
+
   onLocationInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.searchInput.set(value);
