@@ -18,6 +18,7 @@ export class ClientsService {
   successful = signal<boolean>(false);
   totalPages = signal(1);
   currentPage = signal(1)
+  filterValue = signal('')
 
   /** Load all Clients assosiated tothe current user */
   loadClients() {
@@ -31,7 +32,7 @@ export class ClientsService {
   loadPaginatedClients(page: number, searchTerm: string = '') {
     this.httpService
       .get<PaginatedResponse<Clients>>(
-        `${environment.apiBaseUrl}/api/clients/?page=${page}&search=${searchTerm}`
+        `${environment.apiBaseUrl}/api/clients/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`
       )
       .subscribe((clients) => {
         this.clients.set(clients.results);

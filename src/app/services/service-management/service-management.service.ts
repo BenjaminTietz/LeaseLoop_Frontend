@@ -18,6 +18,8 @@ export class ServiceManagementService {
   sortServices = (s: Service[]) => s.slice().sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
   totalPages = signal(1);
   currentPage = signal(1)
+  filterValue = signal('');
+
   /**
    * Load all services from the server.
    *
@@ -39,12 +41,14 @@ export class ServiceManagementService {
 
   loadPaginatedService(page: number, searchTerm: string = '') {
     this.httpService
-      .get<PaginatedResponse<Service>>(`${environment.apiBaseUrl}/api/services/?page=${page}&search=${searchTerm}`)
+      .get<PaginatedResponse<Service>>(`${environment.apiBaseUrl}/api/services/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`)
       .subscribe({
         next: (data) => {
           this.services.set(this.sortServices(data.results));
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
+          console.log(this.services());
+          
         },
         error: (error) => {
           console.error('Failed to load services', error);

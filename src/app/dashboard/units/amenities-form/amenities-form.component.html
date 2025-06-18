@@ -4,7 +4,7 @@
     <div class="category-dropdown">
       <div class="dropdown-header" (click)="toggleCategory(category)">
         <strong>{{ category }}</strong>
-        <span>{{ selectedByCategory()[category]?.length || 0 }} selected</span>
+        <span>{{ (selectedByCategory()[category] || []).length }} selected</span>
       </div>
 
       @if (openCategory() === category) {
@@ -13,7 +13,7 @@
             <label class="checkbox-option">
               <input
                 type="checkbox"
-                [checked]="selectedByCategory()[category]?.includes(amenity.id)"
+                [checked]="(selectedByCategory()[category] || []).includes(amenity.id)"
                 (change)="toggleAmenity(category, amenity.id)"
               />
               <span>{{ amenity.label }}</span>
@@ -23,4 +23,5 @@
       }
     </div>
   }
+  <button (click)="closeAmenities()">Save</button>
 </div>

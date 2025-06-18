@@ -8,6 +8,7 @@
                 <span >New Property</span> 
             </button>
             <app-search-input (searchTerm)="this.search($event)"  placeholder="Search properties" ></app-search-input>
+            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterProperties($event)"></app-filter>
         </div>
         <div class="table-wrapper">
             @if(propertyService.sending()){
@@ -32,7 +33,7 @@
                         <td>{{property.name}}</td>
                         <td>{{property.units.length}}</td>
                         <td>{{property.description}}</td>
-                        <td>{{property.address.street}}, {{property.address.city}}, {{property.address.house_number}}</td>
+                        <td>{{property.address.country}}, {{property.address.city}}, {{property.address.street}} {{property.address.house_number}}</td>
                         <td>{{property.images.length}}</td>
                         <td>  <button class="btn" [disabled]="propertyService.sending()" (click)=" openEditForm(property)">Edit</button></td>
 

@@ -15,6 +15,7 @@ export class BookingsService {
   bookings = signal<Booking[]>([]);
   totalPages = signal(1);
   currentPage = signal(1)
+  filterValue = signal<string>('');
 
   loadBooking() {
     this.sending.set(true);
@@ -30,12 +31,14 @@ export class BookingsService {
 
   loadPaginatedBookings(page: number, searchTerm: string = '') {
     this.httpService
-      .get<PaginatedResponse<Booking>>(`${environment.apiBaseUrl}/api/bookings/?page=${page}&search=${searchTerm}`)
+      .get<PaginatedResponse<Booking>>(`${environment.apiBaseUrl}/api/bookings/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`)
       .subscribe({
         next: (data) => {
           this.bookings.set(data.results);
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
+          console.log(this.bookings());
+          
         },
         error: (error) => {
           this.handleError('Failed to load Bookings');

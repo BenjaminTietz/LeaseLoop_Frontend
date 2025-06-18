@@ -7,6 +7,7 @@
                 <span>New Unit</span>
             </button>
             <app-search-input (searchTerm)="this.search($event)" placeholder="Search units"></app-search-input>
+            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterUnits($event)"></app-filter>
         </div>
         <div class="table-wrapper">
             <table class="table">
@@ -15,7 +16,7 @@
                         <th class="active-column">Active</th>
                         <th>Property</th>
                         <th>Name</th>
-                        <th>Capacity</th>
+                        <th>Max Capacity</th>
                         <th>Price</th>
                         <th>Status</th>
                         <th>Edit unit</th>
@@ -28,7 +29,7 @@
                         </td>
                         <td>{{unit.property.name}}</td>
                         <td>{{unit.name}}</td>
-                        <td>{{unit.capacity}}</td>
+                        <td>{{unit.max_capacity}}</td>
                         <td>{{unit.price_per_night}} €</td>
                         <td>{{unit.status}}</td>
                         <td> <button class="btn" (click)="openEditForm(unit)">Edit</button> </td>
