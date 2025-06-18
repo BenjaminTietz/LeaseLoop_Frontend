@@ -12,6 +12,7 @@ export class InvoiceService {
   sending = signal<boolean>(false);
   totalPages = signal(1);
   currentPage = signal(1);
+  filterValue = signal('');
   
 
   constructor() {
@@ -22,7 +23,7 @@ export class InvoiceService {
     this.sending.set(true);
     this.httpService
       .get<PaginatedResponse<Invoice>>(
-        `${environment.apiBaseUrl}/api/invoices/owner/?page=${page}&search=${searchTerm}`
+        `${environment.apiBaseUrl}/api/invoices/owner/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`
       )
       .subscribe({
         next: (data) => {
