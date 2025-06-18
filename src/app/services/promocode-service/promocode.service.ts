@@ -15,6 +15,7 @@ export class PromocodeService {
   successful = signal<boolean>(false);
   totalPages = signal(1);
   currentPage = signal(1);
+  filterValue = signal<string>('');
 
   /** Load all promocodes assoziated to current user / property */
   loadPromocodes() {
@@ -29,7 +30,7 @@ export class PromocodeService {
   loadPaginatedPromoCodes(page:number, searchTerm: string = '') {
     this.sending.set(true);
     this.httpService
-      .get<PaginatedResponse<PromoCode>>(`${environment.apiBaseUrl}/api/promocodes/?page=${page}&search=${searchTerm}`)
+      .get<PaginatedResponse<PromoCode>>(`${environment.apiBaseUrl}/api/promocodes/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`)
       .subscribe({
         next: (data) => {
           this.promocodes.set(data.results);

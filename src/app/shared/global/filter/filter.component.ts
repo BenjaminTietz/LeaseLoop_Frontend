@@ -13,8 +13,6 @@ export class FilterComponent {
   @Output() filterByChange = new EventEmitter<string>()
   selected = '';
 
-  standardText = 'Filter by';
-
   startFilter(value: string) {
   this.filterByChange.emit(value);
   }
