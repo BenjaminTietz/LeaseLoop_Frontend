@@ -8,11 +8,12 @@ import { Service, ServiceDto } from '../../models/service.model';
 import { MatIcon } from '@angular/material/icon';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
+import { FilterComponent } from "../../shared/global/filter/filter.component";
 
 @Component({
   selector: 'app-service-management',
   standalone: true,
-  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon, PagingComponent, SearchInputComponent],
+  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon, PagingComponent, SearchInputComponent, FilterComponent],
   templateUrl: './service-management.component.html',
   styleUrl: './service-management.component.scss',
 })
@@ -24,6 +25,16 @@ export class ServiceManagementComponent implements OnInit {
   http = inject(HttpService);
   formOpen = signal<boolean>(false);
   searchInput = signal('');
+  filterBy = [
+    { label: 'Name (A-Z)', value: 'ascending_name' },
+    { label: 'Name (Z-A)', value: 'descending_name' },
+    { label: 'Price (low to high)', value: 'ascending_price' },
+    { label: 'Price (high to low)', value: 'descending_price' },
+    { label: 'One-time', value: 'one_time' },
+    { label: 'Per day', value: 'per_day' },
+    { label: 'Property name (A-Z)', value: 'ascending_property_name' },
+    { label: 'Property name (Z-A)', value: 'descending_property_name' },
+  ];
 
   ngOnInit(): void {
     this.loadServices();
@@ -56,7 +67,6 @@ export class ServiceManagementComponent implements OnInit {
     this.sms.loadPaginatedService(1);
   }
 
-  // TODO: Ask Team about using AuthInterceptor for token management
   createService(serviceData: ServiceDto) {
     this.sending.set(true);
 
@@ -79,5 +89,10 @@ export class ServiceManagementComponent implements OnInit {
   closeForm(){
     this.formOpen.set(false);
     this.sms.loadPaginatedService(this.sms.currentPage(), this.searchInput());
+  }
+
+  filterServices(filter:string){
+    this.sms.filterValue.set(filter);
+    this.sms.loadPaginatedService(1, this.searchInput());
   }
 }

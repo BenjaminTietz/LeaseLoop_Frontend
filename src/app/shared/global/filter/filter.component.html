@@ -1,0 +1,13 @@
+@if (filterBy.length > 0) {
+<div class="form-field">
+  <select name="filter" id="filter" [(ngModel)]="selected" (ngModelChange)="startFilter($event)">
+    <option value="" disabled hidden selected>{{ standardText }}</option>
+    @for (filter of filterBy; track $index) {
+    <option [value]="filter.value">
+      {{ filter.label }}
+    </option>
+    }
+    <option value="">Reset filter</option>
+  </select>
+</div>
+}

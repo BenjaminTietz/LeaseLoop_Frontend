@@ -6,11 +6,12 @@ import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
 import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
+import { FilterComponent } from "../../shared/global/filter/filter.component";
 
 @Component({
   selector: 'app-clients',
   standalone: true,
-  imports: [ClientFormComponent, MatIcon, CommonModule, PagingComponent, SearchInputComponent],
+  imports: [ClientFormComponent, MatIcon, CommonModule, PagingComponent, SearchInputComponent, FilterComponent],
   templateUrl: './clients.component.html',
   styleUrl: './clients.component.scss',
 })
@@ -18,6 +19,15 @@ export class ClientsComponent implements OnInit {
   clientService = inject(ClientsService);
   formOpen = signal(false);
   searchInput = signal('');
+
+  filterBy = [
+    { label: 'Name (A-Z)', value: 'ascending_name' },
+    { label: 'Name (Z-A)', value: 'descending_name' },
+    { label: 'Email (A-Z)', value: 'ascending_email' },
+    { label: 'Email (Z-A)', value: 'descending_email' },
+    { label: 'Country (A-Z)', value: 'country' },
+    { label: 'City (A-Z)', value: 'city' }
+  ]
 
   ngOnInit(): void {
     this.clientService.loadPaginatedClients(1, '');
@@ -43,5 +53,10 @@ export class ClientsComponent implements OnInit {
   closeForm() {
     this.formOpen.set(false);
     this.clientService.loadPaginatedClients(this.clientService.currentPage(), this.searchInput());
+  }
+
+  filterClients(filter: string) {
+    this.clientService.filterValue.set(filter);
+    this.clientService.loadPaginatedClients(1, this.searchInput());
   }
 }

@@ -7,6 +7,7 @@
                 <span>New Client</span>
             </button>
             <app-search-input (searchTerm)="this.search($event)"  placeholder="Search clients" ></app-search-input>
+            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterClients($event)"></app-filter>
         </div>
         <div class="table-wrapper">
             <table class="table">

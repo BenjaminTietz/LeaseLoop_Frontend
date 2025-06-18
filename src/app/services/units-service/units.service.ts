@@ -17,6 +17,7 @@ export class UnitsService {
   deletedImageIds = signal<number[]>([]);
   totalPages = signal(1);
   currentPage = signal(1)
+  filterValue = signal('');
 
 
   /** Load all units (admin or general fetch) */
@@ -35,7 +36,7 @@ export class UnitsService {
 
   loadPaginatedUnits(page: number, searchTerm: string = '') {
     this.setLoading(true);
-    this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}`).subscribe({
+    this.httpService.get<PaginatedResponse<Unit>>(`${environment.apiBaseUrl}/api/units/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`).subscribe({
       next: (data) => {
         this.units.set(data.results.slice().sort((a, b) => {
           return (b.active ? 1 : 0) - (a.active ? 1 : 0);
@@ -43,6 +44,8 @@ export class UnitsService {
         this.totalPages.set(data.total_pages);
         this.currentPage.set(page);
         this.setLoading(false);
+        console.log(this.units());
+        
       },
       error: this.handleError('Failed to load Ünits')
     });
