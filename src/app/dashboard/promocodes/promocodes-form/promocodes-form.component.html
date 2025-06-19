@@ -17,11 +17,14 @@
                 @if(formService.getFormErrors(promocodeForm, 'code')?.['required']) {
                 <small>Code is required</small>
                 }
-                @if(formService.getFormErrors(promocodeForm, 'code')?.['minlength']) {
+                @else if(formService.getFormErrors(promocodeForm, 'code')?.['minlength']) {
                 <small>Code must be at least 3 characters long</small>
                 }
-                @if(formService.getFormErrors(promocodeForm, 'code')?.['maxlength']) {
+                @else if(formService.getFormErrors(promocodeForm, 'code')?.['maxlength']) {
                 <small>Code must be at most 10 characters long</small>
+                }
+                @else if(formService.getFormErrors(promocodeForm, 'code')?.['pattern']) {
+                <small>Only letters, numbers and no spaces are allowed</small>
                 }
             </div>
         </div>

@@ -10,6 +10,7 @@ export class FormService {
   passwordPattern = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d])[^\\s]{8,}$';
   namePattern = '^[A-Za-z]+(-[A-Za-z]+)?$';
   pricePattern = '^[0-9]*[.,]?[0-9]{0,2}$';
+  promocodePattern = '^[A-Za-z0-9]{1,10}$';
 
   constructor() { }
 
