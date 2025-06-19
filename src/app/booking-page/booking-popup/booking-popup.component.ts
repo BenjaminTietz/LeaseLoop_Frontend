@@ -1,82 +1,206 @@
-import { Component, computed, Input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Unit } from '../../models/unit.model';
 import { CommonModule } from '@angular/common';
+import { ClientBookingService } from '../../services/client-booking/client-booking.service';
+import { Service } from '../../models/service.model';
+import { effect } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-booking-popup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './booking-popup.component.html',
   styleUrl: './booking-popup.component.scss',
+  animations: [
+    trigger('fadeExpand', [
+      state('void', style({ opacity: 0, transform: 'scaleY(0)' })),
+      state('*', style({ opacity: 1, transform: 'scaleY(1)' })),
+      transition('void <=> *', animate('250ms ease-in-out')),
+    ]),
+  ],
 })
-export class BookingPopupComponent {
+export class BookingPopupComponent implements OnInit {
   @Input({ required: true }) unit!: Unit;
   @Input({ required: true }) closePopup!: () => void;
+  bookingService = inject(ClientBookingService);
+  formBuilder = inject(FormBuilder);
+
+  property = this.bookingService.selectedPropertyDetail();
 
   checkIn = signal<string>('');
   checkOut = signal<string>('');
   guests = signal<number>(1);
+  usedPromoCode = signal<string>('');
+  promoDiscount = signal<number>(0);
+  promoError = signal<string | null>(null);
+  showServices = signal<boolean>(false);
+  selectedServiceIds = signal<Set<number>>(new Set());
+  showClientForm = signal<boolean>(false);
 
-  //TODO: need to make sure that unit is available for the selected dates
-  today = new Date().toISOString().split('T')[0];
+  private loadedPropertyIds = new Set<number>();
 
-  isValid = computed(() => {
-    const checkIn = new Date(this.checkIn());
-    const checkOut = new Date(this.checkOut());
-    const today = new Date(new Date().toDateString());
-
-    return (
-      !!this.checkIn() &&
-      !!this.checkOut() &&
-      checkIn >= today &&
-      checkOut > checkIn &&
-      this.guests() >= 1 &&
-      this.guests() <= this.unit.max_capacity
-    );
+  clientForm: FormGroup = this.formBuilder.group({
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    address: this.formBuilder.group({
+      street: ['', Validators.required],
+      house_number: ['', Validators.required],
+      postal_code: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      phone: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9+\s()-]{6,20}$/)],
+      ],
+    }),
   });
+
+  ngOnInit() {
+    const selected = this.bookingService.selectedPropertyDetail();
+    if (selected?.id) {
+      this.bookingService.loadServicesForProperty(selected.id);
+    }
+    this.checkIn.set(this.bookingService.checkInDate() ?? '');
+    this.checkOut.set(this.bookingService.checkOutDate() ?? '');
+    this.guests.set(this.bookingService.guestCount());
+  }
 
   totalPrice = computed(() => {
     const inDate = new Date(this.checkIn());
     const outDate = new Date(this.checkOut());
     const guests = this.guests();
     const nights = Math.max((+outDate - +inDate) / (1000 * 60 * 60 * 24), 0);
+    const selectedServiceIds = this.selectedServiceIds();
 
-    if (nights === 0) return 0;
-    const base = this.unit.price_per_night * nights;
-    const extras =
+    const selectedServices = this.bookingService
+      .services()
+      .filter((service) => selectedServiceIds.has(service.id));
+
+    const serviceTotal = selectedServices.reduce((sum, s) => {
+      switch (s.type) {
+        case 'per_day':
+          return sum + s.price * nights;
+        case 'one_time':
+          return sum + s.price;
+        default:
+          return sum;
+      }
+    }, 0);
+
+    const basePrice =
+      this.unit.price_per_night * nights +
       Math.max(0, guests - this.unit.capacity) *
-      this.unit.price_per_extra_person *
-      nights;
-    return base + extras;
+        this.unit.price_per_extra_person *
+        nights +
+      serviceTotal;
+
+    return Math.max(0, basePrice - this.promoDiscount());
   });
 
-  handleCheckInChange(date: string) {
-    this.checkIn.set(date);
-
-    const checkInDate = new Date(date);
-    const checkOutDate = new Date(this.checkOut());
-
-    if (!this.checkOut() || checkOutDate <= checkInDate) {
-      const nextDay = new Date(checkInDate);
-      nextDay.setDate(nextDay.getDate() + 1);
-      const nextDayStr = nextDay.toISOString().split('T')[0];
-      this.checkOut.set(nextDayStr);
-    }
-  }
-
   submitBooking() {
-    if (!this.isValid()) return;
     console.log('Submitting booking:', {
       checkIn: this.checkIn(),
       checkOut: this.checkOut(),
       guests: this.guests(),
       total: this.totalPrice(),
+      services: Array.from(this.selectedServiceIds()),
     });
+    this.showClientForm.set(true);
+  }
+
+  handleServiceSelect(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOptions = Array.from(selectElement.selectedOptions).map(
+      (opt) => +opt.value
+    );
+    this.selectedServiceIds.set(new Set(selectedOptions));
+  }
+
+  trackById(index: number, item: Service | undefined) {
+    return item?.id ?? index;
+  }
+
+  toggleServiceSelection(serviceId: number, checked: boolean) {
+    const current = this.selectedServiceIds();
+    const updated = new Set(current);
+
+    if (checked) {
+      updated.add(serviceId);
+    } else {
+      updated.delete(serviceId);
+    }
+
+    this.selectedServiceIds.set(updated);
+  }
+
+  onCheckboxChange(event: Event, serviceId: number) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.toggleServiceSelection(serviceId, checked);
+  }
+  toggleServicesVisibility() {
+    this.showServices.update((v) => !v);
+  }
+
+  applyPromoCode() {
+    const code = this.usedPromoCode().trim();
+    if (!code) {
+      this.promoError.set('Please enter a promo code.');
+      return;
+    }
+
+    this.promoError.set(null);
+    this.bookingService.validatePromoCode(code).subscribe({
+      next: (discount) => {
+        this.promoDiscount.set(discount);
+        console.log(`✅ Promo applied: -${discount}€`);
+      },
+      error: () => {
+        this.promoDiscount.set(0);
+        this.promoError.set('Invalid promo code.');
+      },
+    });
+  }
+
+  sendRequest() {
+    console.log('Sending booking request with data:', {
+      checkIn: this.checkIn(),
+      checkOut: this.checkOut(),
+      guests: this.guests(),
+      total: this.totalPrice(),
+      services: Array.from(this.selectedServiceIds()),
+    });
+  }
+
+  confirmBooking() {
+    console.log('Confirming booking with data:', {
+      checkIn: this.checkIn(),
+      checkOut: this.checkOut(),
+      guests: this.guests(),
+      total: this.totalPrice(),
+      services: Array.from(this.selectedServiceIds()),
+    });
+    // SHOW PAYMENT INFO HERE
   }
 }

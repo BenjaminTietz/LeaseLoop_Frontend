@@ -77,6 +77,7 @@ export class BookingLandingComponent implements OnInit {
   navigator = inject(NavigatorService);
   ngOnInit() {
     this.bookingService.loadInitialData();
+    this.clearSearchInput();
   }
 
   setCheckInFromEvent(event: Event) {
