@@ -1,27 +1,34 @@
 <div class="category-wrapper">
   <mat-icon aria-label="Close" class="close-icon" (click)="closeAmenities()">close</mat-icon>
   @for (category of categoryKeys(); track category) {
-    <div class="category-dropdown">
-      <div class="dropdown-header" (click)="toggleCategory(category)">
-        <strong>{{ category }}</strong>
-        <span>{{ (selectedByCategory()[category] || []).length }} selected</span>
-      </div>
+  <div class="category-dropdown">
+    <div class="dropdown-header" (click)="toggleCategory(category)">
+      <strong>{{ category }}</strong>
+      <span class="selection-info">
+        {{ (selectedByCategory()[category] || []).length }}
+        selected
+       
+          of {{ groupedAmenities()[category].length }}
+        
+         <mat-icon class="arrow-icon">
+        {{ openCategory() === category ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+      </mat-icon>
+      </span>
+     
+    </div>
 
-      @if (openCategory() === category) {
-        <div class="dropdown-content">
-          @for (amenity of groupedAmenities()[category]; track amenity.id) {
-            <label class="checkbox-option">
-              <input
-                type="checkbox"
-                [checked]="(selectedByCategory()[category] || []).includes(amenity.id)"
-                (change)="toggleAmenity(category, amenity.id)"
-              />
-              <span>{{ amenity.label }}</span>
-            </label>
-          }
-        </div>
+    @if (openCategory() === category) {
+    <div class="dropdown-content">
+      @for (amenity of groupedAmenities()[category]; track amenity.id) {
+      <label class="checkbox-option">
+        <input type="checkbox" [checked]="(selectedByCategory()[category] || []).includes(amenity.id)"
+          (change)="toggleAmenity(category, amenity.id)" />
+        <span>{{ amenity.label }}</span>
+      </label>
       }
     </div>
+    }
+  </div>
   }
   <button (click)="closeAmenities()">Save</button>
 </div>

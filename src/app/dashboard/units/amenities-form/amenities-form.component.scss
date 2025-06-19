@@ -59,8 +59,13 @@ label {
   }
 }
 
+.selection-info{
+  @include display(flex, row, flex-start, center);
+  gap: 10px;
+}
+
 strong,
 span,
-input {
+input, mat-icon {
   margin: 0px;
 }

@@ -41,7 +41,7 @@ export class PromocodesFormComponent {
   promocodeForm = new FormBuilder().nonNullable.group({
     code: [
       this.promocodeService.selectedPromocode()?.code || '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
+      [Validators.required, Validators.minLength(3), Validators.maxLength(10), Validators.pattern(this.formService.promocodePattern)],
     ],
     description: [
       this.promocodeService.selectedPromocode()?.description || '',
