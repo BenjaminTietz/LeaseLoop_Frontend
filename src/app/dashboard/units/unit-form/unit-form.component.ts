@@ -30,7 +30,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
   missingDescription: boolean = false
 
   unitTypes = ['apartment', 'villa', 'house', 'studio', 'suite', 'cabin', 'condo', 'townhouse']
-  unitStatus = ['available', 'booked', 'unavailable', 'booked', 'maintenance']
+  unitStatus = ['available', 'booked', 'unavailable', 'maintenance', 'cleaning']
   amenitiesOpen = signal(false)
   amenities = signal<number[]>(this.unitService.selectedUnit()?.amenities || []);
 
@@ -99,6 +99,9 @@ export class UnitFormComponent implements OnInit, OnDestroy {
         amenities: selected.amenities
       });
     }    
+
+    console.log('Selected status:', selected?.status);
+    console.log('Form status after patch:', this.unitForm.value.status);
   }
 
   createUnit() {
