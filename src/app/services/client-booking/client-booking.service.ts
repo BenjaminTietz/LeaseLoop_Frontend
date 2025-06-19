@@ -148,12 +148,17 @@ export class ClientBookingService {
   }
 
   validatePromoCode(code: string): Observable<number> {
-    // Hier später echte Backend-URL verwenden
+    const payload = {
+      code: code,
+      owner_id: this.selectedPropertyDetail()?.owner,
+    };
+
     return this.httpService
-      .get<{ discount: number }>(
-        `${environment.apiBaseUrl}/api/public/promos/validate/?code=${code}`
+      .post<{ discount_percent: number }>(
+        `${environment.apiBaseUrl}/api/public/promocode/validate/`,
+        payload
       )
-      .pipe(map((res) => res.discount));
+      .pipe(map((res) => res.discount_percent));
   }
 
   resetFilters() {
