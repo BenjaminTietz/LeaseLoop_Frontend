@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { HttpParams } from '@angular/common/http';
 import { NavigatorService } from '../navigator/navigator.service';
 import { Service } from '../../models/service.model';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -144,6 +145,15 @@ export class ClientBookingService {
         next: (res) => this.services.set(res),
         error: (err) => console.error('Error loading public services', err),
       });
+  }
+
+  validatePromoCode(code: string): Observable<number> {
+    // Hier später echte Backend-URL verwenden
+    return this.httpService
+      .get<{ discount: number }>(
+        `${environment.apiBaseUrl}/api/public/promos/validate/?code=${code}`
+      )
+      .pipe(map((res) => res.discount));
   }
 
   resetFilters() {

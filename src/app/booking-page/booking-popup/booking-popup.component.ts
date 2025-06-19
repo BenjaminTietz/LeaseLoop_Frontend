@@ -9,6 +9,7 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -28,7 +29,7 @@ import {
 @Component({
   selector: 'app-booking-popup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './booking-popup.component.html',
   styleUrl: './booking-popup.component.scss',
   animations: [
@@ -43,21 +44,42 @@ export class BookingPopupComponent implements OnInit {
   @Input({ required: true }) unit!: Unit;
   @Input({ required: true }) closePopup!: () => void;
   bookingService = inject(ClientBookingService);
+  formBuilder = inject(FormBuilder);
 
   property = this.bookingService.selectedPropertyDetail();
 
   checkIn = signal<string>('');
   checkOut = signal<string>('');
   guests = signal<number>(1);
-
+  usedPromoCode = signal<string>('');
+  promoDiscount = signal<number>(0);
+  promoError = signal<string | null>(null);
   showServices = signal<boolean>(false);
   selectedServiceIds = signal<Set<number>>(new Set());
+  showClientForm = signal<boolean>(false);
+
   private loadedPropertyIds = new Set<number>();
+
+  clientForm: FormGroup = this.formBuilder.group({
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    address: this.formBuilder.group({
+      street: ['', Validators.required],
+      house_number: ['', Validators.required],
+      postal_code: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
+      phone: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9+\s()-]{6,20}$/)],
+      ],
+    }),
+  });
 
   ngOnInit() {
     const selected = this.bookingService.selectedPropertyDetail();
     if (selected?.id) {
-      console.log('ngOnInit: Lade Services einmalig');
       this.bookingService.loadServicesForProperty(selected.id);
     }
     this.checkIn.set(this.bookingService.checkInDate() ?? '');
@@ -87,13 +109,14 @@ export class BookingPopupComponent implements OnInit {
       }
     }, 0);
 
-    return (
+    const basePrice =
       this.unit.price_per_night * nights +
       Math.max(0, guests - this.unit.capacity) *
         this.unit.price_per_extra_person *
         nights +
-      serviceTotal
-    );
+      serviceTotal;
+
+    return Math.max(0, basePrice - this.promoDiscount());
   });
 
   submitBooking() {
@@ -104,6 +127,7 @@ export class BookingPopupComponent implements OnInit {
       total: this.totalPrice(),
       services: Array.from(this.selectedServiceIds()),
     });
+    this.showClientForm.set(true);
   }
 
   handleServiceSelect(event: Event) {
@@ -137,5 +161,46 @@ export class BookingPopupComponent implements OnInit {
   }
   toggleServicesVisibility() {
     this.showServices.update((v) => !v);
+  }
+
+  applyPromoCode() {
+    const code = this.usedPromoCode().trim();
+    if (!code) {
+      this.promoError.set('Please enter a promo code.');
+      return;
+    }
+
+    this.promoError.set(null);
+    this.bookingService.validatePromoCode(code).subscribe({
+      next: (discount) => {
+        this.promoDiscount.set(discount);
+        console.log(`✅ Promo applied: -${discount}€`);
+      },
+      error: () => {
+        this.promoDiscount.set(0);
+        this.promoError.set('Invalid promo code.');
+      },
+    });
+  }
+
+  sendRequest() {
+    console.log('Sending booking request with data:', {
+      checkIn: this.checkIn(),
+      checkOut: this.checkOut(),
+      guests: this.guests(),
+      total: this.totalPrice(),
+      services: Array.from(this.selectedServiceIds()),
+    });
+  }
+
+  confirmBooking() {
+    console.log('Confirming booking with data:', {
+      checkIn: this.checkIn(),
+      checkOut: this.checkOut(),
+      guests: this.guests(),
+      total: this.totalPrice(),
+      services: Array.from(this.selectedServiceIds()),
+    });
+    // SHOW PAYMENT INFO HERE
   }
 }

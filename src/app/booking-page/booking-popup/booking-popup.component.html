@@ -1,6 +1,7 @@
 <div class="booking-popup-backdrop" (click)="closePopup()"></div>
 <div class="booking-popup">
     <h2>Book now</h2>
+    @if (!showClientForm()) {
     <div class="booking-summary">
         <div class="summary-row">
             <label>Check-in:</label>
@@ -18,6 +19,21 @@
             <label>Total:</label>
             <strong>{{ totalPrice() | currency: 'EUR' }}</strong>
         </div>
+    </div>
+    <!-- Promo Codes -->
+    <div class="form-group promo-code-section">
+        <label for="promoCode">Promo Code</label>
+        <div class="promo-container">
+            <input type="text" id="promoCode" [value]="usedPromoCode()"
+                (input)="usedPromoCode.set($any($event.target).value)" />
+            <button class="apply-btn" (click)="applyPromoCode()">Apply</button>
+        </div>
+    </div>
+    <div *ngIf="promoDiscount() > 0" class="promo-success">
+        Promo applied: -{{ promoDiscount() | currency: 'EUR' }}
+    </div>
+    <div *ngIf="promoError()" class="promo-error">
+        {{ promoError() }}
     </div>
     <!-- Services Selection -->
     @if (bookingService.services().length > 0) {
@@ -39,6 +55,68 @@
         </div>
         }
     </div>
+    }<div class="button-area">
+        <button class="btn" (click)="submitBooking()">Continue</button>
+        <button class="btn" (click)="closePopup()">Cancel</button>
+    </div>
+
+    } @else {
+    <!-- Client Form -->
+    <h3>Client Information</h3>
+    <form [formGroup]="clientForm">
+        <div class="form-input-wrapper">
+            <div class="input-area width-50">
+                <label for="first_name">First Name</label>
+                <input id="first_name" formControlName="first_name" placeholder="First Name" required />
+            </div>
+            <div class="input-area width-50">
+                <label for="last_name">Last Name</label>
+                <input id="last_name" formControlName="last_name" placeholder="Last Name" required />
+            </div>
+        </div>
+
+        <div class="input-area">
+            <label for="email">Email</label>
+            <input id="email" type="email" formControlName="email" required placeholder="Email" />
+        </div>
+
+        <div [formGroupName]="'address'">
+            <div class="form-input-wrapper">
+                <div class="input-area width-75">
+                    <label for="street">Street</label>
+                    <input id="street" formControlName="street" placeholder="Street" />
+                </div>
+                <div class="input-area width-25">
+                    <label for="house_number">Nr.</label>
+                    <input id="house_number" formControlName="house_number" placeholder="Nr." />
+                </div>
+            </div>
+            <div class="form-input-wrapper">
+                <div class="input-area width-75">
+                    <label for="city">City</label>
+                    <input id="city" formControlName="city" placeholder="City" />
+                </div>
+                <div class="input-area width-25">
+                    <label for="postal_code">Postal Code</label>
+                    <input id="postal_code" formControlName="postal_code" placeholder="Postal Code" />
+                </div>
+            </div>
+            <div class="form-input-wrapper">
+                <div class="input-area width-50">
+                    <label for="country">Country</label>
+                    <input id="country" formControlName="country" placeholder="Country" />
+                </div>
+                <div class="input-area width-50">
+                    <label for="phone">Phone</label>
+                    <input id="phone" formControlName="phone" placeholder="Phone" />
+                </div>
+            </div>
+        </div>
+
+        <div class="button-area">
+            <button type="button" class="btn" (click)="sendRequest()">Send Request</button>
+            <button type="button" class="btn" (click)="confirmBooking()">Book Now</button>
+        </div>
+    </form>
     }
-    <button class="btn primary" (click)="submitBooking()">Confirm Booking</button>
 </div>
