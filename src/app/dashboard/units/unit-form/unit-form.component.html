@@ -106,10 +106,12 @@
       <div class="input-area">
         <label for="status">Status</label>
         <div class="form-field">
-          <select name="" id="status" formControlName="status">
-            @for(status of unitStatus; track $index){
-            <option [ngValue]="status">{{status.charAt(0).toUpperCase() + status.slice(1)}}</option>
-            }
+          <select id="status" formControlName="status">
+            @for (status of unitStatus; track status) {
+            <option [value]="status">
+              {{ status.charAt(0).toUpperCase() + status.slice(1) }}
+            </option>
+        }
           </select>
         </div>
       </div>

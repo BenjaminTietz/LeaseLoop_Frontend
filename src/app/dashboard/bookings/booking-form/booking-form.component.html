@@ -3,7 +3,9 @@
     @if(bookingService.sending()) {
     <app-progress-bar aria-label="Loading"></app-progress-bar>
     }
+    @if (!bookingService.sending()) {
     <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    }
     @if(bookingService.selectedBooking() === null) {
     <h1>New Booking</h1>
     }
@@ -181,7 +183,7 @@
       <label for="promo_code">Promo code</label>
       <div class="form-field">
         <select name="promo_code" id="promo_code" formControlName="promo_code" (change)="onValueChange()">
-          <option [ngValue]="0" >Select Promo Code</option>
+          <option [ngValue]="null" >Select Promo Code</option>
           @for(promocode of promoService.promocodes(); track $index) {
           <option [ngValue]="promocode.id">{{promocode.description}} {{promocode.discount_percent}}%</option>
           }
@@ -190,10 +192,10 @@
     </div>
     }
 
-    @if(serviceService.services().length > 0){
+    @if(filteredServicesByProperties().length > 0){
     <div class="input-area" formGroupName="services">
       <label for="service">Services</label>
-      @for(service of serviceService.services(); track $index){
+      @for(service of filteredServicesByProperties(); track $index){
       <div class="form-field">
         <div class="checkbox-list">
           <input type="checkbox" [value]="service.id" (change)="onServiceChange($event, service.id)"

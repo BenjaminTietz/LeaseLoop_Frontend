@@ -33,6 +33,7 @@ export class BookingFormComponent {
   serviceService = inject(ServiceManagementService)
   unitService = inject(UnitsService);
   clientInput = signal('');
+  clientTyped = signal(false);
   initialClientInput = computed(() => {
     const selected = this.bookingService.selectedBooking();
     if (selected && selected.client) {
@@ -62,6 +63,16 @@ export class BookingFormComponent {
   showRestOfForm = signal(false);
   nochangesMade = signal(true);
 
+  filteredServicesByProperties = computed(() => {
+    const selectedProperty = this.bookingForm.get('property')?.value;
+    const services = this.serviceService.services();
+
+    if (selectedProperty) {
+      return services.filter(service => service.property === selectedProperty);
+    } else {
+      return services;
+    }
+  });
 
   constructor() {
     this.loadAllData();
@@ -159,6 +170,7 @@ export class BookingFormComponent {
   onClientChange(clientId: number) {
     this.showRestOfForm.set(true);
     this.nochangesMade.set(false);
+    this.clientTyped.set(true);
   }
 
   onGuestsCountChange(guestsCount: number) {
@@ -212,7 +224,10 @@ export class BookingFormComponent {
     this.availableUnits.set(units);
   }
 
-  closeForm = () => this.close.emit();
+  closeForm = () => {
+    if(this.bookingService.sending()) return
+    this.close.emit()
+  };
 
   ngOnInit(): void {
     this.bookingService.sending.set(false);
@@ -226,6 +241,11 @@ export class BookingFormComponent {
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
+    setTimeout(() => {
+      console.log(this.serviceService.services());
+    }, 3000);
+    
+    
   }
 
 
@@ -347,6 +367,6 @@ export class BookingFormComponent {
   }
 
   getClientInputValue() {
-    return this.clientInput() || this.initialClientInput();
-  }  
+    return this.clientTyped() ? this.clientInput() : this.initialClientInput();
+  } 
 }
