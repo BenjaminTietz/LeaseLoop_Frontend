@@ -6,6 +6,7 @@ import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import { HttpParams } from '@angular/common/http';
 import { NavigatorService } from '../navigator/navigator.service';
+import { Service } from '../../models/service.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +17,14 @@ export class ClientBookingService {
   properties = signal<Property[]>([]);
   units = signal<Unit[]>([]);
   bookings = signal<Booking[]>([]);
-
   selectedPropertyId = signal<number | null>(null);
-
   currentYear = signal<number>(new Date().getFullYear());
   checkInDate = signal<string | null>(null);
   checkOutDate = signal<string | null>(null);
   guestCount = signal<number>(1);
   filteredMode = signal(false);
   selectedPropertyDetail = signal<Property | null>(null);
+  services = signal<Service[]>([]);
 
   showPropertyDetail = signal(false);
   countryList = computed(() =>
@@ -135,6 +135,17 @@ export class ClientBookingService {
       });
   }
 
+  loadServicesForProperty(propertyId: number) {
+    this.httpService
+      .get<Service[]>(
+        `${environment.apiBaseUrl}/api/public/services/?property=${propertyId}`
+      )
+      .subscribe({
+        next: (res) => this.services.set(res),
+        error: (err) => console.error('Error loading public services', err),
+      });
+  }
+
   resetFilters() {
     this.loadInitialData();
     this.filteredMode.set(false);
@@ -145,6 +156,11 @@ export class ClientBookingService {
 
   selectProperty(id: number) {
     this.selectedPropertyId.set(id);
+    const prop = this.getPropertyById(id);
+    if (prop) {
+      this.selectedPropertyDetail.set(prop);
+    }
+    console.log('Selected property ID:', id, 'Detail:', prop);
   }
 
   reset() {
@@ -218,7 +234,6 @@ export class ClientBookingService {
 
   showPropertyDetails(property: Property) {
     this.selectedPropertyDetail.set(property);
-
     this.showPropertyDetail.set(true);
     console.log('Selected property details:', property);
     console.log('Show property detail:', this.showPropertyDetail());

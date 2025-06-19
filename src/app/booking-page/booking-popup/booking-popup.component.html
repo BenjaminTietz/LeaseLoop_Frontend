@@ -3,32 +3,52 @@
 <div class="booking-popup">
     <h2>Book now</h2>
 
-    <form (ngSubmit)="submitBooking()">
-        <div class="form-group">
-            <label for="checkIn">Check-in</label>
-            <input id="checkIn" type="date" [min]="today" [value]="checkIn()"
-                (input)="handleCheckInChange($any($event.target).value)" />
-
-
+    <div class="booking-summary">
+        <div class="summary-row">
+            <label>Check-in:</label>
+            <span>{{ bookingService.checkInDate() | date: 'mediumDate' }}</span>
         </div>
 
-        <div class="form-group">
-            <label for="checkOut">Check-out</label>
-            <input id="checkOut" type="date" [min]="today" [value]="checkOut()"
-                (input)="checkOut.set($any($event.target).value)" />
+        <div class="summary-row">
+            <label>Check-out:</label>
+            <span>{{ bookingService.checkOutDate() | date: 'mediumDate' }}</span>
         </div>
 
-        <div class="form-group">
-            <label for="guests">Guests</label>
-            <input id="guests" type="number" min="1" [max]="unit.max_capacity" [value]="guests()"
-                (input)="guests.set($any($event.target).valueAsNumber)" />
+        <div class="summary-row">
+            <label>Guests:</label>
+            <span>{{ bookingService.guestCount() }}</span>
         </div>
 
-        <div class="price-summary">
-            <span>Total:</span>
+        <div class="summary-row total">
+            <label>Total:</label>
             <strong>{{ totalPrice() | currency: 'EUR' }}</strong>
         </div>
-        <p>TODO: add services!</p>
-        <button class="btn primary" [disabled]="!isValid()">Confirm Booking</button>
-    </form>
+    </div>
+    <!-- Services Selection -->
+    @if (bookingService.services().length > 0) {
+    <button class="toggle-services-btn" (click)="toggleServicesVisibility()">
+        {{ showServices() ? 'Hide' : 'Show' }} Additional Services
+    </button>
+    }
+    <!-- Additional Services -->
+    @if (showServices() && bookingService.services().length > 0) {
+    <div class="form-group service-section" [@fadeExpand]>
+        <label>Additional Services</label>
+        @for (service of bookingService.services(); track service.id; let index = $index) {
+        <div>
+            <label class="checkbox-label">
+                <input type="checkbox" [checked]="selectedServiceIds().has(service.id)"
+                    (change)="onCheckboxChange($event, service.id)" />
+                {{ service.name }} – {{ service.price | currency: 'EUR' }}
+            </label>
+        </div>
+        }
+    </div>
+    }
+
+
+
+
+
+    <button class="btn primary" (click)="submitBooking()">Confirm Booking</button>
 </div>

@@ -1,4 +1,11 @@
-import { Component, computed, Input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  Input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +14,16 @@ import {
 } from '@angular/forms';
 import { Unit } from '../../models/unit.model';
 import { CommonModule } from '@angular/common';
+import { ClientBookingService } from '../../services/client-booking/client-booking.service';
+import { Service } from '../../models/service.model';
+import { effect } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-booking-popup',
@@ -14,32 +31,36 @@ import { CommonModule } from '@angular/common';
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './booking-popup.component.html',
   styleUrl: './booking-popup.component.scss',
+  animations: [
+    trigger('fadeExpand', [
+      state('void', style({ opacity: 0, transform: 'scaleY(0)' })),
+      state('*', style({ opacity: 1, transform: 'scaleY(1)' })),
+      transition('void <=> *', animate('250ms ease-in-out')),
+    ]),
+  ],
 })
-export class BookingPopupComponent {
+export class BookingPopupComponent implements OnInit {
   @Input({ required: true }) unit!: Unit;
   @Input({ required: true }) closePopup!: () => void;
+  bookingService = inject(ClientBookingService);
+
+  property = this.bookingService.selectedPropertyDetail();
 
   checkIn = signal<string>('');
   checkOut = signal<string>('');
   guests = signal<number>(1);
 
-  //TODO: need to make sure that unit is available for the selected dates
-  today = new Date().toISOString().split('T')[0];
+  showServices = signal<boolean>(false);
+  selectedServiceIds = signal<Set<number>>(new Set());
+  private loadedPropertyIds = new Set<number>();
 
-  isValid = computed(() => {
-    const checkIn = new Date(this.checkIn());
-    const checkOut = new Date(this.checkOut());
-    const today = new Date(new Date().toDateString());
-
-    return (
-      !!this.checkIn() &&
-      !!this.checkOut() &&
-      checkIn >= today &&
-      checkOut > checkIn &&
-      this.guests() >= 1 &&
-      this.guests() <= this.unit.max_capacity
-    );
-  });
+  ngOnInit() {
+    const selected = this.bookingService.selectedPropertyDetail();
+    if (selected?.id) {
+      console.log('ngOnInit: Lade Services einmalig');
+      this.bookingService.loadServicesForProperty(selected.id);
+    }
+  }
 
   totalPrice = computed(() => {
     const inDate = new Date(this.checkIn());
@@ -48,35 +69,62 @@ export class BookingPopupComponent {
     const nights = Math.max((+outDate - +inDate) / (1000 * 60 * 60 * 24), 0);
 
     if (nights === 0) return 0;
+
     const base = this.unit.price_per_night * nights;
     const extras =
       Math.max(0, guests - this.unit.capacity) *
       this.unit.price_per_extra_person *
       nights;
-    return base + extras;
+
+    const serviceIds = this.selectedServiceIds();
+    const selectedServices = this.bookingService
+      .services()
+      .filter((s) => serviceIds.has(s.id));
+    const servicesTotal = selectedServices.reduce((sum, s) => sum + s.price, 0);
+
+    return base + extras + servicesTotal;
   });
 
-  handleCheckInChange(date: string) {
-    this.checkIn.set(date);
-
-    const checkInDate = new Date(date);
-    const checkOutDate = new Date(this.checkOut());
-
-    if (!this.checkOut() || checkOutDate <= checkInDate) {
-      const nextDay = new Date(checkInDate);
-      nextDay.setDate(nextDay.getDate() + 1);
-      const nextDayStr = nextDay.toISOString().split('T')[0];
-      this.checkOut.set(nextDayStr);
-    }
-  }
-
   submitBooking() {
-    if (!this.isValid()) return;
     console.log('Submitting booking:', {
       checkIn: this.checkIn(),
       checkOut: this.checkOut(),
       guests: this.guests(),
       total: this.totalPrice(),
+      services: Array.from(this.selectedServiceIds()),
     });
+  }
+
+  handleServiceSelect(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedOptions = Array.from(selectElement.selectedOptions).map(
+      (opt) => +opt.value
+    );
+    this.selectedServiceIds.set(new Set(selectedOptions));
+  }
+
+  trackById(index: number, item: Service | undefined) {
+    return item?.id ?? index;
+  }
+
+  toggleServiceSelection(serviceId: number, checked: boolean) {
+    const current = this.selectedServiceIds();
+    const updated = new Set(current);
+
+    if (checked) {
+      updated.add(serviceId);
+    } else {
+      updated.delete(serviceId);
+    }
+
+    this.selectedServiceIds.set(updated);
+  }
+
+  onCheckboxChange(event: Event, serviceId: number) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.toggleServiceSelection(serviceId, checked);
+  }
+  toggleServicesVisibility() {
+    this.showServices.update((v) => !v);
   }
 }
