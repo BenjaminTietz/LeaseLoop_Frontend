@@ -3,11 +3,12 @@ import { Component, computed, effect, EventEmitter, inject, input, Output, signa
 import { FormsModule } from '@angular/forms';
 import { AmenitiesService } from '../../../services/amenities-service/amenities.service';
 import { MatIcon } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-amenities-form',
   standalone: true,
-  imports: [FormsModule, MatIcon],
+  imports: [FormsModule, MatIcon, CommonModule],
   templateUrl: './amenities-form.component.html',
   styleUrl: './amenities-form.component.scss'
 })
