@@ -60,6 +60,9 @@ export class BookingPopupComponent implements OnInit {
       console.log('ngOnInit: Lade Services einmalig');
       this.bookingService.loadServicesForProperty(selected.id);
     }
+    this.checkIn.set(this.bookingService.checkInDate() ?? '');
+    this.checkOut.set(this.bookingService.checkOutDate() ?? '');
+    this.guests.set(this.bookingService.guestCount());
   }
 
   totalPrice = computed(() => {
@@ -67,22 +70,30 @@ export class BookingPopupComponent implements OnInit {
     const outDate = new Date(this.checkOut());
     const guests = this.guests();
     const nights = Math.max((+outDate - +inDate) / (1000 * 60 * 60 * 24), 0);
+    const selectedServiceIds = this.selectedServiceIds();
 
-    if (nights === 0) return 0;
-
-    const base = this.unit.price_per_night * nights;
-    const extras =
-      Math.max(0, guests - this.unit.capacity) *
-      this.unit.price_per_extra_person *
-      nights;
-
-    const serviceIds = this.selectedServiceIds();
     const selectedServices = this.bookingService
       .services()
-      .filter((s) => serviceIds.has(s.id));
-    const servicesTotal = selectedServices.reduce((sum, s) => sum + s.price, 0);
+      .filter((service) => selectedServiceIds.has(service.id));
 
-    return base + extras + servicesTotal;
+    const serviceTotal = selectedServices.reduce((sum, s) => {
+      switch (s.type) {
+        case 'per_day':
+          return sum + s.price * nights;
+        case 'one_time':
+          return sum + s.price;
+        default:
+          return sum;
+      }
+    }, 0);
+
+    return (
+      this.unit.price_per_night * nights +
+      Math.max(0, guests - this.unit.capacity) *
+        this.unit.price_per_extra_person *
+        nights +
+      serviceTotal
+    );
   });
 
   submitBooking() {

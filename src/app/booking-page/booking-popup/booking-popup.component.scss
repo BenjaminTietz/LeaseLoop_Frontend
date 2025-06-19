@@ -44,11 +44,6 @@
         border: none;
         border-radius: 6px;
         cursor: pointer;
-
-        &:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
     }
 
     .booking-summary {
@@ -74,8 +69,7 @@
                 padding-top: 12px;
 
                 strong {
-                    font-size: 18px;
-                    color: #2a3647;
+                    font-size: 22px;
                 }
             }
         }
@@ -84,8 +78,6 @@
 
 .form-group {
     margin: 16px 0;
-
-
 
     .checkbox-label {
         display: flex;
@@ -96,7 +88,6 @@
         border-radius: 6px;
         margin-bottom: 6px;
         cursor: pointer;
-
 
         input[type='checkbox'] {
             width: 18px;

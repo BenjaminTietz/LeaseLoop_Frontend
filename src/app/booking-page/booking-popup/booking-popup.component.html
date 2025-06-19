@@ -1,24 +1,19 @@
 <div class="booking-popup-backdrop" (click)="closePopup()"></div>
-
 <div class="booking-popup">
     <h2>Book now</h2>
-
     <div class="booking-summary">
         <div class="summary-row">
             <label>Check-in:</label>
             <span>{{ bookingService.checkInDate() | date: 'mediumDate' }}</span>
         </div>
-
         <div class="summary-row">
             <label>Check-out:</label>
             <span>{{ bookingService.checkOutDate() | date: 'mediumDate' }}</span>
         </div>
-
         <div class="summary-row">
             <label>Guests:</label>
             <span>{{ bookingService.guestCount() }}</span>
         </div>
-
         <div class="summary-row total">
             <label>Total:</label>
             <strong>{{ totalPrice() | currency: 'EUR' }}</strong>
@@ -39,16 +34,11 @@
             <label class="checkbox-label">
                 <input type="checkbox" [checked]="selectedServiceIds().has(service.id)"
                     (change)="onCheckboxChange($event, service.id)" />
-                {{ service.name }} – {{ service.price | currency: 'EUR' }}
+                {{ service.name }} – {{ service.price | currency: 'EUR' }} - {{ service.type }}
             </label>
         </div>
         }
     </div>
     }
-
-
-
-
-
     <button class="btn primary" (click)="submitBooking()">Confirm Booking</button>
 </div>
