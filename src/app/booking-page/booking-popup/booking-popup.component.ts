@@ -109,14 +109,17 @@ export class BookingPopupComponent implements OnInit {
       }
     }, 0);
 
-    const basePrice =
+    const baseTotal =
       this.unit.price_per_night * nights +
       Math.max(0, guests - this.unit.capacity) *
         this.unit.price_per_extra_person *
         nights +
       serviceTotal;
 
-    return Math.max(0, basePrice - this.promoDiscount());
+    const discount = this.promoDiscount();
+    const discountedTotal = baseTotal - (baseTotal * discount) / 100;
+
+    return Math.max(0, discountedTotal);
   });
 
   submitBooking() {
@@ -136,10 +139,6 @@ export class BookingPopupComponent implements OnInit {
       (opt) => +opt.value
     );
     this.selectedServiceIds.set(new Set(selectedOptions));
-  }
-
-  trackById(index: number, item: Service | undefined) {
-    return item?.id ?? index;
   }
 
   toggleServiceSelection(serviceId: number, checked: boolean) {
@@ -174,22 +173,29 @@ export class BookingPopupComponent implements OnInit {
     this.bookingService.validatePromoCode(code).subscribe({
       next: (discount) => {
         this.promoDiscount.set(discount);
-        console.log(`✅ Promo applied: -${discount}€`);
+        console.log(`Promo applied: -${discount}€`);
       },
-      error: () => {
+      error: (err) => {
+        console.warn(err);
         this.promoDiscount.set(0);
-        this.promoError.set('Invalid promo code.');
+        this.promoError.set('Invalid or expired promo code.');
       },
     });
   }
-
   sendRequest() {
-    console.log('Sending booking request with data:', {
-      checkIn: this.checkIn(),
-      checkOut: this.checkOut(),
-      guests: this.guests(),
-      total: this.totalPrice(),
-      services: Array.from(this.selectedServiceIds()),
+    if (this.clientForm.invalid) {
+      this.promoError.set('Please fill out all required fields.');
+      return;
+    }
+    const formData = this.clientForm.getRawValue();
+    this.bookingService.createPublicClient(formData).subscribe({
+      next: (client) => {
+        this.bookingService.setClientId(client.id);
+        this.showClientForm.set(false);
+      },
+      error: (err) => {
+        this.promoError.set('Client creation failed. Please try again.');
+      },
     });
   }
 
