@@ -164,9 +164,15 @@ export class ClientBookingService {
   }
 
   createPublicClient(clientData: any): Observable<Clients> {
+    const ownerId = this.selectedPropertyDetail()?.owner;
+    const payload = {
+      ...clientData,
+      owner_id: ownerId,
+    };
+
     return this.httpService.post<Clients>(
       `${environment.apiBaseUrl}/api/public/create-client/`,
-      clientData
+      payload
     );
   }
 
