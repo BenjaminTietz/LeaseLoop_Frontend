@@ -192,6 +192,8 @@ export class BookingPopupComponent implements OnInit {
       next: (client) => {
         this.bookingService.setClientId(client.id);
         this.showClientForm.set(false);
+        console.log('Client created successfully:', client);
+        // show success message or proceed with booking confirmation
       },
       error: (err) => {
         this.promoError.set('Client creation failed. Please try again.');
