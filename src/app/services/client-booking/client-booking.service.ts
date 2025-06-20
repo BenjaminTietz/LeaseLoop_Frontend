@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { HttpParams } from '@angular/common/http';
 import { NavigatorService } from '../navigator/navigator.service';
 import { Service } from '../../models/service.model';
+import { PromoCode } from '../../models/promocode.model';
 import { map, Observable } from 'rxjs';
 import { Clients } from '../../models/clients.model';
 
@@ -149,18 +150,16 @@ export class ClientBookingService {
       });
   }
 
-  validatePromoCode(code: string): Observable<number> {
+  validatePromoCode(code: string): Observable<PromoCode> {
     const payload = {
       code: code,
       owner_id: this.selectedPropertyDetail()?.owner,
     };
 
-    return this.httpService
-      .post<{ discount_percent: number }>(
-        `${environment.apiBaseUrl}/api/public/promocode/validate/`,
-        payload
-      )
-      .pipe(map((res) => res.discount_percent));
+    return this.httpService.post<PromoCode>(
+      `${environment.apiBaseUrl}/api/public/promocode/validate/`,
+      payload
+    );
   }
 
   createPublicClient(clientData: any): Observable<Clients> {
@@ -244,7 +243,6 @@ export class ClientBookingService {
         return false;
       }
 
-      // Buchungen prüfen
       const overlapping = this.bookings().some(
         (b) =>
           b.unit.id === unit.id &&
@@ -286,5 +284,65 @@ export class ClientBookingService {
 
   getClientId(): number | null {
     return this.clientId();
+  }
+
+  bookPublicClientWithStatus(
+    clientData: any,
+    bookingData: {
+      check_in: string;
+      check_out: string;
+      guests_count: number;
+      unit: number;
+      services: number[];
+      promo_code: number | null;
+    },
+    status: 'pending' | 'confirmed'
+  ): Observable<Booking> {
+    const ownerId = this.selectedPropertyDetail()?.owner;
+
+    const clientPayload = {
+      ...clientData,
+      owner_id: ownerId,
+    };
+
+    return new Observable<Booking>((observer) => {
+      this.httpService
+        .post<{ message: string; client: Clients }>(
+          `${environment.apiBaseUrl}/api/public/create-client/`,
+          clientPayload
+        )
+        .subscribe({
+          next: (res) => {
+            const client = res.client;
+            if (!client?.id) {
+              console.error(' Client ID is missing in response:', res);
+              observer.error(new Error('Client ID is missing'));
+              return;
+            }
+
+            this.setClientId(client.id);
+
+            const bookingPayload = {
+              ...bookingData,
+              client: client.id,
+              status: status,
+            };
+
+            console.log(' Client created with ID:', client.id);
+            console.log(' Booking payload:', bookingPayload);
+
+            this.httpService
+              .post<Booking>(
+                `${environment.apiBaseUrl}/api/public/create-booking/`,
+                bookingPayload
+              )
+              .subscribe({
+                next: (booking) => observer.next(booking),
+                error: (bookingErr) => observer.error(bookingErr),
+              });
+          },
+          error: (clientErr) => observer.error(clientErr),
+        });
+    });
   }
 }
