@@ -54,6 +54,7 @@ export class BookingPopupComponent implements OnInit {
   usedPromoCode = signal<string>('');
   promoDiscount = signal<number>(0);
   promoError = signal<string | null>(null);
+  promoCodeId = signal<number | null>(null);
   showServices = signal<boolean>(false);
   selectedServiceIds = signal<Set<number>>(new Set());
   showClientForm = signal<boolean>(false);
@@ -171,44 +172,78 @@ export class BookingPopupComponent implements OnInit {
 
     this.promoError.set(null);
     this.bookingService.validatePromoCode(code).subscribe({
-      next: (discount) => {
-        this.promoDiscount.set(discount);
-        console.log(`Promo applied: -${discount}€`);
+      next: (promo) => {
+        this.promoDiscount.set(promo.discount_percent);
+        this.promoCodeId.set(promo.id);
+        console.log(`Promo applied: -${promo.discount_percent}%`);
       },
       error: (err) => {
-        console.warn(err);
         this.promoDiscount.set(0);
         this.promoError.set('Invalid or expired promo code.');
       },
     });
   }
+
+  confirmBooking() {
+    if (this.clientForm.invalid) {
+      this.promoError.set('Please fill out all required fields.');
+      return;
+    }
+
+    const clientData = this.clientForm.getRawValue();
+    const bookingData = {
+      check_in: this.checkIn(),
+      check_out: this.checkOut(),
+      guests_count: this.guests(),
+      unit: this.unit.id,
+      services: Array.from(this.selectedServiceIds()),
+      promo_code: this.promoCodeId() ?? null,
+    };
+
+    this.bookingService
+      .bookPublicClientWithStatus(clientData, bookingData, 'confirmed')
+      .subscribe({
+        next: (res) => {
+          console.log('Booking confirmed:', res);
+          this.closePopup(); // TODO: Show success message ask for payment
+        },
+        error: (err) => {
+          console.error('Booking failed:', err);
+          this.promoError.set(
+            err.error?.error || 'Booking failed. Please try again.'
+          );
+        },
+      });
+  }
+
   sendRequest() {
     if (this.clientForm.invalid) {
       this.promoError.set('Please fill out all required fields.');
       return;
     }
-    const formData = this.clientForm.getRawValue();
-    this.bookingService.createPublicClient(formData).subscribe({
-      next: (client) => {
-        this.bookingService.setClientId(client.id);
-        this.showClientForm.set(false);
-        console.log('Client created successfully:', client);
-        // show success message or proceed with booking confirmation
-      },
-      error: (err) => {
-        this.promoError.set('Client creation failed. Please try again.');
-      },
-    });
-  }
 
-  confirmBooking() {
-    console.log('Confirming booking with data:', {
-      checkIn: this.checkIn(),
-      checkOut: this.checkOut(),
-      guests: this.guests(),
-      total: this.totalPrice(),
+    const clientData = this.clientForm.getRawValue();
+    const bookingData = {
+      check_in: this.checkIn(),
+      check_out: this.checkOut(),
+      guests_count: this.guests(),
+      unit: this.unit.id,
       services: Array.from(this.selectedServiceIds()),
-    });
-    // SHOW PAYMENT INFO HERE
+      promo_code: this.promoCodeId() ?? null,
+    };
+    this.bookingService
+      .bookPublicClientWithStatus(clientData, bookingData, 'pending')
+      .subscribe({
+        next: (res) => {
+          console.log('Booking request sent:', res);
+          this.closePopup(); // TODO: Show success message show request status
+        },
+        error: (err) => {
+          console.error('Booking request failed:', err);
+          this.promoError.set(
+            err.error?.error || 'Request failed. Please try again.'
+          );
+        },
+      });
   }
 }
