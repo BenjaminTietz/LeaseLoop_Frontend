@@ -183,12 +183,19 @@ export class BookingPopupComponent implements OnInit {
     });
   }
   sendRequest() {
-    console.log('Sending booking request with data:', {
-      checkIn: this.checkIn(),
-      checkOut: this.checkOut(),
-      guests: this.guests(),
-      total: this.totalPrice(),
-      services: Array.from(this.selectedServiceIds()),
+    if (this.clientForm.invalid) {
+      this.promoError.set('Please fill out all required fields.');
+      return;
+    }
+    const formData = this.clientForm.getRawValue();
+    this.bookingService.createPublicClient(formData).subscribe({
+      next: (client) => {
+        this.bookingService.setClientId(client.id);
+        this.showClientForm.set(false);
+      },
+      error: (err) => {
+        this.promoError.set('Client creation failed. Please try again.');
+      },
     });
   }
 

@@ -8,6 +8,7 @@ import { HttpParams } from '@angular/common/http';
 import { NavigatorService } from '../navigator/navigator.service';
 import { Service } from '../../models/service.model';
 import { map, Observable } from 'rxjs';
+import { Clients } from '../../models/clients.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class ClientBookingService {
   filteredMode = signal(false);
   selectedPropertyDetail = signal<Property | null>(null);
   services = signal<Service[]>([]);
+  clientId = signal<number | null>(null);
 
   showPropertyDetail = signal(false);
   countryList = computed(() =>
@@ -161,6 +163,13 @@ export class ClientBookingService {
       .pipe(map((res) => res.discount_percent));
   }
 
+  createPublicClient(clientData: any): Observable<Clients> {
+    return this.httpService.post<Clients>(
+      `${environment.apiBaseUrl}/api/public/create-client/`,
+      clientData
+    );
+  }
+
   resetFilters() {
     this.loadInitialData();
     this.filteredMode.set(false);
@@ -264,4 +273,12 @@ export class ClientBookingService {
   getPropertyById = (id: number) => {
     return this.properties().find((p) => p.id === id);
   };
+
+  setClientId(id: number) {
+    this.clientId.set(id);
+  }
+
+  getClientId(): number | null {
+    return this.clientId();
+  }
 }
