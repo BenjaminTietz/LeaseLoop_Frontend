@@ -113,3 +113,7 @@
         <app-landing-footer></app-landing-footer>
     </content>
 </main>
+
+<app-booking-status-popup *ngIf="bookingService.bookingStatusPopup()"
+    [status]="bookingService.bookingStatusPopup()!.status" [bookingId]="bookingService.bookingStatusPopup()!.bookingId"
+    (close)="bookingService.closeBookingStatusPopup()">

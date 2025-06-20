@@ -25,11 +25,16 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-
+import { BookingStatusPopupComponent } from '../booking-status-popup/booking-status-popup.component';
 @Component({
   selector: 'app-booking-popup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    BookingStatusPopupComponent,
+  ],
   templateUrl: './booking-popup.component.html',
   styleUrl: './booking-popup.component.scss',
   animations: [
@@ -204,14 +209,22 @@ export class BookingPopupComponent implements OnInit {
       .bookPublicClientWithStatus(clientData, bookingData, 'confirmed')
       .subscribe({
         next: (res) => {
+          this.bookingService.setBookingStatusPopup({
+            status: 'confirmed',
+            bookingId: res.id.toString(),
+            message:
+              'Your booking is confirmed! Please check your email for details.',
+          });
           console.log('Booking confirmed:', res);
-          this.closePopup(); // TODO: Show success message ask for payment
+          this.closePopup();
         },
         error: (err) => {
-          console.error('Booking failed:', err);
-          this.promoError.set(
-            err.error?.error || 'Booking failed. Please try again.'
-          );
+          this.closePopup();
+          this.bookingService.setBookingStatusPopup({
+            status: 'unavailable',
+            message:
+              'The selected unit is no longer available. Please choose another one.',
+          });
         },
       });
   }
@@ -235,14 +248,22 @@ export class BookingPopupComponent implements OnInit {
       .bookPublicClientWithStatus(clientData, bookingData, 'pending')
       .subscribe({
         next: (res) => {
+          this.bookingService.setBookingStatusPopup({
+            status: 'pending',
+            bookingId: res.id.toString(),
+            message:
+              'Your booking request has been sent. We’ll get back to you shortly!',
+          });
           console.log('Booking request sent:', res);
           this.closePopup(); // TODO: Show success message show request status
         },
         error: (err) => {
-          console.error('Booking request failed:', err);
-          this.promoError.set(
-            err.error?.error || 'Request failed. Please try again.'
-          );
+          this.closePopup();
+          this.bookingService.setBookingStatusPopup({
+            status: 'unavailable',
+            message:
+              'The selected unit is no longer available. Please choose another one.',
+          });
         },
       });
   }

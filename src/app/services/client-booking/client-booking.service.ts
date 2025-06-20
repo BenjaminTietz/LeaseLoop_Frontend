@@ -11,6 +11,12 @@ import { PromoCode } from '../../models/promocode.model';
 import { map, Observable } from 'rxjs';
 import { Clients } from '../../models/clients.model';
 
+type BookingPopupStatus = {
+  status: 'confirmed' | 'pending' | 'unavailable';
+  message: string;
+  bookingId?: string;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -31,6 +37,9 @@ export class ClientBookingService {
   clientId = signal<number | null>(null);
 
   showPropertyDetail = signal(false);
+
+  bookingStatusPopup = signal<BookingPopupStatus | null>(null);
+
   countryList = computed(() =>
     [
       ...new Set(
@@ -344,5 +353,13 @@ export class ClientBookingService {
           error: (clientErr) => observer.error(clientErr),
         });
     });
+  }
+
+  setBookingStatusPopup(status: BookingPopupStatus | null) {
+    this.bookingStatusPopup.set(status);
+  }
+
+  closeBookingStatusPopup() {
+    this.bookingStatusPopup.set(null);
   }
 }

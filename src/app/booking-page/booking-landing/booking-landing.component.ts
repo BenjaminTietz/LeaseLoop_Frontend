@@ -7,6 +7,7 @@ import { LandingFooterComponent } from '../../shared/landing-components/landing-
 import { LogoComponent } from '../../shared/landing-components/logo/logo.component';
 import { ImageSliderComponent } from '../../shared/booking-page/image-slider/image-slider.component';
 import { RouterOutlet } from '@angular/router';
+import { BookingStatusPopupComponent } from '../booking-status-popup/booking-status-popup.component';
 
 @Component({
   selector: 'app-booking-landing',
@@ -18,6 +19,7 @@ import { RouterOutlet } from '@angular/router';
     LogoComponent,
     ImageSliderComponent,
     RouterOutlet,
+    BookingStatusPopupComponent,
   ],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
