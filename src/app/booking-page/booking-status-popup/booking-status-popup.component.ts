@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, computed, inject } from '@angular/core';
+import { Component, Input, OnInit, computed, inject } from '@angular/core';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
+import { NavigatorService } from '../../services/navigator/navigator.service';
 
 @Component({
   selector: 'app-booking-status-popup',
@@ -9,8 +10,9 @@ import { ClientBookingService } from '../../services/client-booking/client-booki
   templateUrl: './booking-status-popup.component.html',
   styleUrl: './booking-status-popup.component.scss',
 })
-export class BookingStatusPopupComponent {
+export class BookingStatusPopupComponent implements OnInit {
   bookingService = inject(ClientBookingService);
+  navigator = inject(NavigatorService);
   @Input() status!: 'confirmed' | 'pending' | 'unavailable';
   @Input() bookingId?: string;
 
@@ -41,6 +43,15 @@ export class BookingStatusPopupComponent {
         return '';
     }
   });
+
+  ngOnInit(): void {
+    if (this.status === 'unavailable') {
+      setTimeout(() => {
+        this.navigator.navigateTo('');
+        this.bookingService.closeBookingStatusPopup();
+      }, 3000);
+    }
+  }
 
   close() {
     this.bookingService.closeBookingStatusPopup();
