@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpService } from '../httpclient/http.service';
 import { HttpClient } from '@angular/common/http';
+import { getMediaUrl } from '../../utils/media-path.utils';
 
 export interface UserData {
   tax_id: string;
@@ -31,7 +32,6 @@ export class SettingsService {
   http  = inject(HttpClient)
   httpService = inject(HttpService)
   baseURL = environment.apiBaseUrl
-  mediaUrl = environment.mediaBaseUrl
   sending = signal(false)
   successful = signal(false)
   errorMessage = signal('')
@@ -49,7 +49,7 @@ export class SettingsService {
   })
 
   logoPath = computed(() => {
-  return this.userLogo() && this.userLogo() !== 'null' ? this.mediaUrl + this.userLogo() : '';
+  return this.userLogo() && this.userLogo() !== 'null' ? getMediaUrl(this.userLogo()) : '';
   });
 
   isGuestEmail = computed(() => {

@@ -3,6 +3,7 @@ import { PropertiesService } from '../../../services/properties-service/properti
 import { MatIcon } from '@angular/material/icon';
 import { environment } from '../../../../environments/environment';
 import { UnitsService } from '../../../services/units-service/units.service';
+import { getMediaUrl } from '../../../utils/media-path.utils';
 
 @Component({
   selector: 'app-image-upload',
@@ -22,7 +23,6 @@ export class ImageUploadComponent {
     images: File[]= []
     newImageDescriptions :string[] = []
     missingDescription: boolean = false;
-    mediaUrl = environment.mediaBaseUrl;
     imageTooBig = signal('');
     maxImagesReached = signal(false);
     isCreateMode = computed(() => !this.propertyService.selectedProperty() && !this.unitService.selectedUnit())
@@ -42,7 +42,7 @@ export class ImageUploadComponent {
       const imagesToConvert = property?.images || unit?.images || [];
     
       imagesToConvert.forEach((image) => {
-        this.convertImageUrlToBase64(this.mediaUrl + image.image)
+        this.convertImageUrlToBase64(getMediaUrl(image.image))
           .then((base64) => this.existingImageBase64s.push(base64));
       });
     }
