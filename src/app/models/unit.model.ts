@@ -1,3 +1,4 @@
+import { Amenity } from './amenity.model';
 export interface Unit {
   id: number;
   name: string;
@@ -15,6 +16,7 @@ export interface Unit {
   active: boolean;
   deleted: boolean;
   amenities: number[];
+  amenity_details?: Amenity[];
 }
 
 export interface PropertyShort {

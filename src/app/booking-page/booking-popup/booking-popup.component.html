@@ -30,7 +30,7 @@
         </div>
     </div>
     <div *ngIf="promoDiscount() > 0" class="promo-success">
-        Promo applied: -{{ promoDiscount() | currency: 'EUR' }}
+        Promo applied: -{{ promoDiscount() }} %
     </div>
     <div *ngIf="promoError()" class="promo-error">
         {{ promoError() }}
