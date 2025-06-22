@@ -30,7 +30,7 @@
                         <td>{{ invoice.booking.total_price.toFixed(2) }}</td>
                         <td>
                             <div class="btn-container">
-                                <a [href]="BASE_URL + invoice.pdf_file" download target="_blank">
+                                <a [href]="getMediaUrl(invoice.pdf_file)" download target="_blank">
                                     <button class="btn">Download</button>
                                 </a>
                             </div>
