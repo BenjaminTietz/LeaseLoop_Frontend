@@ -6,6 +6,8 @@ import { PagingComponent } from "../../shared/dashboard-components/paging/paging
 import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
 import { environment } from '../../../environments/environment';
 import { FilterComponent } from "../../shared/global/filter/filter.component";
+import { getMediaUrl } from '../../utils/media-path.utils';
+
 
 @Component({
   selector: 'app-invoices',
@@ -17,7 +19,7 @@ import { FilterComponent } from "../../shared/global/filter/filter.component";
 export class InvoicesComponent implements OnInit {
   invoiceService = inject(InvoiceService);
   searchInput = signal('');
-  BASE_URL = environment.mediaBaseUrl;
+  getMediaUrl = getMediaUrl;
 
   filterBy = [
     { label: 'Name (A-Z)', value: 'ascending_name' },
@@ -44,7 +46,4 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.getInvoices(1, this.searchInput());
   }
 
-  getMediaUrl(filePath: string): string {
-  return `${this.BASE_URL}/${filePath}`.replace(/([^:]\/)\/+/g, '$1');
-  }
 }

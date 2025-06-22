@@ -11,6 +11,7 @@ import {
 import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
 import { MatIcon } from '@angular/material/icon';
 import { environment } from '../../../environments/environment';
+import { getMediaUrl } from '../../utils/media-path.utils';
 
 @Component({
   selector: 'app-settings',
@@ -42,7 +43,7 @@ export class SettingsComponent {
       return 'favicon.ico';
     } else {
       return (
-        environment.mediaBaseUrl + this.settingsService.newUserData().image.logo
+        getMediaUrl(this.settingsService.newUserData().image.logo)
       );
     }
   });
