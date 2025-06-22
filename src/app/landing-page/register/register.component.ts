@@ -54,4 +54,12 @@ export class RegisterComponent {
     this.auth.registerData.set(this.registerForm.value);
     this.auth.register();
   }
+
+  ngOnInit(){
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+    this.auth.loginData.set({});
+  }
 }
