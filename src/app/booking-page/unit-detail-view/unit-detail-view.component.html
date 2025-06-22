@@ -2,7 +2,6 @@
     <!-- Image Slider -->
     <section class="slider-wrapper">
         <app-image-slider *ngIf="unitImages().length" [images]="unitImages()" [autoPlay]="true" [interval]="5000" />
-
     </section>
 
     <!-- Unit Headline -->
@@ -12,19 +11,14 @@
             <p *ngIf="property()?.address as address">
                 {{ address.street }}, {{ address.city }}, {{ address.country }}
             </p>
-
         </div>
         <div class="right">
             <button class="btn primary" (click)="openBookingPopup()">Book now</button>
-        </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features">
-        <p>Features will be listed here:</p>
-        <div class="feature">
-            <span class="icon">✔</span>
-            <span>FEATURE</span>
+            <div class="price-box">
+                <span class="label">Price starts from</span>
+                <span class="price">€ {{ unit()?.price_per_night | number: '1.2-2' }} <span class="unit">/
+                        night</span></span>
+            </div>
         </div>
     </section>
 
@@ -34,12 +28,17 @@
         <p>{{ unit()?.description }}</p>
     </section>
 
-    <!-- Availability (Placeholder for the availability calendar) -->
-    <section class="availability">
-        <h2>Availability</h2>
-        <p>Calendar or booking options will follow here.</p>
+    <!-- Amenities -->
+    <section class="amenities">
+        <h2>Amenities</h2>
+        <div class="amenities-container">
+            @for (amenity of unit()?.amenity_details; track amenity; let index = $index) {
+            <div class="amenity">
+                <span>{{ amenity.label }}</span>
+            </div>
+            }
+        </div>
     </section>
-
     <!-- Booking Popup -->
     <app-booking-popup *ngIf="showPopup() && unit()" [unit]="unit()!" [closePopup]="closeBookingPopup">
     </app-booking-popup>

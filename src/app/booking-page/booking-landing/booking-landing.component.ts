@@ -124,5 +124,6 @@ export class BookingLandingComponent implements OnInit {
 
   resetFilters() {
     this.bookingService.resetFilters();
+    this.searchInput.set('');
   }
 }

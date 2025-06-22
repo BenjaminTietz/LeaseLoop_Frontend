@@ -17,10 +17,15 @@
         @include display(flex, row, space-between, center);
         margin-bottom: 24px;
         flex-wrap: wrap;
+        min-height: 20svh;
 
         .left h1 {
-            font-size: 32px;
+            font-size: 42px;
             margin-bottom: 8px;
+        }
+
+        .left p {
+            font-size: 18px;
         }
 
         .right {
@@ -36,41 +41,80 @@
                     background-color: #005eff;
                 }
             }
+
+            .price-box {
+                margin-top: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+
+                .label {
+                    font-size: 14px;
+                }
+
+                a .price {
+                    font-size: 22px;
+                    font-weight: 600;
+                    color: #2ac1bc;
+
+                    .unit {
+                        font-size: 16px;
+                        font-weight: normal;
+                        color: #7a7a7a;
+                        margin-left: 6px;
+                    }
+                }
+            }
+
         }
     }
 
-    .features {
-        display: flex;
-        flex-wrap: wrap;
+    .amenities {
+        @include display(flex, column, flex-start, flex-start);
         gap: 16px;
         margin-bottom: 24px;
 
-        .feature {
-            background: #f0f4ff;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
+        h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
 
-            .icon {
-                color: #005eff;
-                margin-right: 8px;
+        .amenities-container {
+            @include display(flex, row, flex-start, flex-start);
+            gap: 16px;
+            flex-wrap: wrap;
+
+            .amenity {
+                background: #f0f4ff;
+                padding: 8px 16px;
+                border-radius: 6px;
+                height: 52px;
+                @include display(flex, column, center, center);
+
+
+                span {
+                    margin-left: 8px;
+                    font-size: 22px;
+                    font-weight: bold;
+                    color: black;
+                    text-align: center;
+                    text-wrap: nowrap;
+                }
             }
         }
     }
 
-    .description,
-    .availability {
+    .description {
         margin-bottom: 32px;
 
         h2 {
-            font-size: 20px;
+            font-size: 32px;
             margin-bottom: 12px;
         }
 
         p {
-            font-size: 16px;
+            font-size: 24px;
             line-height: 1.6;
         }
     }
