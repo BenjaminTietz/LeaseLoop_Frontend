@@ -43,4 +43,8 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.filterValue.set(filter);
     this.invoiceService.getInvoices(1, this.searchInput());
   }
+
+  getMediaUrl(filePath: string): string {
+  return `${this.BASE_URL}/${filePath}`.replace(/([^:]\/)\/+/g, '$1');
+  }
 }
