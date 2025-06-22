@@ -23,45 +23,48 @@
             <!-- Selector selection -->
             <section class="selector">
                 <!-- Combined Search Input -->
-                <div class="custom-dropdown">
-                    <label for="location">Search City or Country</label>
-                    <div class="input-wrapper">
-                        <input id="location" type="text" placeholder="Start typing..." [value]="searchInput()"
-                            (input)="onLocationInput($event)" (focus)="showLocationDropdown.set(true)"
-                            (blur)="onBlurDropdownClose()" />
+                <div class="selector-container">
+                    <div class="custom-dropdown">
+                        <label for="location">Search City or Country</label>
+                        <div class="input-wrapper">
+                            <input id="location" type="text" placeholder="Start typing..." [value]="searchInput()"
+                                (input)="onLocationInput($event)" (focus)="showLocationDropdown.set(true)"
+                                (blur)="onBlurDropdownClose()" />
 
-                        <span *ngIf="searchInput()" class="clear-icon" (mousedown)="clearSearchInput()">&#10005;</span>
-                    </div>
-                    @if (showLocationDropdown() && filteredLocations().length > 0) {
-                    <ul class="dropdown-list">
-                        @for (location of filteredLocations(); track location) {
-                        <li (mousedown)="onLocationSelect(location)">{{ location }}</li>
-                        }
-                    </ul>
-                    }
-                </div>
-                <!-- Date selection -->
-                <div class="date-selector">
-                    <div class="date-input">
-                        <p>Check-in</p>
-                        <input type="date" [min]="today" [value]="bookingService.checkInDate()"
-                            (input)="setCheckInFromEvent($event)" />
-                    </div>
-                    <div class="date-input">
-                        <p>Check-out</p>
-                        <input type="date" [min]="today" [value]="bookingService.checkOutDate()"
-                            (input)="setCheckOutFromEvent($event)" />
-                    </div>
-                    <div class="date-input guest-count">
-                        <p>Guests</p>
-                        <input type="number" [min]="1" [max]="maxGuestCapacity()" [value]="bookingService.guestCount()"
-                            (input)="setGuestCountFromEvent($event)" />
-                        @if (bookingService.guestCount() >= maxGuestCapacity()) {
-                        <p class="info">Max. guest capacity reached – please reduce guest count or change filters.</p>
+                            <span *ngIf="searchInput()" class="clear-icon"
+                                (mousedown)="clearSearchInput()">&#10005;</span>
+                        </div>
+                        @if (showLocationDropdown() && filteredLocations().length > 0) {
+                        <ul class="dropdown-list">
+                            @for (location of filteredLocations(); track location) {
+                            <li (mousedown)="onLocationSelect(location)">{{ location }}</li>
+                            }
+                        </ul>
                         }
                     </div>
-                    <button class="btn" (click)="searchAvailableUnits()">Search</button>
+                    <!-- Date selection -->
+                    <div class="date-selector">
+                        <div class="date-input">
+                            <p>Check-in</p>
+                            <input type="date" [min]="today" [value]="bookingService.checkInDate()"
+                                (input)="setCheckInFromEvent($event)" />
+                        </div>
+                        <div class="date-input">
+                            <p>Check-out</p>
+                            <input type="date" [min]="today" [value]="bookingService.checkOutDate()"
+                                (input)="setCheckOutFromEvent($event)" />
+                        </div>
+                        <div class="date-input guest-count">
+                            <p>Guests</p>
+                            <input type="number" [min]="1" [max]="maxGuestCapacity()"
+                                [value]="bookingService.guestCount()" (input)="setGuestCountFromEvent($event)" />
+                        </div>
+                        <button class="btn search-btn" (click)="searchAvailableUnits()">Search</button>
+                    </div>
                 </div>
+                @if (bookingService.guestCount() >= maxGuestCapacity()) {
+                <p class="info">Max. guest capacity reached – please reduce guest count or change filters.</p>
+                }
             </section>
             <!-- Mainarea -->
             <ng-container *ngIf="searchIsComplete(); else noResultsView">
