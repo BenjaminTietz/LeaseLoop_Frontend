@@ -39,7 +39,7 @@
   <div class="image-field">
     @for(image of propertyService.selectedProperty()?.images || unitService.selectedUnit()?.images; track image.id) {
     <div class="image">
-      <img [src]="mediaUrl + image.image" alt="property image" />
+      <img [src]="getMediaUrl(image.image)" alt="property image" />
       <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
       <textarea type="text" placeholder="Image description" required [value]="image.alt_text || ''" #descInput
       (input)="updateExistingImageDescription(image.id, descInput.value); onDescriptionChange()"></textarea>

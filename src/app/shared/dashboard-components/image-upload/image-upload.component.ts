@@ -31,6 +31,8 @@ export class ImageUploadComponent {
       (this.unitService.selectedUnit()?.images?.length || 0) > 0
     );
 
+    getMediaUrl = getMediaUrl
+
     ngOnInit(): void {
       this.propertyService.clearDeletedImages();
       //this.unitService.clearDeletedImages();
