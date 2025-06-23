@@ -38,6 +38,7 @@ export class BookingLandingComponent implements OnInit {
       loc.toLowerCase().includes(this.searchInput().toLowerCase())
     );
   });
+  
 
   readonly searchIsComplete = computed(
     () =>
@@ -55,6 +56,7 @@ export class BookingLandingComponent implements OnInit {
   ngOnInit() {
     this.bookingService.loadInitialData();
     this.clearSearchInput();
+    this.showLocationDropdown.set(false);
   }
 
   /**
