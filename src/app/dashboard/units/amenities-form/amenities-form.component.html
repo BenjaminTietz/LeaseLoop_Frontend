@@ -7,16 +7,12 @@
       <span class="selection-info">
         {{ (selectedByCategory()[category] || []).length }}
         selected
-       
-          of {{ groupedAmenities()[category].length }}
-        
-         <mat-icon class="arrow-icon">
-        {{ openCategory() === category ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
-      </mat-icon>
+        of {{ groupedAmenities()[category].length }}
+        <mat-icon class="arrow-icon">
+          {{ openCategory() === category ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+        </mat-icon>
       </span>
-     
     </div>
-
     @if (openCategory() === category) {
     <div class="dropdown-content">
       @for (amenity of groupedAmenities()[category]; track amenity.id) {

@@ -29,7 +29,6 @@ import { HelpPageComponent } from './dashboard/help-page/help-page.component';
 
 // Booking Page
 import { BookingLandingComponent } from './booking-page/booking-landing/booking-landing.component';
-import { ClientBookingFormComponent } from './booking-page/client-booking-form/client-booking-form.component';
 import { UnitDetailViewComponent } from './booking-page/unit-detail-view/unit-detail-view.component';
 import { PropertyDetailViewComponent } from './booking-page/property-detail-view/property-detail-view.component';
 
@@ -80,5 +79,4 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: 'book', component: ClientBookingFormComponent },
 ];
