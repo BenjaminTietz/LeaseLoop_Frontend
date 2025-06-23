@@ -4,11 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ProgressBarComponent } from '../../shared/global/progress-bar/progress-bar.component';
 import { PagingComponent } from '../../shared/dashboard-components/paging/paging.component';
 import { SearchInputComponent } from '../../shared/dashboard-components/search-input/search-input.component';
-import { environment } from '../../../environments/environment';
-
 import { FilterComponent } from '../../shared/global/filter/filter.component';
-
-import { FilterComponent } from "../../shared/global/filter/filter.component";
 import { getMediaUrl } from '../../utils/media-path.utils';
 
 
