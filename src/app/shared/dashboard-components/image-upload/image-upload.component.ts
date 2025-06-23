@@ -10,6 +10,7 @@ import { PropertiesService } from '../../../services/properties-service/properti
 import { MatIcon } from '@angular/material/icon';
 import { environment } from '../../../../environments/environment';
 import { UnitsService } from '../../../services/units-service/units.service';
+import { getMediaUrl } from '../../../utils/media-path.utils';
 
 @Component({
   selector: 'app-image-upload',
@@ -19,6 +20,7 @@ import { UnitsService } from '../../../services/units-service/units.service';
   styleUrl: './image-upload.component.scss',
 })
 export class ImageUploadComponent {
+
   imagePreviews: string[] = [];
   @Output() imagesChange = new EventEmitter<any[]>();
   @Output() newImageDescriptionsChange = new EventEmitter<string[]>();
@@ -43,11 +45,25 @@ export class ImageUploadComponent {
       (this.unitService.selectedUnit()?.images?.length || 0) > 0
   );
 
-  ngOnInit(): void {
-    this.propertyService.clearDeletedImages();
-    //this.unitService.clearDeletedImages();
-    const property = this.propertyService.selectedProperty();
-    const unit = this.unitService.selectedUnit();
+
+    getMediaUrl = getMediaUrl
+
+    ngOnInit(): void {
+      this.propertyService.clearDeletedImages();
+      //this.unitService.clearDeletedImages();
+      const property = this.propertyService.selectedProperty();
+      const unit = this.unitService.selectedUnit();
+    
+      this.existingImageBase64s = [];
+    
+      const imagesToConvert = property?.images || unit?.images || [];
+    
+      imagesToConvert.forEach((image) => {
+        this.convertImageUrlToBase64(getMediaUrl(image.image))
+          .then((base64) => this.existingImageBase64s.push(base64));
+      });
+    }
+
 
     this.existingImageBase64s = [];
 

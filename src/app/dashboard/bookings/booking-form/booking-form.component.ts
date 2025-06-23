@@ -53,6 +53,7 @@ export class BookingFormComponent {
   serviceService = inject(ServiceManagementService);
   unitService = inject(UnitsService);
   clientInput = signal('');
+  clientTyped = signal(false);
   initialClientInput = computed(() => {
     const selected = this.bookingService.selectedBooking();
     if (selected && selected.client) {
@@ -83,6 +84,7 @@ export class BookingFormComponent {
   showClient = signal(false);
   showRestOfForm = signal(false);
   nochangesMade = signal(true);
+
 
   bookingForm = new FormBuilder().nonNullable.group({
     property: [
@@ -141,6 +143,17 @@ export class BookingFormComponent {
 
   selectedProperty = toSignal(this.bookingForm.get('property')!.valueChanges, {
     initialValue: null,
+
+  filteredServicesByProperties = computed(() => {
+    const selectedProperty = this.bookingForm.get('property')?.value;
+    const services = this.serviceService.services();
+
+    if (selectedProperty) {
+      return services.filter(service => service.property === selectedProperty);
+    } else {
+      return services;
+    }
+
   });
 
   /**
@@ -283,6 +296,7 @@ export class BookingFormComponent {
   onClientChange(clientId: number) {
     this.showRestOfForm.set(true);
     this.nochangesMade.set(false);
+    this.clientTyped.set(true);
   }
 
   /**
@@ -373,7 +387,10 @@ export class BookingFormComponent {
     this.availableUnits.set(units);
   }
 
-  closeForm = () => this.close.emit();
+  closeForm = () => {
+    if(this.bookingService.sending()) return
+    this.close.emit()
+  };
 
   /**
    * Loads all the data for the booking form. This includes:
@@ -395,6 +412,11 @@ export class BookingFormComponent {
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
+    setTimeout(() => {
+      console.log(this.serviceService.services());
+    }, 3000);
+    
+    
   }
 
   /**
@@ -583,4 +605,7 @@ export class BookingFormComponent {
   getClientInputValue() {
     return this.clientInput() || this.initialClientInput();
   }
+
+    return this.clientTyped() ? this.clientInput() : this.initialClientInput();
+  } 
 }

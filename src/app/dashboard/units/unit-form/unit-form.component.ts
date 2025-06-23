@@ -151,6 +151,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
         active: selected.active,
         amenities: selected.amenities,
       });
+
     }
   }
 
