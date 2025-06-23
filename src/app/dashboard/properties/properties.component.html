@@ -1,18 +1,17 @@
 <main>
     <content>
-        
         <div class="header">
             <h1>Properties</h1>
             <button (click)="openForm()">
                 <mat-icon>add</mat-icon>
-                <span >New Property</span> 
+                <span>New Property</span>
             </button>
-            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search properties" ></app-search-input>
+            <app-search-input (searchTerm)="this.search($event)" placeholder="Search properties"></app-search-input>
             <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterProperties($event)"></app-filter>
         </div>
         <div class="table-wrapper">
             @if(propertyService.sending()){
-                <app-progress-bar></app-progress-bar>
+            <app-progress-bar></app-progress-bar>
             }
             <table class="table">
                 <thead>
@@ -29,22 +28,26 @@
                 <tbody>
                     @for (property of propertyService.properties(); track property.id;) {
                     <tr>
-                        <td> <mat-icon [ngClass]="property.active ? 'active' : 'inactive'">radio_button_checked</mat-icon> </td>
+                        <td> <mat-icon
+                                [ngClass]="property.active ? 'active' : 'inactive'">radio_button_checked</mat-icon>
+                        </td>
                         <td>{{property.name}}</td>
                         <td>{{property.units.length}}</td>
                         <td>{{property.description}}</td>
-                        <td>{{property.address.country}}, {{property.address.city}}, {{property.address.street}} {{property.address.house_number}}</td>
+                        <td>{{property.address.country}}, {{property.address.city}}, {{property.address.street}}
+                            {{property.address.house_number}}</td>
                         <td>{{property.images.length}}</td>
-                        <td>  <button class="btn" [disabled]="propertyService.sending()" (click)=" openEditForm(property)">Edit</button></td>
-
+                        <td> <button class="btn" [disabled]="propertyService.sending()"
+                                (click)=" openEditForm(property)">Edit</button></td>
                     </tr>
                     }
                 </tbody>
             </table>
         </div>
-            <app-paging [currentPage]="propertyService.currentPage()" [totalPages]="propertyService.totalPages()" (pageChanged)="propertyService.loadPaginatedProperties($event, searchInput())"></app-paging>
+        <app-paging [currentPage]="propertyService.currentPage()" [totalPages]="propertyService.totalPages()"
+            (pageChanged)="propertyService.loadPaginatedProperties($event, searchInput())"></app-paging>
     </content>
     @if(formOpen()) {
-        <app-property-form (close)="closeForm()"></app-property-form>
+    <app-property-form (close)="closeForm()"></app-property-form>
     }
 </main>

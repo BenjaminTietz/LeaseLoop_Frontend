@@ -6,67 +6,97 @@ import { ClickOutsideDirective } from '../../../directives/outside-click/click-o
 import { FormService } from '../../../services/form-service/form.service';
 import { environment } from '../../../../environments/environment';
 import { HttpService } from '../../../services/httpclient/http.service';
-import { ProgressBarComponent } from "../../../shared/global/progress-bar/progress-bar.component";
+import { ProgressBarComponent } from '../../../shared/global/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-contact-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIcon, ClickOutsideDirective, ProgressBarComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatIcon,
+    ClickOutsideDirective,
+    ProgressBarComponent,
+  ],
   templateUrl: './contact-form.component.html',
-  styleUrl: './contact-form.component.scss'
+  styleUrl: './contact-form.component.scss',
 })
 export class ContactFormComponent {
-  @Output() close = new EventEmitter()
-  formService = inject(FormService)
-  httpClient = inject(HttpService)
-  sending = signal(false)
+  @Output() close = new EventEmitter();
+  formService = inject(FormService);
+  httpClient = inject(HttpService);
+  sending = signal(false);
 
-  themes = signal(['dashboard', 'properties', 'bookings', 'clients', 'settings',
-  'units', 'services', 'promocodes', 'invoices', 'analytics', 'technical'])
-  
+  themes = signal([
+    'dashboard',
+    'properties',
+    'bookings',
+    'clients',
+    'settings',
+    'units',
+    'services',
+    'promocodes',
+    'invoices',
+    'analytics',
+    'technical',
+  ]);
+
   closeForm = () => {
-    this.sending.set(false)
-    this.close.emit()
-  }
+    this.sending.set(false);
+    this.close.emit();
+  };
 
   contactForm = new FormBuilder().nonNullable.group({
     message: ['', [Validators.required, Validators.minLength(20)]],
-    theme: ['', [Validators.required]]
-  })
-
+    theme: ['', [Validators.required]],
+  });
 
   sendMessage = () => {
-    this.sending.set(true)
-    this.httpClient.post(environment.apiBaseUrl + '/api/contact/', this.contactForm.value).subscribe({
-      next: () => {
-        this.closeForm()
-        this.sending.set(false)
-      },
-      error: () => {
-        console.error('Failed to send message')
-        this.sending.set(false)
-      }
-      
-    })
+    this.sending.set(true);
+    this.httpClient
+      .post(environment.apiBaseUrl + '/api/contact/', this.contactForm.value)
+      .subscribe({
+        next: () => {
+          this.closeForm();
+          this.sending.set(false);
+        },
+        error: () => {
+          console.error('Failed to send message');
+          this.sending.set(false);
+        },
+      });
+  };
+
+  /**
+   * Checks for errors related to the 'theme' selection in the contact form.
+   * Returns an error message if the 'theme' field is required and not selected, otherwise returns an empty string.
+   */
+
+  getSelectErrors() {
+    if (
+      this.formService.getFormErrors(this.contactForm, 'theme')?.['required']
+    ) {
+      return 'Please select a theme';
+    }
+    return '';
   }
 
-  getSelectErrors(){
-    if(this.formService.getFormErrors(this.contactForm, 'theme')?.['required']) {
-      return 'Please select a theme'
+  /**
+   * Checks for errors related to the 'message' field in the contact form.
+   * Returns an error message if the 'message' field is required and not entered, or if the message is not long enough,
+   * otherwise returns an empty string.
+   */
+  getMessageErrors() {
+    if (
+      this.formService.getFormErrors(this.contactForm, 'message')?.['required']
+    ) {
+      return 'Please enter a message';
     }
-    return ''
+    if (
+      this.formService.getFormErrors(this.contactForm, 'message')?.['minlength']
+    ) {
+      return 'Message must be at least 20 characters long';
+    }
+    return '';
   }
-
-  getMessageErrors(){
-    if(this.formService.getFormErrors(this.contactForm, 'message')?.['required']) {
-      return 'Please enter a message'
-    }
-    if(this.formService.getFormErrors(this.contactForm, 'message')?.['minlength']) {
-      return 'Message must be at least 20 characters long'
-    }
-    return ''
-  }   
-
-
-
 }

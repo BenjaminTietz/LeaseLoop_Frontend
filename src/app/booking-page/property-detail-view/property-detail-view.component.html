@@ -5,10 +5,8 @@
             <p>{{ prop.address.city }}, {{ prop.address.country }}</p>
             <p>{{ prop.description }}</p>
         </div>
-
         <app-image-slider *ngIf="prop.images.length > 0" [images]="prop.images" [autoPlay]="true" [interval]="5000" />
     </div>
-
     <h3>Units</h3>
     <div class="grid">
         @for (unit of prop.units; track unit.id) {
@@ -30,7 +28,6 @@
         </div>
         }
     </div>
-
     <button class="btn reset-btn" (click)="navigator.navigateTo('')">
         Back to overview
     </button>

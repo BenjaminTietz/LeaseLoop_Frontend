@@ -2,12 +2,12 @@ export interface PromoCode {
   id: number;
   code: string;
   description: string;
-  valid_until: string; // ISO date
+  valid_until: string;
   discount_percent: number;
   owner_id: number;
-  created_at: string; // ISO date
-  updated_at: string; // ISO date
-  active: boolean
+  created_at: string;
+  updated_at: string;
+  active: boolean;
 }
 
 export interface PromoDto {
@@ -15,5 +15,5 @@ export interface PromoDto {
   description?: string;
   valid_until?: string;
   discount_percent?: number;
-  active ?: boolean
+  active?: boolean;
 }

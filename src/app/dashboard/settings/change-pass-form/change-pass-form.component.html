@@ -23,14 +23,14 @@
 
         <small>{{repeatPasswordErrors}}</small>
       </div>
-
     </div>
-    <button type="button" [disabled]="changePassForm.invalid || settingsService.sending() || settingsService.isGuestEmail()"
+    <button type="button"
+      [disabled]="changePassForm.invalid || settingsService.sending() || settingsService.isGuestEmail()"
       (mouseenter)="formService.markAllAsTouched(changePassForm)"
       (mouseleave)="formService.unmarkAllAsTouched(changePassForm)" (click)="changePassword()">Change Password</button>
-      @if(settingsService.isGuestEmail()) {
-        <strong>You can't change password for guest account</strong>
-      }
+    @if(settingsService.isGuestEmail()) {
+    <strong>You can't change password for guest account</strong>
+    }
     @if(settingsService.errorMessage() !== ''){
     <div class="error-popup">
       <h3>{{settingsService.errorMessage()}}</h3>
@@ -38,7 +38,6 @@
       <button (click)="closePopUp()">Okay</button>
     </div>
     }
-
     @if(settingsService.successful()){
     <div class="error-popup">
       <div class="pop-up-text">
@@ -48,6 +47,5 @@
       </div>
     </div>
     }
-
   </form>
 </main>

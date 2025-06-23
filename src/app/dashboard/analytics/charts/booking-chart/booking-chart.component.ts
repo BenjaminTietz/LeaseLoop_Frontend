@@ -16,7 +16,7 @@ interface PropertyData {
   units: Record<string, UnitData>;
 }
 
-interface SlicePath  {
+interface SlicePath {
   type: 'path';
   d: string;
   color: string;
@@ -24,9 +24,9 @@ interface SlicePath  {
   value: number;
   percent: string;
   textPos: { x: number; y: number } | null;
-};
+}
 
-interface SliceCircle  {
+interface SliceCircle {
   type: 'circle';
   cx: number;
   cy: number;
@@ -36,7 +36,7 @@ interface SliceCircle  {
   value: number;
   percent: string;
   textPos: { x: number; y: number } | null;
-};
+}
 
 type Slice = SlicePath | SliceCircle;
 
@@ -62,6 +62,7 @@ export class BookingChartComponent {
 
   clickOutside = () => this.selectedLabel.set(null);
   selectedLabel = signal<string | null>(null);
+
   /**
    * Retrieves booking data for the given date range on component initialization.
    * @internal
@@ -83,7 +84,6 @@ export class BookingChartComponent {
     const colors: string[] = [];
     const saturation = 70;
     const lightness = 50;
-
     for (let i = 0; i < count; i++) {
       const hue = Math.round((360 / count) * i);
       colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
@@ -100,7 +100,6 @@ export class BookingChartComponent {
   total = computed(() => {
     const properties = this.data();
     let total = 0;
-
     for (const prop of Object.values(properties)) {
       for (const unit of Object.values(prop.units)) {
         total += unit.confirmed ?? unit.total ?? 0;
@@ -113,7 +112,6 @@ export class BookingChartComponent {
   chartData = computed(() => {
     const properties = this.data();
     const result: { label: string; value: number }[] = [];
-
     for (const propId in properties) {
       const prop = properties[propId];
       const propName = prop.name ?? `Property ${propId}`;
@@ -124,74 +122,64 @@ export class BookingChartComponent {
         result.push({ label: `${propName} - ${unitName}`, value });
       }
     }
-
     return result;
   });
 
-slices = computed<Slice[]>(() => {
-  const total = this.total();
-  const data = [...this.chartData()].sort((a, b) => a.value - b.value);
+  slices = computed<Slice[]>(() => {
+    const total = this.total();
+    const data = [...this.chartData()].sort((a, b) => a.value - b.value);
+    const centerX = 120;
+    const centerY = 120;
+    const radius = 100;
+    if (data.length === 1) {
+      const item = data[0];
+      return [
+        {
+          type: 'circle',
+          cx: centerX,
+          cy: centerY,
+          r: radius,
+          color: this.colors()[0],
+          label: item.label,
+          value: item.value,
+          percent: '100.0',
+          textPos: { x: centerX, y: centerY },
+        },
+      ];
+    }
+    let startAngle = 0;
 
-  const centerX = 120;
-  const centerY = 120;
-  const radius = 100;
-
-  if (data.length === 1) {
-    const item = data[0];
-    return [
-      {
-        type: 'circle',
-        cx: centerX,
-        cy: centerY,
-        r: radius,
-        color: this.colors()[0],
+    return data.map((item, index) => {
+      const value = item.value;
+      const angle = (value / total) * 360;
+      const endAngle = startAngle + angle;
+      const largeArc = angle > 180 ? 1 : 0;
+      const x1 = centerX + radius * Math.cos((Math.PI * startAngle) / 180);
+      const y1 = centerY + radius * Math.sin((Math.PI * startAngle) / 180);
+      const x2 = centerX + radius * Math.cos((Math.PI * endAngle) / 180);
+      const y2 = centerY + radius * Math.sin((Math.PI * endAngle) / 180);
+      const d = `M${centerX},${centerY} L${x1},${y1} A${radius},${radius} 0 ${largeArc} 1 ${x2},${y2} Z`;
+      const midAngle = startAngle + angle / 2;
+      const labelRadius = 85;
+      const textX =
+        centerX + labelRadius * Math.cos((Math.PI * midAngle) / 180);
+      const textY =
+        centerY + labelRadius * Math.sin((Math.PI * midAngle) / 180);
+      const percent = ((value / total) * 100).toFixed(1);
+      const percentValue = parseFloat(percent);
+      const showText = percentValue >= 3;
+      startAngle = endAngle;
+      return {
+        type: 'path',
+        d,
+        color: this.colors()[index],
         label: item.label,
         value: item.value,
-        percent: '100.0',
-        textPos: { x: centerX, y: centerY },
-      },
-    ];
-  }
-
-  let startAngle = 0;
-
-  return data.map((item, index) => {
-    const value = item.value;
-    const angle = (value / total) * 360;
-    const endAngle = startAngle + angle;
-
-    const largeArc = angle > 180 ? 1 : 0;
-
-    const x1 = centerX + radius * Math.cos((Math.PI * startAngle) / 180);
-    const y1 = centerY + radius * Math.sin((Math.PI * startAngle) / 180);
-    const x2 = centerX + radius * Math.cos((Math.PI * endAngle) / 180);
-    const y2 = centerY + radius * Math.sin((Math.PI * endAngle) / 180);
-
-    const d = `M${centerX},${centerY} L${x1},${y1} A${radius},${radius} 0 ${largeArc} 1 ${x2},${y2} Z`;
-
-    const midAngle = startAngle + angle / 2;
-    const labelRadius = 85;
-    const textX = centerX + labelRadius * Math.cos((Math.PI * midAngle) / 180);
-    const textY = centerY + labelRadius * Math.sin((Math.PI * midAngle) / 180);
-
-    const percent = ((value / total) * 100).toFixed(1);
-    const percentValue = parseFloat(percent);
-    const showText = percentValue >= 3;
-
-    startAngle = endAngle;
-
-    return {
-      type: 'path',
-      d,
-      color: this.colors()[index],
-      label: item.label,
-      value: item.value,
-      percent,
-      textPos: showText ? { x: textX, y: textY } : null,
-    };
+        percent,
+        textPos: showText ? { x: textX, y: textY } : null,
+      };
+    });
   });
-});
-
 
   hoveredSlice = signal<number | null>(null);
 
@@ -202,6 +190,14 @@ slices = computed<Slice[]>(() => {
     value: number;
   } | null>(null);
 
+  /**
+   * Sets the hovered slice index and shows the tooltip at the given
+   * coordinates with the given label and value.
+   * @param index The index of the hovered slice.
+   * @param event The mouse event that triggered the hover.
+   * @param label The label of the hovered slice.
+   * @param value The value of the hovered slice.
+   */
   onSliceEnter(index: number, event: MouseEvent, label: string, value: number) {
     this.hoveredSlice.set(index);
     this.tooltip.set({
@@ -212,10 +208,21 @@ slices = computed<Slice[]>(() => {
     });
   }
 
+  /**
+   * Resets the hovered slice index and hides the tooltip.
+   */
   onSliceLeave() {
     this.hoveredSlice.set(null);
     this.tooltip.set(null);
   }
+
+  /**
+   * Toggles the selection of a slice by its label.
+   * If the slice is already selected, it deselects it;
+   * otherwise, it selects the slice with the given label.
+   *
+   * @param label The label of the slice to be toggled.
+   */
   selectSlice(label: string) {
     this.selectedLabel.set(this.selectedLabel() === label ? null : label);
   }

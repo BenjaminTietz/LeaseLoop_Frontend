@@ -1,11 +1,6 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { SidenavComponent } from '../sidenav/sidenav.component';
-import {
-  NavigationEnd,
-  Router,
-  RouterOutlet,
-  withDebugTracing,
-} from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeButtonComponent } from '../../shared/global/theme-button/theme-button.component';
 import { SidenavToggleComponent } from '../../shared/dashboard-components/sidenav-toggle/sidenav-toggle.component';
@@ -52,6 +47,10 @@ export class DashboardComponent {
   router = inject(Router);
   currentUrl = signal(this.router.url);
 
+  /**
+   * Gets user full data from the server and sets current URL to the router's URL.
+   * Subscribes to router's events and updates the current URL whenever the route changes.
+   */
   constructor() {
     this.settingsService.getUserFullData();
     this.router.events.subscribe((event) => {
@@ -61,6 +60,10 @@ export class DashboardComponent {
     });
   }
 
+  /**
+   * Toggles the sidebar open or closed. If the sidebar is already open, it sets its state to false.
+   * If the sidebar is closed, it sets its state to true.
+   */
   toggleSidebar(): void {
     this.isSidebarOpen.update((prev) => !prev);
   }

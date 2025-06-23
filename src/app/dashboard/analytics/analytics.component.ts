@@ -1,15 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexDataLabels,
-  ApexTitleSubtitle,
-  ApexStroke,
-  ApexGrid,
-  NgApexchartsModule,
-} from 'ng-apexcharts';
+import { NgApexchartsModule } from 'ng-apexcharts';
 import { AnalyticsService } from '../../services/analytics-service/analytics.service';
 import { BookingChartComponent } from './charts/booking-chart/booking-chart.component';
 import { ServiceChartComponent } from './charts/service-chart/service-chart.component';
@@ -39,8 +30,10 @@ import { NoDataComponent } from '../../shared/global/no-data/no-data.component';
 export class AnalyticsComponent implements OnInit {
   public analyticsService = inject(AnalyticsService);
 
-  constructor() {}
-
+  /**
+   * Set the default date range for the analytics component when it initializes.
+   * This is the only lifecycle hook that is used in this component.
+   */
   ngOnInit(): void {
     this.analyticsService.setDefaultDateRange();
   }

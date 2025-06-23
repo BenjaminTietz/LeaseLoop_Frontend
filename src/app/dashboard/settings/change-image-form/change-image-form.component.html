@@ -1,32 +1,22 @@
 <main>
-<form [appClickOutside]="closeForm">
-  <h1>Change Image</h1>
-  <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
-
-  <div class="input-area">
-    <label for="imageUpload">Image</label>
-    <div class="form-field">
-      <!-- Hidden input -->
-      <input 
-        type="file" 
-        id="imageUpload" 
-        accept="image/*" 
-        (change)="onImageChange($event)" 
-        hidden
-      >
-
-      <!-- Styled label as button -->
-      <label class="upload-button" for="imageUpload">
-        <mat-icon>drive_folder_upload</mat-icon>
-        Select image
-      </label>
+  <form [appClickOutside]="closeForm">
+    <h1>Change Image</h1>
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
+    <div class="input-area">
+      <label for="imageUpload">Image</label>
+      <div class="form-field">
+        <!-- Hidden input -->
+        <input type="file" id="imageUpload" accept="image/*" (change)="onImageChange($event)" hidden>
+        <!-- Styled label as button -->
+        <label class="upload-button" for="imageUpload">
+          <mat-icon>drive_folder_upload</mat-icon>
+          Select image
+        </label>
+      </div>
     </div>
-  </div>
-
-  <div class="preview">
-    <img [src]="image()" alt="Profilbild">
-  </div>
-
-  <button type="button" (click)="changeImage()" [disabled]="!imagePreview()">Change image</button>
-</form>
+    <div class="preview">
+      <img [src]="image()" alt="Profilbild">
+    </div>
+    <button type="button" (click)="changeImage()" [disabled]="!imagePreview()">Change image</button>
+  </form>
 </main>

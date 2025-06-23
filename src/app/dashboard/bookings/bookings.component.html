@@ -6,7 +6,7 @@
         <mat-icon>add</mat-icon>
         <span>New Booking</span>
       </button>
-      <app-search-input (searchTerm)="this.search($event)"  placeholder="Search bookings" ></app-search-input>
+      <app-search-input (searchTerm)="this.search($event)" placeholder="Search bookings"></app-search-input>
       <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterBookings($event)"></app-filter>
     </div>
     <div class="table-wrapper">
@@ -30,7 +30,7 @@
         <tbody>
           @for (booking of this.bs.bookings(); track booking.id; let index = $index) {
           <tr>
-            <td><mat-icon  [ngClass]="{
+            <td><mat-icon [ngClass]="{
               'active': booking.status === 'confirmed',
               'inactive': booking.status === 'cancelled',
               'pending': booking.status === 'pending'
@@ -43,15 +43,11 @@
             <td>{{ booking.check_out }}</td>
             <td>
               @if(booking.services.length > 0){
-                @for (service of booking.services; track $index; let i = $index) {
-                  {{ service?.name }}@if (i < ((booking.services.length) - 1)) {, } }
-              }@else {
-                No booked services
-              }
-               </td>
+              @for (service of booking.services; track $index; let i = $index) {
+              {{ service?.name }}@if (i < ((booking.services.length) - 1)) {, } } }@else { No booked services } </td>
             <td>{{ booking.total_price.toFixed(2) }} €</td>
             <td>@if (booking.deposit_paid) {✔ {{ booking.deposit_amount.toFixed(2) }} €} @else {X}</td>
-            
+
             <td> <button class="btn" (click)="openEditForm(booking)">Edit</button></td>
             <td> <button class="btn" (click)="this.dashboardService.showBooking.set(booking);
                 this.dashboardService.isbookingPopupOpen.set(true);">Details</button>
@@ -61,15 +57,13 @@
         </tbody>
       </table>
     </div>
-      <app-paging [currentPage]="bs.currentPage()" [totalPages]="bs.totalPages()" (pageChanged)="bs.loadPaginatedBookings($event, searchInput())"></app-paging>
+    <app-paging [currentPage]="bs.currentPage()" [totalPages]="bs.totalPages()"
+      (pageChanged)="bs.loadPaginatedBookings($event, searchInput())"></app-paging>
   </content>
   @if (this.dashboardService.isbookingPopupOpen()) {
   <app-booking-popup></app-booking-popup>
   }
-
   @if(this.formOpen()) {
-  <app-booking-form (close)="closeForm()"
-  
-  ></app-booking-form>
+  <app-booking-form (close)="closeForm()"></app-booking-form>
   }
 </main>

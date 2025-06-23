@@ -10,7 +10,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ContactFormComponent } from "./contact-form/contact-form.component";
+import { ContactFormComponent } from './contact-form/contact-form.component';
 
 @Component({
   selector: 'app-help-page',
@@ -163,9 +163,7 @@ export class HelpPageComponent {
     if (!search) {
       return [];
     }
-
     const results: { topicTitle: string; sectionTitle: string }[] = [];
-
     this.sections().forEach((section) => {
       section.topics.forEach((topic) => {
         if (
@@ -179,7 +177,6 @@ export class HelpPageComponent {
         }
       });
     });
-
     return results;
   });
 
@@ -188,7 +185,6 @@ export class HelpPageComponent {
     if (!search) {
       return this.sections();
     }
-
     return this.sections()
       .map((section) => ({
         ...section,
@@ -201,6 +197,13 @@ export class HelpPageComponent {
       .filter((section) => section.topics.length > 0);
   });
 
+  /**
+   * Constructor that sets up an effect to monitor the search term.
+   *
+   * When the search term is non-empty, it closes all sections by setting
+   * their `open` status to false. This ensures that sections are collapsed
+   * while searching, providing a more focused view on search results.
+   */
   constructor() {
     effect(() => {
       const term = this.searchTerm().trim();
@@ -214,6 +217,13 @@ export class HelpPageComponent {
     });
   }
 
+  /**
+   * Toggles the open status of a section at the given index in the `filteredSections`
+   * array. If the section is already open, it will be closed; if it is closed, it
+   * will be opened. All other sections will be closed.
+   * @param index The index of the section to toggle in the `filteredSections`
+   * array.
+   */
   toggleSection(index: number) {
     const selectedTitle = this.filteredSections()[index].title;
 
@@ -224,10 +234,15 @@ export class HelpPageComponent {
         return { ...section, open: false };
       }
     });
-
     this.sections.set(updated);
   }
 
+  /**
+   * Opens the section with the given title and scrolls to the topic with the
+   * given title. Also clears the search term.
+   * @param sectionTitle The title of the section to open.
+   * @param topicTitle The title of the topic to scroll to.
+   */
   openSectionFromSearch(sectionTitle: string, topicTitle: string) {
     const updated = this.sections().map((section) => ({
       ...section,
@@ -241,21 +256,28 @@ export class HelpPageComponent {
           ref.nativeElement.getAttribute('data-topic-title') === topicTitle
         );
       });
-
       matchingTopic?.nativeElement.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       });
-
       this.searchTerm.set('');
     }, 150);
   }
 
-  openContactForm(){
+  /**
+   * Opens the contact form by setting the contactFormOpen signal to true.
+   * @returns {void}
+   */
+  openContactForm() {
     this.contactFormOpen.set(true);
   }
 
-  closeForm(){
+  /**
+   * Closes the contact form by setting the contactFormOpen signal to false.
+   * This hides the contact form from the user interface.
+   */
+
+  closeForm() {
     this.contactFormOpen.set(false);
   }
 }

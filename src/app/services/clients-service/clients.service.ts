@@ -11,14 +11,13 @@ import { PaginatedResponse } from '../../models/paginated-response.model';
 export class ClientsService {
   httpService = inject(HttpService);
 
-  // Signals to hold reactive state
   clients = signal<Clients[]>([]);
   selectedClient = signal<Clients | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
   totalPages = signal(1);
-  currentPage = signal(1)
-  filterValue = signal('')
+  currentPage = signal(1);
+  filterValue = signal('');
 
   /** Load all Clients assosiated tothe current user */
   loadClients() {
@@ -32,7 +31,9 @@ export class ClientsService {
   loadPaginatedClients(page: number, searchTerm: string = '') {
     this.httpService
       .get<PaginatedResponse<Clients>>(
-        `${environment.apiBaseUrl}/api/clients/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`
+        `${
+          environment.apiBaseUrl
+        }/api/clients/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`
       )
       .subscribe((clients) => {
         this.clients.set(clients.results);
@@ -40,8 +41,6 @@ export class ClientsService {
         this.currentPage.set(page);
       });
   }
-
-
 
   deleteClient(id: number) {
     this.httpService

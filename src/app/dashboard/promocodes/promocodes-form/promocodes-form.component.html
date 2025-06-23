@@ -84,7 +84,6 @@
         </div>
         <div class="button-area">
             @if(promocodeService.selectedPromocode() !== null) {
-
             <button type="button" (click)="this.promocodeService.deleteService(
                 this.promocodeService.selectedPromocode()!.id
               )">Delete</button>

@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { AnalyticsService } from '../../../../services/analytics-service/analytics.service';
 import type {
@@ -102,8 +95,6 @@ export class ServiceChartComponent implements OnInit {
         },
       }
   );
-
-  constructor() {}
 
   /**
    * Initializes the component by fetching service data for a specified date range.

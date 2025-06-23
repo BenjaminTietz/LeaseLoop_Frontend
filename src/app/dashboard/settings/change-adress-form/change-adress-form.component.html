@@ -3,65 +3,64 @@
     <h1>Change Personals</h1>
     <mat-icon aria-label="Close" class="close-icon" (click)="closeForm()">close</mat-icon>
     <div formGroupName="address" class="width-100 address">
-    <div class="side-by-side-area">
-      <div class="input-area width-75">
-        <label for="street">Street</label>
-        <div class="form-field">
-          <input type="text" placeholder="Street" formControlName="street">
+      <div class="side-by-side-area">
+        <div class="input-area width-75">
+          <label for="street">Street</label>
+          <div class="form-field">
+            <input type="text" placeholder="Street" formControlName="street">
+          </div>
         </div>
-      </div>
-      <div class="input-area width-25">
-        <label for="house_number">House Number</label>
-        <div class="form-field">
-          <input type="text" placeholder="House Number" formControlName="house_number">
+        <div class="input-area width-25">
+          <label for="house_number">House Number</label>
+          <div class="form-field">
+            <input type="text" placeholder="House Number" formControlName="house_number">
+          </div>
         </div>
-      </div>
-      @if(streetErrors) {
+        @if(streetErrors) {
         <small>{{streetErrors}}</small>
-      }
-    </div>
-    <div class="side-by-side-area">
-      <div class="input-area width-75">
-        <label for="city">City</label>
-        <div class="form-field">
-          <input type="text" placeholder="City" formControlName="city">
-        </div>
+        }
       </div>
-      <div class="input-area width-25">
-        <label for="zip">Zip</label>
-        <div class="form-field">
-          <input type="text" placeholder="Zip" formControlName="postal_code">
+      <div class="side-by-side-area">
+        <div class="input-area width-75">
+          <label for="city">City</label>
+          <div class="form-field">
+            <input type="text" placeholder="City" formControlName="city">
+          </div>
         </div>
-      </div>
-      @if(cityErrors) {
+        <div class="input-area width-25">
+          <label for="zip">Zip</label>
+          <div class="form-field">
+            <input type="text" placeholder="Zip" formControlName="postal_code">
+          </div>
+        </div>
+        @if(cityErrors) {
         <small>{{cityErrors}}</small>
-      }
-    </div>
-    <div class="side-by-side-area">
-      <div class="input-area">
-        <label for="country">Country</label>
-        <div class="form-field">
-          <input type="text" placeholder="Country" formControlName="country">
-        </div>
+        }
       </div>
-      <div class="input-area">
-        <label for="phone">Phone</label>
-        <div class="form-field">
-          <input type="text" placeholder="Phone"  formControlName="phone">
+      <div class="side-by-side-area">
+        <div class="input-area">
+          <label for="country">Country</label>
+          <div class="form-field">
+            <input type="text" placeholder="Country" formControlName="country">
+          </div>
         </div>
-      </div>
-      @if(countryPhoneErrors) {
+        <div class="input-area">
+          <label for="phone">Phone</label>
+          <div class="form-field">
+            <input type="text" placeholder="Phone" formControlName="phone">
+          </div>
+        </div>
+        @if(countryPhoneErrors) {
         <small>{{countryPhoneErrors}}</small>
-      }
+        }
+      </div>
     </div>
-    
-  </div>
     <div class="input-area">
       <label for="tax_id">Tax ID</label>
       <div class="form-field">
         <input type="text" placeholder="Tax ID" formControlName="tax_id">
         @if(taxIdErrors) {
-          <small>{{taxIdErrors}}</small>
+        <small>{{taxIdErrors}}</small>
         }
       </div>
     </div>
@@ -75,24 +74,24 @@
       <div class="input-area width-50">
         <label for="last_name">Last Name</label>
         <div class="form-field">
-          <input type="text" placeholder="Last Name"  formControlName="last_name">
+          <input type="text" placeholder="Last Name" formControlName="last_name">
         </div>
       </div>
       @if(nameErrors){
-        <small>{{nameErrors}}</small>
+      <small>{{nameErrors}}</small>
       }
     </diV>
-    <button type="button" (click)="changePersonals()" [disabled]="userForm.invalid" (mouseenter)="formService.markAllAsTouched(userForm)" (mouseleave)="formService.unmarkAllAsTouched(userForm)">Change Personals</button>
+    <button type="button" (click)="changePersonals()" [disabled]="userForm.invalid"
+      (mouseenter)="formService.markAllAsTouched(userForm)"
+      (mouseleave)="formService.unmarkAllAsTouched(userForm)">Change Personals</button>
   </form>
-
   @if(settingsService.successful()){
-    <div class="error-popup">
-      <mat-icon aria-label="Close" class="close-icon" (click)="closeSuccessPopUp()">close</mat-icon>
-      <div class="pop-up-text">
-        <h3>Changed your data successfully</h3>
-        <button (click)="closeSuccessPopUp()">Okay</button>
-      </div>
+  <div class="error-popup">
+    <mat-icon aria-label="Close" class="close-icon" (click)="closeSuccessPopUp()">close</mat-icon>
+    <div class="pop-up-text">
+      <h3>Changed your data successfully</h3>
+      <button (click)="closeSuccessPopUp()">Okay</button>
     </div>
-    }
-
+  </div>
+  }
 </main>

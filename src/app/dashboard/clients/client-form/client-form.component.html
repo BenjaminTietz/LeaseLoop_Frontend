@@ -62,23 +62,19 @@
                 <small>{{getStreetErrors()}}</small>
                 }
             </div>
-
             <div class="form-input-wrapper">
-
                 <div class="input-area width-75">
                     <label for="city">City</label>
                     <div class="form-field">
                         <input type="text" id="city" formControlName="city" placeholder="City" />
                     </div>
                 </div>
-
                 <div class="input-area width-25">
                     <label for="postal_code">Postal Code</label>
                     <div class="form-field">
                         <input type="text" id="postal_code" formControlName="postal_code" placeholder="Postal Code" />
                     </div>
                 </div>
-
                 @if(getCityErrors()){
                 <small>{{getCityErrors()}}</small>
                 }
@@ -89,15 +85,12 @@
                     <div class="form-field">
                         <input type="text" id="country" formControlName="country" placeholder="Country" />
                     </div>
-
                 </div>
-
                 <div class="input-area width-50">
                     <label for="phone">Phone</label>
                     <div class="form-field">
                         <input type="text" id="phone" formControlName="phone" placeholder="Phone" />
                     </div>
-
                 </div>
                 @if(getPhoneCountryErrors()){
                 <small>{{getPhoneCountryErrors()}}</small>
@@ -113,10 +106,8 @@
                 </select>
             </div>
         </div>
-
         <div class="button-area">
             @if(clientService.selectedClient() !== null) {
-
             <button type="button" (click)="this.clientService.deleteClient(
                 this.clientService.selectedClient()!.id
               )">Delete</button>

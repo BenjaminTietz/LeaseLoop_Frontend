@@ -9,7 +9,6 @@
         <small>{{actualEmailErrors}}</small>
       </div>
     </div>
-
     <div class="input-area">
       <label for="password">Password</label>
       <div class="form-field">
@@ -17,7 +16,6 @@
         <small>{{actualPasswordErrors}}</small>
       </div>
     </div>
-
     <div class="input-area">
       <label for="newEmail">New E-mail</label>
       <div class="form-field">
@@ -25,18 +23,14 @@
         <small>{{newEmailErrors}}</small>
       </div>
     </div>
-
-
-
-    <button type="button" (click)="changeEmail()" [disabled]="emailForm.invalid || settingsService.sending() || settingsService.isGuestEmail()"
+    <button type="button" (click)="changeEmail()"
+      [disabled]="emailForm.invalid || settingsService.sending() || settingsService.isGuestEmail()"
       (mouseenter)="formService.markAllAsTouched(emailForm)"
       (mouseleave)="formService.unmarkAllAsTouched(emailForm)">Change e-mail</button>
   </form>
-
   @if(settingsService.isGuestEmail()) {
   <strong>You can't change e-mail for guest account</strong>
   }
-
   @if(settingsService.errorMessage() !== ''){
   <div class="error-popup">
     <mat-icon aria-label="Close" class="close-icon" (click)="closePopUp()">close</mat-icon>
@@ -46,7 +40,6 @@
     </div>
   </div>
   }
-
   @if(settingsService.successful()){
   <div class="error-popup">
     <mat-icon aria-label="Close" class="close-icon" (click)="closeSuccessPopUp()">close</mat-icon>

@@ -10,7 +10,6 @@
     @if(unitService.selectedUnit() !== null) {
     <h1>Edit Unit</h1>
     }
-
     <div class="input-area">
       <label for="name">Name</label>
       <div class="form-field">
@@ -20,7 +19,6 @@
         }
       </div>
     </div>
-
     <div class="input-area">
       <label for="description">Description</label>
       <div class="textarea-field">
@@ -33,43 +31,36 @@
     </div>
     <div class="side-by-side-area">
       <div class="input-area">
-        
         <label for="max_capacity">Max Capacity</label>
         <div class="form-field">
           <input type="number" id="max_capacity" name="max_capacity" required placeholder="Max capacity"
             formControlName="max_capacity">
         </div>
       </div>
-
       <div class="input-area">
         <label for="capacity">Base Capacity</label>
         <div class="form-field">
           <input type="number" id="capacity" name="capacity" required placeholder="Capacity" formControlName="capacity">
         </div>
       </div>
-
       <div class="input-area">
         <label for="price">Price per night</label>
         <div class="form-field">
           <input type="number" id="price" name="price" required placeholder="Price per Night"
             formControlName="price_per_night">
-
         </div>
       </div>
-
       <div class="input-area">
         <label for="price_extra_person">Price per extra Person</label>
         <div class="form-field">
           <input type="number" id="price_extra_person" name="price_extra_person" required
             placeholder="Price per extra Person" formControlName="price_per_extra_person">
-
         </div>
       </div>
       @if(getCapacityPriceError() !== null) {
       <small>{{getCapacityPriceError()}}</small>
       }
     </div>
-
     <div class="input-area">
       <label for="property">Property</label>
       <div class="form-field">
@@ -86,11 +77,10 @@
           }
         </select>
         @if(formService.getFormErrors(unitForm, 'property')?.['required']) {
-          <small>Property is required.</small>
+        <small>Property is required.</small>
         }
       </div>
     </div>
-
     <div class="form-input-wrapper">
       <div class="input-area">
         <label for="type">Unit Type</label>
@@ -102,7 +92,6 @@
           </select>
         </div>
       </div>
-
       <div class="input-area">
         <label for="status">Status</label>
         <div class="form-field">
@@ -115,25 +104,22 @@
           </select>
         </div>
       </div>
-
       <div class="input-area">
         <label for="active">Active</label>
         <div class="form-field">
           <select name="" id="active" formControlName="active">
             <option value="true">Active</option>
-            <option value="false">Inactive</option> 
+            <option value="false">Inactive</option>
           </select>
         </div>
       </div>
-
       <div class="input-area">
         <label for="amenities">Amenities</label>
         <div class="form-field" (click)="openAmenities()">
-        <span class="amenities-text">Select Amenities</span>
+          <span class="amenities-text">Select Amenities</span>
         </div>
       </div>
     </div>
-
     <app-image-upload (imagesChange)="images = $event" (newImageDescriptionsChange)="newImageDescriptions = $event"
       (missingDescriptionChange)="missingDescription = $event"></app-image-upload>
     <div class="button-area">
@@ -153,11 +139,10 @@
       </button>
       }
     </div>
-
     @if(amenitiesOpen()) {
-      <app-amenities-form [selectedAmenities]="amenities()" (selectedAmenitiesChange)="
-    unitForm.patchValue({ amenities: $event }); amenities.set($event)" 
-    [appClickOutside]="closeAmenities" (closeAmenitiesForm)="closeAmenities()"></app-amenities-form>
+    <app-amenities-form [selectedAmenities]="amenities()" (selectedAmenitiesChange)="
+    unitForm.patchValue({ amenities: $event }); amenities.set($event)" [appClickOutside]="closeAmenities"
+      (closeAmenitiesForm)="closeAmenities()"></app-amenities-form>
     }
   </form>
 </main>

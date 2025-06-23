@@ -6,14 +6,22 @@ import { HttpService } from '../../services/httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import { Service, ServiceDto } from '../../models/service.model';
 import { MatIcon } from '@angular/material/icon';
-import { PagingComponent } from "../../shared/dashboard-components/paging/paging.component";
-import { SearchInputComponent } from "../../shared/dashboard-components/search-input/search-input.component";
-import { FilterComponent } from "../../shared/global/filter/filter.component";
+import { PagingComponent } from '../../shared/dashboard-components/paging/paging.component';
+import { SearchInputComponent } from '../../shared/dashboard-components/search-input/search-input.component';
+import { FilterComponent } from '../../shared/global/filter/filter.component';
 
 @Component({
   selector: 'app-service-management',
   standalone: true,
-  imports: [CommonModule, ServiceFormComponent, CommonModule, MatIcon, PagingComponent, SearchInputComponent, FilterComponent],
+  imports: [
+    CommonModule,
+    ServiceFormComponent,
+    CommonModule,
+    MatIcon,
+    PagingComponent,
+    SearchInputComponent,
+    FilterComponent,
+  ],
   templateUrl: './service-management.component.html',
   styleUrl: './service-management.component.scss',
 })
@@ -36,6 +44,11 @@ export class ServiceManagementComponent implements OnInit {
     { label: 'Property name (Z-A)', value: 'descending_property_name' },
   ];
 
+  /**
+   * Initializes the component by loading the services from the server.
+   *
+   * This is a lifecycle hook that is called automatically by Angular when the component is created.
+   */
   ngOnInit(): void {
     this.loadServices();
   }
@@ -52,24 +65,53 @@ export class ServiceManagementComponent implements OnInit {
     this.sms.successful.set(false);
   }
 
+  /**
+   * Searches for services based on the given search term.
+   *
+   * The search term is saved to the search input signal and the first page of services
+   * is reloaded from the server with the given search term.
+   * @param searchTerm The search term to search for.
+   */
   search(searchTerm: string) {
     this.searchInput.set(searchTerm);
     this.sms.loadPaginatedService(1, searchTerm);
   }
 
-  openForm(){
+  /**
+   * Opens the service form for creating a new service.
+   *
+   * Sets the formOpen state to true, clears the selected service,
+   * and resets the successful flag to false.
+   */
+  openForm() {
     this.formOpen.set(true);
     this.sms.selectedService.set(null);
     this.sms.successful.set(false);
   }
 
+  /**
+   * Loads the first page of paginated services from the server.
+   *
+   * This method calls the service management service to retrieve
+   * and display the list of services, starting from the first page.
+   */
+
   loadServices() {
     this.sms.loadPaginatedService(1);
   }
 
+  /**
+   * Creates a new service with the given data.
+   *
+   * This function sends a POST request to the server to create the specified
+   * service. It updates the local services list by reloading the first page of
+   * services from the server. It also manages the UI state by setting the sending
+   * and successful signals.
+   *
+   * @param serviceData - The data to be used to create the new service.
+   */
   createService(serviceData: ServiceDto) {
     this.sending.set(true);
-
     this.http
       .post<Service>(`${environment.apiBaseUrl}/api/services/`, serviceData)
       .subscribe({
@@ -86,12 +128,24 @@ export class ServiceManagementComponent implements OnInit {
       });
   }
 
-  closeForm(){
+  /**
+   * Closes the service form and reloads the current page of paginated services
+   * based on the current search term.
+   */
+  closeForm() {
     this.formOpen.set(false);
     this.sms.loadPaginatedService(this.sms.currentPage(), this.searchInput());
   }
 
-  filterServices(filter:string){
+  /**
+   * Filters the services based on the provided filter criteria.
+   *
+   * This function sets the filter value and reloads the first page of
+   * paginated services using the current search term.
+   *
+   * @param filter The filter criteria to apply.
+   */
+  filterServices(filter: string) {
     this.sms.filterValue.set(filter);
     this.sms.loadPaginatedService(1, this.searchInput());
   }

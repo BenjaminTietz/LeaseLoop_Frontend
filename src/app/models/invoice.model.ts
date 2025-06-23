@@ -13,6 +13,6 @@ export interface Invoice {
   services: Service[];
   total_price: number;
   promo_code?: PromoCode;
-  created_at: string; // ISO date
-  updated_at: string; // ISO date
+  created_at: string;
+  updated_at: string;
 }

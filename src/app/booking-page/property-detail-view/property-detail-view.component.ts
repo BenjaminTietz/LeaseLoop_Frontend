@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { ImageSliderComponent } from '../../shared/booking-page/image-slider/image-slider.component';
 import { NavigatorService } from '../../services/navigator/navigator.service';
-import { BookingsService } from '../../services/bookings-service/bookings.service';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -19,7 +18,6 @@ export class PropertyDetailViewComponent {
   navigator = inject(NavigatorService);
   bookingService = inject(ClientBookingService);
   route = inject(ActivatedRoute);
-
   propertyId = toSignal(
     this.route.paramMap.pipe(map((p) => +p.get('propertyId')!))
   );
