@@ -254,8 +254,7 @@ export class BookingPopupComponent implements OnInit {
             message:
               'Your booking request has been sent. We’ll get back to you shortly!',
           });
-          console.log('Booking request sent:', res);
-          this.closePopup(); // TODO: Show success message show request status
+          this.closePopup();
         },
         error: (err) => {
           this.closePopup();

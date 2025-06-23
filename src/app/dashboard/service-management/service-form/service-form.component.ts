@@ -46,8 +46,11 @@ export class ServiceFormComponent implements OnInit {
       [Validators.required, Validators.minLength(3), Validators.maxLength(50)],
     ],
     type: ['' as ServiceType, Validators.required],
-    price: [0,[ Validators.required, Validators.pattern(this.formService.pricePattern)]],
-    property: [0 as number  | undefined, Validators.required],
+    price: [
+      0,
+      [Validators.required, Validators.pattern(this.formService.pricePattern)],
+    ],
+    property: [0 as number | undefined, Validators.required],
     active: [true, Validators.required],
   });
 
@@ -55,8 +58,6 @@ export class ServiceFormComponent implements OnInit {
     { label: 'Per Day', value: 'per_day' },
     { label: 'One Time', value: 'one_time' },
   ];
-
-  // TODO: refactor price field to use a custom validator to allow only numbers and commas and set type to text instead of number
 
   /**
    * Constructor for the ServiceFormComponent.
@@ -122,10 +123,6 @@ export class ServiceFormComponent implements OnInit {
    * and saves it to the server.
    */
   updateService() {
-    
-
-    this.serviceManagementService.updateService(
-      this.serviceForm.value
-    );
+    this.serviceManagementService.updateService(this.serviceForm.value);
   }
 }

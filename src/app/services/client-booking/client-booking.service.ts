@@ -68,7 +68,6 @@ export class ClientBookingService {
     this.units().filter((u) => u.property.id === this.selectedPropertyId())
   );
 
-  // load all properties of all users with pagination
   loadInitialData(page: number = 1, pageSize: number = 20) {
     this.httpService
       .get<any>(

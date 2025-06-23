@@ -3,11 +3,11 @@ export type ServiceType = 'one_time' | 'per_day';
 export interface Service {
   id: number;
   name: string;
-  price: number; // TODO: Check if this is a number or string in the API
+  price: number;
   type: ServiceType;
   property: number;
-  created_at: string; // ISO date
-  updated_at: string; // ISO date
+  created_at: string;
+  updated_at: string;
   property_info: PropertyShort;
   active: boolean;
 }

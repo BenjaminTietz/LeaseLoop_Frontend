@@ -8,8 +8,8 @@ export interface Booking {
   id: number;
   unit: Unit;
   client: Clients;
-  check_in: string; // ISO date
-  check_out: string; // ISO date
+  check_in: string;
+  check_out: string;
   total_days: number;
   guests_count: number;
   total_price: number;
