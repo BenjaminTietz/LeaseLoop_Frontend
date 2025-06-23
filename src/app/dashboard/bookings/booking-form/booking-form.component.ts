@@ -142,7 +142,7 @@ export class BookingFormComponent {
   );
 
   selectedProperty = toSignal(this.bookingForm.get('property')!.valueChanges, {
-    initialValue: null,
+    initialValue: null,});
 
   filteredServicesByProperties = computed(() => {
     const selectedProperty = this.bookingForm.get('property')?.value;
@@ -154,7 +154,7 @@ export class BookingFormComponent {
       return services;
     }
 
-  });
+  })
 
   /**
    * Lifecycle hook that is called after the component has been initialized.
@@ -603,9 +603,7 @@ export class BookingFormComponent {
    * field is empty.
    */
   getClientInputValue() {
-    return this.clientInput() || this.initialClientInput();
+     return this.clientTyped() ? this.clientInput() : this.initialClientInput();
   }
 
-    return this.clientTyped() ? this.clientInput() : this.initialClientInput();
-  } 
 }
