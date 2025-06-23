@@ -13,7 +13,6 @@
             Status: {{ booking?.status }}
         </div>
     </header>
-
     <section class="section">
         <h3>Guest Information</h3>
         <ul>
@@ -26,7 +25,6 @@
             <li><strong>Phone:</strong> {{ clientAddress?.phone }}</li>
         </ul>
     </section>
-
     <section class="section">
         <h3>Booking Info</h3>
         <ul>
@@ -36,7 +34,6 @@
             <li><strong>Guests:</strong> {{ booking?.guests_count}}</li>
         </ul>
     </section>
-
     <section class="section">
         <h3>Unit</h3>
         <ul>
@@ -46,7 +43,6 @@
             <li><strong>Price per Night:</strong> {{ unit?.price_per_night}} €</li>
         </ul>
     </section>
-
     <section class="section">
         <h3>Extra Services</h3>
         @if((booking?.services?.length ?? 0) > 0) {
@@ -62,9 +58,7 @@
         } @else {
         <p>No extra services selected</p>
         }
-
     </section>
-
     <section class="section">
         <h3>Promo Code</h3>
         @if (promocode != null) {
@@ -76,7 +70,6 @@
         <p>No promo code applied</p>
         }
     </section>
-
     <section class="section payment-section">
         <h3>Payment Info</h3>
         <ul>
