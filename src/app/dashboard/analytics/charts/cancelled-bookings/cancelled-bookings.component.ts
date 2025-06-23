@@ -6,11 +6,8 @@ import type {
   ApexChart,
   ApexXAxis,
   ApexDataLabels,
-  ApexTitleSubtitle,
   ApexStroke,
-  ApexGrid,
   ApexPlotOptions,
-  ApexFill,
 } from 'ng-apexcharts';
 import { AnalyticsService } from '../../../../services/analytics-service/analytics.service';
 import { ThemeService } from '../../../../services/theme-service/theme.service';
@@ -44,7 +41,6 @@ export class CancelledBookingsComponent {
   } | null>(() => {
     const raw = this.rawData();
     if (!raw || !raw.series || raw.series.length < 3) return null;
-
     return {
       series: [
         {

@@ -1,12 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  OnInit,
-  signal,
-  isSignal,
-  computed,
-} from '@angular/core';
+import { Component, effect, inject, computed } from '@angular/core';
 import { AnalyticsService } from '../../../../services/analytics-service/analytics.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -17,10 +9,8 @@ import {
   ApexTitleSubtitle,
   ApexStroke,
   ApexGrid,
-  ChartType,
 } from 'ng-apexcharts';
 import { NgApexchartsModule } from 'ng-apexcharts';
-
 import { ThemeService } from '../../../../services/theme-service/theme.service';
 
 @Component({
@@ -50,7 +40,6 @@ export class RevenueChartComponent {
     const data = this.analyticsService.revenueGroupedData();
     const dark = this.themeService.currentTheme() === 'dark';
     if (!data || data.length === 0) return null;
-
     return {
       series: [
         {

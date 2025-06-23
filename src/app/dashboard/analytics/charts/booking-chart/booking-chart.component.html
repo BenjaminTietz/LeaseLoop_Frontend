@@ -1,61 +1,34 @@
 <div>
-<svg viewBox="0 0 240 240" class="pie" [appClickOutside]="clickOutside">
-  <ng-container *ngFor="let slice of slices(); let i = index">
-    <path
-      *ngIf="slice.type === 'path'"
-      [attr.d]="slice.d"
-      [attr.fill]="slice.color"
-      class="slice"
-      [attr.stroke]="hoveredSlice() === i || selectedLabel() === slice.label ? '#fff' : 'none'"
-      [attr.stroke-width]="hoveredSlice() === i || selectedLabel() === slice.label ? 2 : 0"
-      [style.opacity]="!selectedLabel() || selectedLabel() === slice.label ? 1 : 0.3"
-      [style.transform]="selectedLabel() === slice.label ? 'scale(1.1)' : 'scale(1)'"
-      style="transform-origin: 120px 120px; transition: all 0.3s ease;"
-      (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)"
-      (mouseleave)="onSliceLeave()"
-      (click)="selectSlice(slice.label)"
-    />
+  <svg viewBox="0 0 240 240" class="pie" [appClickOutside]="clickOutside">
+    <ng-container *ngFor="let slice of slices(); let i = index">
+      <path *ngIf="slice.type === 'path'" [attr.d]="slice.d" [attr.fill]="slice.color" class="slice"
+        [attr.stroke]="hoveredSlice() === i || selectedLabel() === slice.label ? '#fff' : 'none'"
+        [attr.stroke-width]="hoveredSlice() === i || selectedLabel() === slice.label ? 2 : 0"
+        [style.opacity]="!selectedLabel() || selectedLabel() === slice.label ? 1 : 0.3"
+        [style.transform]="selectedLabel() === slice.label ? 'scale(1.1)' : 'scale(1)'"
+        style="transform-origin: 120px 120px; transition: all 0.3s ease;"
+        (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)" (mouseleave)="onSliceLeave()"
+        (click)="selectSlice(slice.label)" />
+      <circle *ngIf="slice.type === 'circle'" [attr.cx]="slice.cx" [attr.cy]="slice.cy" [attr.r]="slice.r"
+        [attr.fill]="slice.color" class="slice" (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)"
+        (mouseleave)="onSliceLeave()" (click)="selectSlice(slice.label)" />
+      <text *ngIf="slice.textPos" class="text" [attr.x]="slice.textPos.x" [attr.y]="slice.textPos.y"
+        text-anchor="middle" alignment-baseline="middle" font-size="10" fill="white"
+        (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)" (mouseleave)="onSliceLeave()">
+        {{ slice.percent }}%
+      </text>
+    </ng-container>
+  </svg>
+  <div class="legend">
+    <div class="legend-title">Confirmed bookings per Unit</div>
+    <div class="legend-item" *ngFor="let slice of slices()"
+      (click)="selectSlice(slice.label); $event.stopPropagation();" [class.active]="selectedLabel() === slice.label">
+      <span class="legend-dot" [style.background]="slice.color"></span>
+      <span>{{ slice.label }}</span>
 
-    <circle
-      *ngIf="slice.type === 'circle'"
-      [attr.cx]="slice.cx"
-      [attr.cy]="slice.cy"
-      [attr.r]="slice.r"
-      [attr.fill]="slice.color"
-      class="slice"
-      (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)"
-      (mouseleave)="onSliceLeave()"
-      (click)="selectSlice(slice.label)"
-    />
-    <text
-    *ngIf="slice.textPos"
-    class="text"
-    [attr.x]="slice.textPos.x"
-    [attr.y]="slice.textPos.y"
-    text-anchor="middle"
-    alignment-baseline="middle"
-    font-size="10"
-    fill="white"
-    (mouseenter)="onSliceEnter(i, $event, slice.label, slice.value)"
-    (mouseleave)="onSliceLeave()"
-  >
-    {{ slice.percent }}%
-  </text>
-  </ng-container>
-    </svg>
-
-    <div class="legend">
-        <div class="legend-title">Confirmed bookings per Unit</div>
-        <div class="legend-item" *ngFor="let slice of slices()"
-            (click)="selectSlice(slice.label); $event.stopPropagation();"
-            [class.active]="selectedLabel() === slice.label">
-            <span class="legend-dot" [style.background]="slice.color"></span>
-            <span>{{ slice.label }}</span>
-
-        </div>
     </div>
-
-    <div class="tooltip" *ngIf="tooltip()" [style.left.px]="tooltip()?.x" [style.top.px]="tooltip()?.y">
-        {{ tooltip()?.label }}: {{ tooltip()?.value }}
-    </div>
+  </div>
+  <div class="tooltip" *ngIf="tooltip()" [style.left.px]="tooltip()?.x" [style.top.px]="tooltip()?.y">
+    {{ tooltip()?.label }}: {{ tooltip()?.value }}
+  </div>
 </div>
