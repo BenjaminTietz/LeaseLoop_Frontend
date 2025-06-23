@@ -16,8 +16,6 @@ import {
 import { Unit } from '../../models/unit.model';
 import { CommonModule } from '@angular/common';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
-import { Service } from '../../models/service.model';
-import { effect } from '@angular/core';
 import {
   animate,
   state,
@@ -26,15 +24,11 @@ import {
   trigger,
 } from '@angular/animations';
 import { BookingStatusPopupComponent } from '../booking-status-popup/booking-status-popup.component';
+
 @Component({
   selector: 'app-booking-popup',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    FormsModule,
-    BookingStatusPopupComponent,
-  ],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './booking-popup.component.html',
   styleUrl: './booking-popup.component.scss',
   animations: [
@@ -52,7 +46,6 @@ export class BookingPopupComponent implements OnInit {
   formBuilder = inject(FormBuilder);
 
   property = this.bookingService.selectedPropertyDetail();
-
   checkIn = signal<string>('');
   checkOut = signal<string>('');
   guests = signal<number>(1);
@@ -63,8 +56,37 @@ export class BookingPopupComponent implements OnInit {
   showServices = signal<boolean>(false);
   selectedServiceIds = signal<Set<number>>(new Set());
   showClientForm = signal<boolean>(false);
-
   private loadedPropertyIds = new Set<number>();
+
+  totalPrice = computed(() => {
+    const inDate = new Date(this.checkIn());
+    const outDate = new Date(this.checkOut());
+    const guests = this.guests();
+    const nights = Math.max((+outDate - +inDate) / (1000 * 60 * 60 * 24), 0);
+    const selectedServiceIds = this.selectedServiceIds();
+    const selectedServices = this.bookingService
+      .services()
+      .filter((service) => selectedServiceIds.has(service.id));
+    const serviceTotal = selectedServices.reduce((sum, s) => {
+      switch (s.type) {
+        case 'per_day':
+          return sum + s.price * nights;
+        case 'one_time':
+          return sum + s.price;
+        default:
+          return sum;
+      }
+    }, 0);
+    const baseTotal =
+      this.unit.price_per_night * nights +
+      Math.max(0, guests - this.unit.capacity) *
+        this.unit.price_per_extra_person *
+        nights +
+      serviceTotal;
+    const discount = this.promoDiscount();
+    const discountedTotal = baseTotal - (baseTotal * discount) / 100;
+    return Math.max(0, discountedTotal);
+  });
 
   clientForm: FormGroup = this.formBuilder.group({
     first_name: ['', Validators.required],
@@ -83,6 +105,10 @@ export class BookingPopupComponent implements OnInit {
     }),
   });
 
+  /**
+   * Loads services for the currently selected property, and sets the check-in and
+   * check-out dates, and the number of guests from the booking service.
+   */
   ngOnInit() {
     const selected = this.bookingService.selectedPropertyDetail();
     if (selected?.id) {
@@ -93,41 +119,11 @@ export class BookingPopupComponent implements OnInit {
     this.guests.set(this.bookingService.guestCount());
   }
 
-  totalPrice = computed(() => {
-    const inDate = new Date(this.checkIn());
-    const outDate = new Date(this.checkOut());
-    const guests = this.guests();
-    const nights = Math.max((+outDate - +inDate) / (1000 * 60 * 60 * 24), 0);
-    const selectedServiceIds = this.selectedServiceIds();
-
-    const selectedServices = this.bookingService
-      .services()
-      .filter((service) => selectedServiceIds.has(service.id));
-
-    const serviceTotal = selectedServices.reduce((sum, s) => {
-      switch (s.type) {
-        case 'per_day':
-          return sum + s.price * nights;
-        case 'one_time':
-          return sum + s.price;
-        default:
-          return sum;
-      }
-    }, 0);
-
-    const baseTotal =
-      this.unit.price_per_night * nights +
-      Math.max(0, guests - this.unit.capacity) *
-        this.unit.price_per_extra_person *
-        nights +
-      serviceTotal;
-
-    const discount = this.promoDiscount();
-    const discountedTotal = baseTotal - (baseTotal * discount) / 100;
-
-    return Math.max(0, discountedTotal);
-  });
-
+  /**
+   * Submits the booking form, and logs the current state of the booking to the
+   * console. This currently only shows the client form, but should eventually
+   * also send a booking request to the server.
+   */
   submitBooking() {
     console.log('Submitting booking:', {
       checkIn: this.checkIn(),
@@ -139,6 +135,12 @@ export class BookingPopupComponent implements OnInit {
     this.showClientForm.set(true);
   }
 
+  /**
+   * Handles changes to the service selection, by updating the selectedServiceIds
+   * signal with the new set of selected services.
+   * @param event The event emitted by the multi-select element when its selection
+   * changes.
+   */
   handleServiceSelect(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedOptions = Array.from(selectElement.selectedOptions).map(
@@ -147,34 +149,64 @@ export class BookingPopupComponent implements OnInit {
     this.selectedServiceIds.set(new Set(selectedOptions));
   }
 
+  /**
+   * Toggles the selection of a service in the list of selected services.
+   *
+   * @param serviceId The id of the service to be toggled.
+   * @param checked Whether the service should be added to the selection (true), or removed from it (false).
+   */
   toggleServiceSelection(serviceId: number, checked: boolean) {
     const current = this.selectedServiceIds();
     const updated = new Set(current);
-
     if (checked) {
       updated.add(serviceId);
     } else {
       updated.delete(serviceId);
     }
-
     this.selectedServiceIds.set(updated);
   }
 
+  /**
+   * Handles changes to the selection of a service by toggling its selection in
+   * the list of selected services. This function is called when the user checks
+   * or unchecks a service in the list of available services.
+   * @param event The event emitted by the checkbox element when its selection
+   * changes.
+   * @param serviceId The id of the service to be toggled.
+   */
   onCheckboxChange(event: Event, serviceId: number) {
     const checked = (event.target as HTMLInputElement).checked;
     this.toggleServiceSelection(serviceId, checked);
   }
+
+  /**
+   * Toggles the visibility of the services selection section.
+   *
+   * This function is called when the user clicks the "Show" or "Hide" button
+   * above the list of available services. It toggles the visibility of the
+   * services selection section by updating the `showServices` signal with the
+   * opposite value of the current one.
+   */
   toggleServicesVisibility() {
     this.showServices.update((v) => !v);
   }
 
+  /**
+   * Applies a promo code to the booking, by validating it on the server and
+   * updating the promo discount and promo code id signals if it is valid.
+   *
+   * @remarks
+   * This function is called when the user clicks the "Apply" button next to the
+   * promo code input.
+   * If the promo code is invalid or expired, it sets the promo error signal to
+   * an appropriate error message.
+   */
   applyPromoCode() {
     const code = this.usedPromoCode().trim();
     if (!code) {
       this.promoError.set('Please enter a promo code.');
       return;
     }
-
     this.promoError.set(null);
     this.bookingService.validatePromoCode(code).subscribe({
       next: (promo) => {
@@ -189,12 +221,28 @@ export class BookingPopupComponent implements OnInit {
     });
   }
 
+  /**
+   * Confirms a booking with the given client data and booking details.
+   *
+   * It first checks if the client form is valid. If not, it sets the promo error
+   * signal to an appropriate error message and returns.
+   *
+   * If the form is valid, it creates a booking with the given details and calls
+   * the `bookPublicClientWithStatus` method of the `ClientBookingService` with
+   * the booking data and the status 'confirmed'.
+   *
+   * If the booking is successful, it sets the booking status popup to the
+   * confirmed state with the booking id and a success message, and closes the
+   * popup.
+   *
+   * If the booking fails, it sets the booking status popup to the unavailable
+   * state with an appropriate error message, and closes the popup.
+   */
   confirmBooking() {
     if (this.clientForm.invalid) {
       this.promoError.set('Please fill out all required fields.');
       return;
     }
-
     const clientData = this.clientForm.getRawValue();
     const bookingData = {
       check_in: this.checkIn(),
@@ -204,7 +252,6 @@ export class BookingPopupComponent implements OnInit {
       services: Array.from(this.selectedServiceIds()),
       promo_code: this.promoCodeId() ?? null,
     };
-
     this.bookingService
       .bookPublicClientWithStatus(clientData, bookingData, 'confirmed')
       .subscribe({
@@ -229,12 +276,28 @@ export class BookingPopupComponent implements OnInit {
       });
   }
 
+  /**
+   * Sends a booking request with the given client data and booking details.
+   *
+   * It first checks if the client form is valid. If not, it sets the promo error
+   * signal to an appropriate error message and returns.
+   *
+   * If the form is valid, it creates a booking with the given details and calls
+   * the `bookPublicClientWithStatus` method of the `ClientBookingService` with
+   * the booking data and the status 'pending'.
+   *
+   * If the booking is successful, it sets the booking status popup to the
+   * pending state with the booking id and a success message, and closes the
+   * popup.
+   *
+   * If the booking fails, it sets the booking status popup to the unavailable
+   * state with an appropriate error message, and closes the popup.
+   */
   sendRequest() {
     if (this.clientForm.invalid) {
       this.promoError.set('Please fill out all required fields.');
       return;
     }
-
     const clientData = this.clientForm.getRawValue();
     const bookingData = {
       check_in: this.checkIn(),

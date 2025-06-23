@@ -3,7 +3,6 @@
     <section class="slider-wrapper">
         <app-image-slider *ngIf="unitImages().length" [images]="unitImages()" [autoPlay]="true" [interval]="5000" />
     </section>
-
     <!-- Unit Headline -->
     <section class="unit-headline">
         <div class="left">
@@ -21,13 +20,11 @@
             </div>
         </div>
     </section>
-
     <!-- Description -->
     <section class="description">
         <h2>Description</h2>
         <p>{{ unit()?.description }}</p>
     </section>
-
     <!-- Amenities -->
     <section class="amenities">
         <h2>Amenities</h2>
@@ -42,5 +39,4 @@
     <!-- Booking Popup -->
     <app-booking-popup *ngIf="showPopup() && unit()" [unit]="unit()!" [closePopup]="closeBookingPopup">
     </app-booking-popup>
-
 </main>

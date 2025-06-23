@@ -3,7 +3,6 @@ import { ImageSliderComponent } from '../../shared/booking-page/image-slider/ima
 import { CommonModule } from '@angular/common';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
 import { ActivatedRoute } from '@angular/router';
-import { AvailabilityCalendarComponent } from '../../shared/dashboard-components/availability-calendar/availability-calendar.component';
 import { BookingPopupComponent } from '../booking-popup/booking-popup.component';
 
 @Component({
@@ -21,6 +20,7 @@ export class UnitDetailViewComponent {
   unit = computed(() =>
     this.bookingService.units().find((u) => u.id === this.unitId())
   );
+
   property = computed(() => {
     const unit = this.unit();
     if (!unit) return null;
@@ -31,6 +31,11 @@ export class UnitDetailViewComponent {
 
   unitImages = computed(() => this.unit()?.images ?? []);
 
+  /**
+   * Initializes the component by subscribing to route parameter changes.
+   * Extracts the 'unitId' from the route parameters and sets the unitId signal.
+   */
+
   constructor() {
     this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('unitId'));
@@ -40,6 +45,10 @@ export class UnitDetailViewComponent {
 
   showPopup = signal(false);
 
+  /**
+   * Opens the booking popup.
+   * Sets the `showPopup` signal to `true` which shows the booking popup in the template.
+   */
   openBookingPopup() {
     this.showPopup.set(true);
   }

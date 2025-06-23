@@ -44,6 +44,10 @@ export class BookingStatusPopupComponent implements OnInit {
     }
   });
 
+  /**
+   * Closes the booking status popup after 3 seconds if the booking status is 'unavailable'.
+   * This is a temporary solution until we have a proper redirect to a search page.
+   */
   ngOnInit(): void {
     if (this.status === 'unavailable') {
       setTimeout(() => {
@@ -53,6 +57,9 @@ export class BookingStatusPopupComponent implements OnInit {
     }
   }
 
+  /**
+   * Closes the booking status popup by calling the booking service method.
+   */
   close() {
     this.bookingService.closeBookingStatusPopup();
   }
