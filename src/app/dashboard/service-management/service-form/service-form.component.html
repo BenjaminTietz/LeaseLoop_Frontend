@@ -92,7 +92,6 @@
         </div>
         <div class="button-area">
             @if(serviceManagementService.selectedService() !== null) {
-
             <button type="button" (click)="this.serviceManagementService.deleteService(
                 this.serviceManagementService.selectedService()!.id
               )">Delete</button>

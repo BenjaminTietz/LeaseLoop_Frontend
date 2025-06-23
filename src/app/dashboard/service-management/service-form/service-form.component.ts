@@ -8,21 +8,13 @@ import {
 } from '@angular/core';
 import { FormService } from '../../../services/form-service/form.service';
 import { ServiceManagementService } from '../../../services/service-management/service-management.service';
-import {
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ClickOutsideDirective } from '../../../directives/outside-click/click-outside.directive';
 import { ProgressBarComponent } from '../../../shared/global/progress-bar/progress-bar.component';
 import { MatIcon } from '@angular/material/icon';
 import { ServiceType } from '../../../models/service.model';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
-import { Service } from '../../../models/service.model';
-import { Property } from '../../../models/property.model';
-import { ServiceDto } from '../../../models/service.model';
+
 @Component({
   selector: 'app-service-form',
   standalone: true,
@@ -79,7 +71,6 @@ export class ServiceFormComponent implements OnInit {
         });
       }
     });
-
     effect(
       () => {
         if (this.serviceManagementService.successful()) {
@@ -91,9 +82,15 @@ export class ServiceFormComponent implements OnInit {
     );
   }
 
+  /**
+   * Lifecycle hook that is called after Angular has fully initialized a component.
+   *
+   * It loads the properties from the PropertiesService.
+   */
   ngOnInit(): void {
     this.propertyService.loadProperties();
   }
+
   /**
    * Resets the form to its initial state and closes the form.
    *
