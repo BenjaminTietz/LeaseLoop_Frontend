@@ -52,6 +52,10 @@ export class SettingsComponent {
     return !!data && typeof data === 'object' && Object.keys(data).length > 0;
   });
 
+  /**
+   * Lifecycle hook that is called after the component has been initialized.
+   * Calls SettingsService.getUserFullData() to fetch the user's data.
+   */
   constructor() {
     this.settingsService.getUserFullData();
   }

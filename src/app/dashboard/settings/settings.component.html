@@ -9,60 +9,55 @@
           <h2>Your Logo</h2>
           <div class="logo">
             @if(showData()){
-              <img (click)="showFoto.set(true)" [src]="image()" alt="Logo">
+            <img (click)="showFoto.set(true)" [src]="image()" alt="Logo">
             }
             <button (click)="openForm('changeImage')">Change Logo</button>
             @if(changeImage()){
-              <app-change-image-form (close)="closeAllForms()"></app-change-image-form>
+            <app-change-image-form (close)="closeAllForms()"></app-change-image-form>
             }
           </div>
         </div>
-
         <div class="card">
           <button (click)="openForm('changeEmail')">Change account e-mail</button>
           @if(changeEmail()){
-            <app-change-email-form (close)="closeAllForms()"></app-change-email-form>
+          <app-change-email-form (close)="closeAllForms()"></app-change-email-form>
           }
         </div>
         <div class="card">
           <button (click)="openForm('changePass')">Change account password</button>
           @if(changePass()){
-            <app-change-pass-form (close)="closeAllForms()"></app-change-pass-form>
+          <app-change-pass-form (close)="closeAllForms()"></app-change-pass-form>
           }
         </div>
-
       </div>
       <div class="side">
-        
-        
         <div class="card">
           <h2>Your personals</h2>
           @if(showData()){
-            <ul>
-              <li>First Name: {{settingsService.newUserData().first_name}}</li>
-              <li>Last Name: {{settingsService.newUserData().last_name}}</li>
-              <li>Phone: {{settingsService.newUserData().address.phone}}</li>
-              <li>Email: {{settingsService.newUserData().email}}</li>
-              <li>Street: {{settingsService.newUserData().address.street}} {{settingsService.newUserData().address.house_number}}</li>
-              <li>City: {{settingsService.newUserData().address.postal_code}} {{settingsService.newUserData().address.city}} </li>
-              <li>Country: {{settingsService.newUserData().address.country}}</li>
-              <li>Tax ID: {{settingsService.newUserData().tax_id}}</li>
-
-            </ul>
+          <ul>
+            <li>First Name: {{settingsService.newUserData().first_name}}</li>
+            <li>Last Name: {{settingsService.newUserData().last_name}}</li>
+            <li>Phone: {{settingsService.newUserData().address.phone}}</li>
+            <li>Email: {{settingsService.newUserData().email}}</li>
+            <li>Street: {{settingsService.newUserData().address.street}}
+              {{settingsService.newUserData().address.house_number}}</li>
+            <li>City: {{settingsService.newUserData().address.postal_code}}
+              {{settingsService.newUserData().address.city}} </li>
+            <li>Country: {{settingsService.newUserData().address.country}}</li>
+            <li>Tax ID: {{settingsService.newUserData().tax_id}}</li>
+          </ul>
           }
-          
           <button (click)="openForm('changePersonals')">Change personal data</button>
           @if(changePersonals()){
-            <app-change-adress-form (close)="closeAllForms()"></app-change-adress-form>
+          <app-change-adress-form (close)="closeAllForms()"></app-change-adress-form>
           }
         </div>
       </div>
-      
     </div>
     @if(showFoto()){
     <div class="full-foto">
       <mat-icon aria-label="Close" class="close-icon" (click)="closeAllForms()">close</mat-icon>
-      <img [src]="image()" alt="Logo" [appClickOutside]="closeAllForms" >
+      <img [src]="image()" alt="Logo" [appClickOutside]="closeAllForms">
     </div>
     }
   </content>
