@@ -10,7 +10,6 @@
     @if(bookingService.selectedBooking() !== null) {
     <h1>Edit Booking</h1>
     }
-
     <div class="input-area">
       <label for="check_in">Check In</label>
       <div class="form-field">
@@ -19,10 +18,9 @@
       </div>
     </div>
     @if(!showCheckOutInput()) {
-      <p class="info-text">Please select a check-in date.</p>
+    <p class="info-text">Please select a check-in date.</p>
     }
     @if(showCheckOutInput()) {
-
     <div class="input-area">
       <label for="check_out">Check Out</label>
       <div class="form-field">
@@ -32,12 +30,10 @@
     </div>
     }
     @if(checkIn()) {
-      @if(!bookingForm.get('check_out')?.value) {
-        <p class="info-text">Now select a check-out date to see available properties.</p>
-      }
+    @if(!bookingForm.get('check_out')?.value) {
+    <p class="info-text">Now select a check-out date to see available properties.</p>
     }
-    
-
+    }
     @if(showPropertyInput()) {
     <div class="input-area">
       <label for="property">Property</label>
@@ -53,15 +49,12 @@
     </div>
     }
     @if(checkIn() && checkOut() && availableProperties().length === 0) {
-      <p class="info-text">No available properties for the selected dates.</p>
-      <button routerLink="/dashboard">Check availability calendar</button>
+    <p class="info-text">No available properties for the selected dates.</p>
+    <button routerLink="/dashboard">Check availability calendar</button>
     }
     @if(checkIn() && checkOut() && availableProperties().length > 0 && bookingForm.get('property')?.value === 0) {
-      <p class="info-text">Please select a property.</p>
+    <p class="info-text">Please select a property.</p>
     }
-    
-
-
     @if(showUnitInput()) {
     <div class="input-area">
       <label for="unit">Unit</label>
@@ -75,71 +68,56 @@
       </div>
     </div>
     }
-
     @if(showUnitInput() && bookingForm.get('unit')?.value === 0 && availableUnits().length > 0) {
-      <p class="info-text">Please select a unit.</p>
+    <p class="info-text">Please select a unit.</p>
     }
-
     @if(showGuestsInput()) {
-      <div class="input-area">
-        <label for="guests_count">Guests count</label>
-        <div class="form-field">
-          <input type="number" min="1" id="guests_count" name="guests_count" required placeholder="Guests conunt"
-            (change)="onGuestsCountChange($any($event.target).value)" formControlName="guests_count"
-            (input)="onGuestsCountChange($any($event.target).value)">
-            @if(formService.getFormErrors(bookingForm, 'guests_count')?.['required']) {
-              <small>Guests count is required.</small>
-            }
-            @if(formService.getFormErrors(bookingForm, 'guests_count')?.['min']) {
-              <small>Guests count must be at least 1.</small>
-            }
-        </div>
-        @if(bookingForm.get('guests_count')?.value === null) {
-          <p>Please enter the number of guests.</p>
+    <div class="input-area">
+      <label for="guests_count">Guests count</label>
+      <div class="form-field">
+        <input type="number" min="1" id="guests_count" name="guests_count" required placeholder="Guests conunt"
+          (change)="onGuestsCountChange($any($event.target).value)" formControlName="guests_count"
+          (input)="onGuestsCountChange($any($event.target).value)">
+        @if(formService.getFormErrors(bookingForm, 'guests_count')?.['required']) {
+        <small>Guests count is required.</small>
         }
-        @if(guestCountExceedsCapacity()) {
-          <p>Selected unit cannot accommodate this number of guests.</p>
+        @if(formService.getFormErrors(bookingForm, 'guests_count')?.['min']) {
+        <small>Guests count must be at least 1.</small>
         }
       </div>
-      
+      @if(bookingForm.get('guests_count')?.value === null) {
+      <p>Please enter the number of guests.</p>
+      }
+      @if(guestCountExceedsCapacity()) {
+      <p>Selected unit cannot accommodate this number of guests.</p>
+      }
+    </div>
     }
-   
-      
     @if(clientService.clients().length === 0 && showClient()) {
-      <p class="info-text">No clients available.</p>
-      <button routerLink="/dashboard/clients">Add Client</button>
+    <p class="info-text">No clients available.</p>
+    <button routerLink="/dashboard/clients">Add Client</button>
     }
-
-    
-      @if(showClient() && clientService.clients().length > 0){
-      
-        <div class="input-area" (click)="$event.stopPropagation()">
-          <label for="client">Client</label>
-          <div class="form-field">
-            <input type="text" 
-                   placeholder="Type to search clients..."
-                   [value]="getClientInputValue() || ''"
-                   (input)="onClientInput($event)"
-                   (focus)="clientDropdownOpen = true">
-            
-            @if(clientDropdownOpen && filteredClients().length > 0) {
-              <ul class="dropdown" [appClickOutside]="closeClientDropdown">
-                @for(client of filteredClients(); track $index) {
-                  <li (click)="selectClient(client)">{{ client.first_name }} {{ client.last_name }}, {{ client.email }}, {{ client.address.postal_code }}, {{ client.address.city }}, {{ client.address.country }}</li>
-                }
-              </ul>
-            }
-          </div>
-        </div>
-        
-        @if(showClient() && bookingForm.get('client')?.value === 0) {
-          <p class="info-text">Please select a client.</p>
+    @if(showClient() && clientService.clients().length > 0){
+    <div class="input-area" (click)="$event.stopPropagation()">
+      <label for="client">Client</label>
+      <div class="form-field">
+        <input type="text" placeholder="Type to search clients..." [value]="getClientInputValue() || ''"
+          (input)="onClientInput($event)" (focus)="clientDropdownOpen = true">
+        @if(clientDropdownOpen && filteredClients().length > 0) {
+        <ul class="dropdown" [appClickOutside]="closeClientDropdown">
+          @for(client of filteredClients(); track $index) {
+          <li (click)="selectClient(client)">{{ client.first_name }} {{ client.last_name }}, {{ client.email }}, {{
+            client.address.postal_code }}, {{ client.address.city }}, {{ client.address.country }}</li>
+          }
+        </ul>
         }
-   
-  }
-
+      </div>
+    </div>
+    @if(showClient() && bookingForm.get('client')?.value === 0) {
+    <p class="info-text">Please select a client.</p>
+    }
+    }
     @if(showRestOfForm()) {
-
     <div class="input-area">
       <label for="deposit_paid">Deposit Paid</label>
       <div class="form-field">
@@ -149,23 +127,21 @@
         </select>
       </div>
     </div>
-
     @if(bookingForm.get('deposit_paid')?.value === true) {
     <div class="input-area">
       <label for="deposit_amount">Deposit Amount</label>
       <div class="form-field">
         <input type="number" id="deposit_amount" min="1" name="deposit_amount" required placeholder="Deposit Amount"
           formControlName="deposit_amount">
-          @if(formService.getFormErrors(bookingForm, 'deposit_amount')?.['required']) {
-          <small>Deposit amount is required.</small>
-          }
-          @if(formService.getFormErrors(bookingForm, 'deposit_amount')?.['min']) {  
-          <small>Deposit amount must be at least 0.</small>
-          }
+        @if(formService.getFormErrors(bookingForm, 'deposit_amount')?.['required']) {
+        <small>Deposit amount is required.</small>
+        }
+        @if(formService.getFormErrors(bookingForm, 'deposit_amount')?.['min']) {
+        <small>Deposit amount must be at least 0.</small>
+        }
       </div>
     </div>
     }
-
     <div class="input-area">
       <label for="status">Status</label>
       <div class="form-field">
@@ -181,7 +157,7 @@
       <label for="promo_code">Promo code</label>
       <div class="form-field">
         <select name="promo_code" id="promo_code" formControlName="promo_code" (change)="onValueChange()">
-          <option [ngValue]="0" >Select Promo Code</option>
+          <option [ngValue]="0">Select Promo Code</option>
           @for(promocode of promoService.promocodes(); track $index) {
           <option [ngValue]="promocode.id">{{promocode.description}} {{promocode.discount_percent}}%</option>
           }
@@ -189,7 +165,6 @@
       </div>
     </div>
     }
-
     @if(serviceService.services().length > 0){
     <div class="input-area" formGroupName="services">
       <label for="service">Services</label>
@@ -204,28 +179,28 @@
       }
     </div>
     }
-
     <div class="button-area">
       @if(bookingService.selectedBooking() !== null) {
       <button type="button" (click)="deleteBooking()">Delete</button>
       <button type="submit" (click)="updateBooking()"
         [disabled]="bookingForm.invalid || unitService.sending() || bookingService.sending() || nochangesMade()"
-        (mouseenter)="formService.markAllAsTouched(bookingForm)" (mouseleave)="formService.unmarkAllAsTouched(bookingForm)">
+        (mouseenter)="formService.markAllAsTouched(bookingForm)"
+        (mouseleave)="formService.unmarkAllAsTouched(bookingForm)">
         @if(nochangesMade()) {
-          No changes
+        No changes
         }@else{
-          Update
+        Update
         }
       </button>
       }
       @if(bookingService.selectedBooking() === null) {
       <button type="submit" (click)="createBooking()"
         [disabled]="bookingForm.invalid || unitService.sending() || bookingService.sending()"
-        (mouseenter)="formService.markAllAsTouched(bookingForm)" (mouseleave)="formService.unmarkAllAsTouched(bookingForm)">
+        (mouseenter)="formService.markAllAsTouched(bookingForm)"
+        (mouseleave)="formService.unmarkAllAsTouched(bookingForm)">
         Save
       </button>
       }
-      
     </div>
     }
   </form>
