@@ -7,8 +7,14 @@ footer {
   height: 60px;
   gap: 30px;
   font-size: 24px;
+  @media (max-width:650px){
+    font-size: 20px;
+  }
 
+}
 
+.legal-link, p{
+  text-align: center;
 }
 
 .relative-footer {

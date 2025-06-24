@@ -6,12 +6,18 @@ header{
   @include display(flex, row, space-between, center);
   max-width: 1440px;
   padding: 20px 20px 0px 20px;
+  @media (max-width:400px){
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
 }
 
 .buttons {
-  @include display(flex, row, center, center);
-  margin-right: 0px;
-  width: 110px;
+  @include display(flex, row-reverse, center, center);
+  margin: 0px;
+  gap: 20px;
+  width: 100%;
 }
 
 button{
