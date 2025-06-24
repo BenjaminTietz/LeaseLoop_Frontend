@@ -1,13 +1,14 @@
 <header>
-  <span matTooltip="Change theme">
-    <app-theme-button></app-theme-button>
-  </span>
+ 
 
   <app-logo
     [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
     (click)="this.navigator.navigateTo('owner/')"></app-logo>
 
   <div class="buttons">
+     <span matTooltip="Change theme">
+    <app-theme-button></app-theme-button>
+    </span>
     @if(navigator.actualRoute() == '/owner/register'){
     <button (click)="navigator.navigateTo('owner/login')">Log in</button>
 

@@ -1,6 +1,6 @@
 <footer
   [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'relative-footer' : ''">
   <div class="legal-link" (click)="this.navigator.navigateTo('owner/legal-notice')">Legal Notice</div>
-  <p>© {{ bookingService.currentYear() }} LeaseLoop. All rights reserved.</p>
+  <p>© {{ bookingService.currentYear() }} LeaseLoop</p>
   <div class="legal-link" (click)="this.navigator.navigateTo('owner/privacy-policy')">Privacy Policy</div>
 </footer>
