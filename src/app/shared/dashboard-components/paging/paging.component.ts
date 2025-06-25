@@ -1,16 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, computed, input } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  computed,
+  input,
+} from '@angular/core';
 
 @Component({
   selector: 'app-paging',
   imports: [CommonModule],
   standalone: true,
   templateUrl: './paging.component.html',
-  styleUrl: './paging.component.scss'
+  styleUrl: './paging.component.scss',
 })
 export class PagingComponent {
-   currentPage = input(1);
-   totalPages = input(1);
+  currentPage = input(1);
+  totalPages = input(1);
   @Output() pageChanged = new EventEmitter<number>();
 
   visiblePages = computed(() => {
@@ -26,6 +33,10 @@ export class PagingComponent {
     return pages;
   });
 
+  /**
+   * Emits the pageChanged event with the specified page number if it is within the valid range.
+   * @param page - The page number to navigate to.
+   */
   onPageChange(page: number) {
     if (page >= 1 && page <= this.totalPages()) {
       this.pageChanged.emit(page);

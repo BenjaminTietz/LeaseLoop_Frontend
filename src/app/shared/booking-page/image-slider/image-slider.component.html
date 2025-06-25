@@ -3,11 +3,9 @@
         <img [src]="img.image" [alt]="img.alt_text || 'Slide Image'" />
     </div>
 </div>
-
 <!-- Navigation -->
 <button class="nav-button prev-button" (click)="prev()">‹</button>
 <button class="nav-button next-button" (click)="next()">›</button>
-
 <!-- Dots -->
 <div class="dots">
     <div class="dot" *ngFor="let img of images(); let idx = index" [class.active]="idx === currentIndex()"
