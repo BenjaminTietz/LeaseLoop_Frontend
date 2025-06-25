@@ -4,8 +4,11 @@ main {
     @include display(flex, column, flex-start, center);
     min-height: 100vh;
     height: fit-content;
-    padding: 20px 50px;
+    padding: 60px 50px;
     background-color: var(--color-bg-body);
+    @media(max-width: 700px){
+        padding: 60px 20px;
+    }
 }
 
 .header {
@@ -31,6 +34,7 @@ app-search-input, app-filter{
 
 .table-wrapper {
     overflow-x: auto;
+    scrollbar-width: none;
     border-radius: 12px;
     background: var(--color-bg-surface);
     box-shadow: 0 0 0 1px #ddd;

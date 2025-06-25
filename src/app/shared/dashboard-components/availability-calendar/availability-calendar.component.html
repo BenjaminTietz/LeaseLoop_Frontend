@@ -8,7 +8,7 @@
         @if(allDataLoaded()){
         <div class="calendar-controls">
             <label>
-                Property:
+                <span>Property:</span>
                 @if(this.propertyService.properties().length > 0) {
                 <select [value]="selectedPropertyId()" (change)="onSelectChange($event)">
                     @for (p of this.propertyService.properties(); track p.id) {
@@ -19,8 +19,9 @@
                 <p>No properties found</p>
                 }
             </label>
+            <div class="time-select">
             <label>
-                Month:
+                <span>Month:</span>
                 <select [(ngModel)]="selectedMonth" (change)="onDateChange()">
                     @for (m of months; track m.value; let i = $index) {
                     <option [ngValue]="m.value">{{ m.label }}</option>
@@ -28,13 +29,14 @@
                 </select>
             </label>
             <label>
-                Year:
+                <span>Year:</span>
                 <select [(ngModel)]="selectedYear" (change)="onDateChange()">
                     @for (y of years; track y; let i = $index) {
                     <option [ngValue]="y">{{ y }}</option>
                     }
                 </select>
             </label>
+            </div>
         </div>
         <div class="calendar-info">
             <p>Unit availability for the next 30 days.
