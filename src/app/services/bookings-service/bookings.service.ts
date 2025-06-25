@@ -54,7 +54,6 @@ export class BookingsService {
           this.bookings.set(data.results);
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
-          console.log(this.bookings());
         },
         error: (error) => {
           this.handleError('Failed to load Bookings');

@@ -49,9 +49,6 @@ export class BookingsComponent implements OnInit {
    */
   ngOnInit() {
     this.bs.loadPaginatedBookings(1);
-    setTimeout(() => {
-      console.log(this.bs.bookings());
-    }, 3000);
   }
 
   /**

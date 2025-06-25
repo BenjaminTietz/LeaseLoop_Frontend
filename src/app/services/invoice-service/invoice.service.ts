@@ -42,7 +42,6 @@ export class InvoiceService {
           this.sending.set(false);
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
-          console.log(this.invoiceStats());
         },
         error: (error) => {
           console.error('Failed to load invoices', error);
