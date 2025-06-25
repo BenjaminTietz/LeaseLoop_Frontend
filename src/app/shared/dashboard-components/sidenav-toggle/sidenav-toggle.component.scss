@@ -3,6 +3,8 @@
 button{
     padding: 4px;
     border-radius: 5px;
+    z-index: 999;
+    position:relative;
     mat-icon{
         height: auto;
         width: auto;

@@ -6,9 +6,7 @@
     (click)="this.navigator.navigateTo('owner/')"></app-logo>
 
   <div class="buttons">
-     <span matTooltip="Change theme">
     <app-theme-button></app-theme-button>
-    </span>
     @if(navigator.actualRoute() == '/owner/register'){
     <button (click)="navigator.navigateTo('owner/login')">Log in</button>
 

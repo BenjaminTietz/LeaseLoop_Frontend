@@ -163,9 +163,9 @@ apx-chart{
 }
 app-landing-page{
   @include display(flex, column, space-between, center);
-  height: 100svh;
   max-width: 1440px;
   width: 100%;
+  height: 100svh
 }
 
 app-landing-header, app-register, app-landing-footer, app-login{
