@@ -262,7 +262,6 @@ export class ClientBookingService {
     if (prop) {
       this.selectedPropertyDetail.set(prop);
     }
-    console.log('Selected property ID:', id, 'Detail:', prop);
   }
 
   /**
@@ -281,7 +280,6 @@ export class ClientBookingService {
    */
   setCheckIn(date: string) {
     this.checkInDate.set(date);
-    console.log('Check-in date set to:', date);
   }
 
   /**
@@ -292,7 +290,6 @@ export class ClientBookingService {
    */
   setCheckOut(date: string) {
     this.checkOutDate.set(date);
-    console.log('Check-out date set to:', date);
   }
 
   /**
@@ -312,7 +309,6 @@ export class ClientBookingService {
         `⚠️ Guest count '${count}' exceeds max allowed (${max}) – adjusted to ${validCount}.`
       );
     }
-    console.log('Guest count set to:', validCount);
   }
 
   isValidRange = computed(() => {

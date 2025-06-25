@@ -79,7 +79,6 @@ export class PropertiesService {
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
           this.setLoading(false);
-          console.log(this.properties());
         },
         error: this.handleError('Failed to load properties'),
       });

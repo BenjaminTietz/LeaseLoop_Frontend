@@ -125,13 +125,6 @@ export class BookingPopupComponent implements OnInit {
    * also send a booking request to the server.
    */
   submitBooking() {
-    console.log('Submitting booking:', {
-      checkIn: this.checkIn(),
-      checkOut: this.checkOut(),
-      guests: this.guests(),
-      total: this.totalPrice(),
-      services: Array.from(this.selectedServiceIds()),
-    });
     this.showClientForm.set(true);
   }
 
@@ -212,7 +205,6 @@ export class BookingPopupComponent implements OnInit {
       next: (promo) => {
         this.promoDiscount.set(promo.discount_percent);
         this.promoCodeId.set(promo.id);
-        console.log(`Promo applied: -${promo.discount_percent}%`);
       },
       error: (err) => {
         this.promoDiscount.set(0);
@@ -262,7 +254,6 @@ export class BookingPopupComponent implements OnInit {
             message:
               'Your booking is confirmed! Please check your email for details.',
           });
-          console.log('Booking confirmed:', res);
           this.closePopup();
         },
         error: (err) => {

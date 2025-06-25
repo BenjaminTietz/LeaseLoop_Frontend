@@ -85,7 +85,6 @@ export class BookingFormComponent {
   showRestOfForm = signal(false);
   nochangesMade = signal(true);
 
-
   bookingForm = new FormBuilder().nonNullable.group({
     property: [
       this.bookingService.selectedBooking()?.property.id || 0,
@@ -142,19 +141,21 @@ export class BookingFormComponent {
   );
 
   selectedProperty = toSignal(this.bookingForm.get('property')!.valueChanges, {
-    initialValue: null,});
+    initialValue: null,
+  });
 
   filteredServicesByProperties = computed(() => {
     const selectedProperty = this.bookingForm.get('property')?.value;
     const services = this.serviceService.services();
 
     if (selectedProperty) {
-      return services.filter(service => service.property === selectedProperty);
+      return services.filter(
+        (service) => service.property === selectedProperty
+      );
     } else {
       return services;
     }
-
-  })
+  });
 
   /**
    * Lifecycle hook that is called after the component has been initialized.
@@ -388,8 +389,8 @@ export class BookingFormComponent {
   }
 
   closeForm = () => {
-    if(this.bookingService.sending()) return
-    this.close.emit()
+    if (this.bookingService.sending()) return;
+    this.close.emit();
   };
 
   /**
@@ -412,11 +413,6 @@ export class BookingFormComponent {
     this.promoService.loadPromocodes();
     this.serviceService.loadService();
     this.unitService.loadUnits();
-    setTimeout(() => {
-      console.log(this.serviceService.services());
-    }, 3000);
-    
-    
   }
 
   /**
@@ -603,7 +599,6 @@ export class BookingFormComponent {
    * field is empty.
    */
   getClientInputValue() {
-     return this.clientTyped() ? this.clientInput() : this.initialClientInput();
+    return this.clientTyped() ? this.clientInput() : this.initialClientInput();
   }
-
 }
