@@ -1,8 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Service, ServiceDto } from '../../models/service.model';
 import { environment } from '../../../environments/environment';
-import { catchError } from 'rxjs/operators';
-import { throwError, tap } from 'rxjs';
 import { HttpService } from '../httpclient/http.service';
 import { PaginatedResponse } from '../../models/paginated-response.model';
 
@@ -15,9 +13,10 @@ export class ServiceManagementService {
   selectedService = signal<Service | null>(null);
   sending = signal<boolean>(false);
   successful = signal<boolean>(false);
-  sortServices = (s: Service[]) => s.slice().sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
+  sortServices = (s: Service[]) =>
+    s.slice().sort((a, b) => (b.active ? 1 : 0) - (a.active ? 1 : 0));
   totalPages = signal(1);
-  currentPage = signal(1)
+  currentPage = signal(1);
   filterValue = signal('');
 
   /**
@@ -39,16 +38,27 @@ export class ServiceManagementService {
       });
   }
 
+  /**
+   * Loads a paginated list of services, filtered by the provided search term and filter criteria.
+   *
+   * The method updates the `services` signal with the paginated list of services, and
+   * the `totalPages` signal with the total number of pages available.
+   *
+   * @param page The page number of services to load.
+   * @param searchTerm The search term to filter services by.
+   */
   loadPaginatedService(page: number, searchTerm: string = '') {
     this.httpService
-      .get<PaginatedResponse<Service>>(`${environment.apiBaseUrl}/api/services/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`)
+      .get<PaginatedResponse<Service>>(
+        `${
+          environment.apiBaseUrl
+        }/api/services/?page=${page}&search=${searchTerm}&filter=${this.filterValue()}`
+      )
       .subscribe({
         next: (data) => {
           this.services.set(this.sortServices(data.results));
           this.totalPages.set(data.total_pages);
           this.currentPage.set(page);
-          console.log(this.services());
-          
         },
         error: (error) => {
           console.error('Failed to load services', error);
@@ -94,8 +104,8 @@ export class ServiceManagementService {
    * @param id - The ID of the service to be updated.
    * @param data - The data to be used for the update.
    */
-  updateService( data: ServiceDto) {
-    let id = this.selectedService()?.id
+  updateService(data: ServiceDto) {
+    let id = this.selectedService()?.id;
     this.sending.set(true);
     this.httpService
       .patch<Service>(`${environment.apiBaseUrl}/api/service/${id}/`, data)
@@ -148,12 +158,15 @@ export class ServiceManagementService {
    * @param selected - An optional service object to be set as the selected
    * service. If not provided, the current selected service is not changed.
    */
-  setResponse(sending: boolean, successful: boolean, selected?: Service | null) {	
-  if (selected) {
-    this.selectedService.set(selected);
-  }
+  setResponse(
+    sending: boolean,
+    successful: boolean,
+    selected?: Service | null
+  ) {
+    if (selected) {
+      this.selectedService.set(selected);
+    }
     this.sending.set(sending);
     this.successful.set(successful);
   }
-
 }

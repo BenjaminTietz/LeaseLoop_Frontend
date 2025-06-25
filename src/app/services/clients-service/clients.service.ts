@@ -2,7 +2,6 @@ import { inject, Injectable, signal } from '@angular/core';
 import { HttpService } from '../httpclient/http.service';
 import { ClientDto, Clients } from '../../models/clients.model';
 import { environment } from '../../../environments/environment';
-import { catchError, tap, throwError } from 'rxjs';
 import { PaginatedResponse } from '../../models/paginated-response.model';
 
 @Injectable({
@@ -28,6 +27,15 @@ export class ClientsService {
       });
   }
 
+  /**
+   * Loads a paginated list of clients, filtered by the provided search term and filter criteria.
+   *
+   * The method updates the `clients` signal with the paginated list of clients, and
+   * the `totalPages` signal with the total number of pages available.
+   *
+   * @param page The page number of clients to load.
+   * @param searchTerm The search term to filter clients by.
+   */
   loadPaginatedClients(page: number, searchTerm: string = '') {
     this.httpService
       .get<PaginatedResponse<Clients>>(
@@ -42,6 +50,14 @@ export class ClientsService {
       });
   }
 
+  /**
+   * Deletes a client by ID.
+   *
+   * Updates the `clients` signal to remove the deleted client, and
+   * sets the `selectedClient` signal to `null`.
+   *
+   * @param id The ID of the client to delete
+   */
   deleteClient(id: number) {
     this.httpService
       .delete(`${environment.apiBaseUrl}/api/client/${id}/`)
@@ -49,7 +65,6 @@ export class ClientsService {
         next: () => {
           const current = this.clients();
           this.clients.set(current.filter((promo) => promo.id !== id));
-
           this.selectedClient.set(null);
           this.sending.set(false);
           this.successful.set(true);
@@ -62,6 +77,16 @@ export class ClientsService {
       });
   }
 
+  /**
+   * Creates a new client with the given data.
+   *
+   * This function sends a POST request to the server to create the specified
+   * client. It adds the new client to the local client list. It also manages
+   * the UI state by setting the sending and successful signals, and resetting
+   * the selectedClient and formOpen signals.
+   *
+   * @param data - The data to be used to create the new client.
+   */
   createClient(data: ClientDto) {
     this.sending.set(true);
     this.httpService
@@ -70,7 +95,6 @@ export class ClientsService {
         next: (service) => {
           const current = this.clients();
           this.clients.set([...current, service]);
-
           this.sending.set(false);
           this.successful.set(true);
           this.selectedClient.set(null);
@@ -82,6 +106,17 @@ export class ClientsService {
         },
       });
   }
+
+  /**
+   * Updates an existing client with the given data.
+   *
+   * This function sends a PATCH request to the server to update the specified
+   * client. It updates the local client list by replacing the existing client
+   * with the updated one. It also manages the UI state by setting the sending
+   * and successful signals, and resetting the selectedClient signal.
+   *
+   * @param data - The data to be used for the update.
+   */
 
   updateClient(data: ClientDto) {
     this.sending.set(true);

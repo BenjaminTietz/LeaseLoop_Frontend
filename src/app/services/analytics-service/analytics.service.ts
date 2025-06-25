@@ -1,4 +1,4 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpService } from '../httpclient/http.service';
 import { environment } from '../../../environments/environment';
 import {
@@ -147,13 +147,10 @@ export class AnalyticsService {
   public setDefaultDateRange() {
     const today = new Date();
     const currentYear = today.getFullYear();
-
     const from = `${currentYear}-01-01`;
     const to = today.toISOString().split('T')[0];
-
     this.dateFrom.set(from);
     this.dateTo.set(to);
-
     this.updateAllAnalytics(from, to);
   }
 }
