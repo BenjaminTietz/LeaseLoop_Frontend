@@ -161,4 +161,15 @@ button {
 apx-chart{
   width: 100%;
 }
+app-landing-page{
+  @include display(flex, column, space-between, center);
+  max-width: 1440px;
+  width: 100%;
+  height: 100svh
+}
+
+app-landing-header, app-register, app-landing-footer, app-login{
+  margin: 0 0;
+  width: 100%;
+}
 

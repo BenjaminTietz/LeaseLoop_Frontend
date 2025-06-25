@@ -2,7 +2,9 @@
 @use "../styles/checkbox.scss" as *;
 
 main {
-  height: calc(100vh - 160px)
+  // min-height: calc(100vh - 160px);
+  @include display(flex, column, center, center);
+  padding: 20px 0px 20px 0;
 }
 
 content {
@@ -118,5 +120,29 @@ small {
 
   &:hover::after {
     transform: scaleX(1);
+  }
+}
+
+@media(max-width: 500px) {
+  content{
+    padding: 0 10px
+  }
+
+  form{
+    padding: 20px 10px;
+  }
+
+  .name-field{
+    flex-direction: column;
+    width: 100%;
+  }
+
+  h1{
+    font-size: 36px;
+    text-align: center;
+  }
+
+  input{
+    margin: 0 0;
   }
 }

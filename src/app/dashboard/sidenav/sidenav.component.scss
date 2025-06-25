@@ -1,14 +1,28 @@
 @use "../../styles/mixins.scss" as *;
 
+.nav-wrapper{
+    height: 100vh;
+    position:relative;
+}
+
 .sidenav {
     @include display(flex, column, space-between, flex-start);
     width: 250px;
-    height: 100vh;
+    height: 100svh;
     position: fixed;
     top: 0;
     left: 0;
     border-right: 2px solid white;
     background-color: var(--color-bg-surface);
+    z-index: 99;
+    overflow: auto;
+    scrollbar-width: none;
+
+    @media(max-width: 650px) {
+        width: 100%;
+        padding-top: 40px;
+        border-right: 0;
+    }
 
     .top-section,
     .bottom-section {
@@ -21,6 +35,10 @@
     }
 
     button {
+        @media(max-width: 650px) {
+        width: 80%;
+      
+    }
         min-width: 200px;
         animation: fadeInStaggered 0.5s ease forwards;
         opacity: 0;
@@ -35,7 +53,7 @@
 
 @keyframes fadeInStaggered {
     0% {
-        opacity: 0;
+        opacity: 0.3;
         transform: translateY(-20%);
     }
 

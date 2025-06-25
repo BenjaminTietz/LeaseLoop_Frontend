@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, signal } from '@angular/core';
 import { SidenavComponent } from '../sidenav/sidenav.component';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { ClickOutsideDirective } from '../../directives/outside-click/click-outside.directive';
 import { SettingsService } from '../../services/settings-service/settings.service';
 import { FillDataOverlayComponent } from '../fill-data-overlay/fill-data-overlay.component';
+import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,16 +27,16 @@ import { FillDataOverlayComponent } from '../fill-data-overlay/fill-data-overlay
   animations: [
     trigger('fadeAnimation', [
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateX(-100%)' }),
+        style({  transform: 'translateX(-100%)' }),
         animate(
-          '250ms ease-out',
-          style({ opacity: 1, transform: 'translateX(0)' })
+          '200ms ease-out',
+          style({  transform: 'translateX(100%)' })
         ),
       ]),
       transition(':leave', [
         animate(
           '200ms ease-in',
-          style({ opacity: 0, transform: 'translateX(-100%)' })
+          style({  transform: 'translateX(-100%)' })
         ),
       ]),
     ]),
@@ -46,6 +47,16 @@ export class DashboardComponent {
   isSidebarOpen = signal(false);
   router = inject(Router);
   currentUrl = signal(this.router.url);
+  windowWidth = signal(window.innerWidth);
+
+  mobileWidth = computed(() => {
+  return this.windowWidth() <= 650 ? `${this.windowWidth() - 50}px` : '250px';
+  });
+
+  @HostListener('window:resize')
+  onResize() {
+  this.windowWidth.set(window.innerWidth);
+  }
 
   /**
    * Gets user full data from the server and sets current URL to the router's URL.
@@ -66,10 +77,16 @@ export class DashboardComponent {
    */
   toggleSidebar(): void {
     this.isSidebarOpen.update((prev) => !prev);
+    if(this.windowWidth() <= 650) {
+      disableBackgroundScroll()
+    }else{
+      enableBackgroundScroll()
+    }
   }
 
   closeSidenav = () => {
     this.isSidebarOpen.set(false);
+    enableBackgroundScroll()
   };
 
   isAllowedRoute = computed(
