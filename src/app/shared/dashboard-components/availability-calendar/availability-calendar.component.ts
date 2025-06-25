@@ -1,24 +1,23 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookingsService } from '../../../services/bookings-service/bookings.service';
 import { PropertiesService } from '../../../services/properties-service/properties.service';
 import { UnitsService } from '../../../services/units-service/units.service';
 import { HorizontalDirectivesDirective } from '../../../directives/horizontal-scroll/horizontal-directives.directive';
 import { DashboardService } from '../../../services/dashboard-service/dashboard.service';
-import { timeout } from 'rxjs';
-import { ProgressBarComponent } from "../../global/progress-bar/progress-bar.component";
+import { ProgressBarComponent } from '../../global/progress-bar/progress-bar.component';
+
 @Component({
   selector: 'app-availability-calendar',
   standalone: true,
-  imports: [DatePipe, CommonModule, FormsModule, HorizontalDirectivesDirective, ProgressBarComponent],
+  imports: [
+    DatePipe,
+    CommonModule,
+    FormsModule,
+    HorizontalDirectivesDirective,
+    ProgressBarComponent,
+  ],
   templateUrl: './availability-calendar.component.html',
   styleUrl: './availability-calendar.component.scss',
 })
@@ -60,6 +59,12 @@ export class AvailabilityCalendarComponent {
       this.bookingService.bookings().length > 0
   );
 
+  /**
+   * The constructor for the availability calendar component.
+   * It initializes the properties and units data and the booking data.
+   * When the data is loaded, it sets the first property in the list as the selected property
+   * and generates the dates for the selected month.
+   */
   constructor() {
     this.propertyService.loadProperties();
     this.unitService.loadUnits();
@@ -75,6 +80,10 @@ export class AvailabilityCalendarComponent {
     );
   }
 
+  /**
+   * Handles changes to the date selection.
+   * Regenerates the array of dates for the currently selected month and year.
+   */
   onDateChange() {
     this.generateDatesForMonth(this.selectedYear(), this.selectedMonth());
   }
@@ -103,11 +112,9 @@ export class AvailabilityCalendarComponent {
     const dates: Date[] = [];
     const first = new Date(year, month, 1);
     const last = new Date(year, month + 1, 0);
-
     for (let d = new Date(first); d <= last; d.setDate(d.getDate() + 1)) {
       dates.push(new Date(d.getFullYear(), d.getMonth(), d.getDate()));
     }
-
     this.dates.set(dates);
   }
 
@@ -201,21 +208,21 @@ export class AvailabilityCalendarComponent {
    */
 
   getBookingColor(unitId: number, day: Date): string | undefined {
-  const dayTime = day.getTime();
-  const booking = this.filteredBookings().find((b) => {
-    const checkIn = this.normalizeDate(b.check_in);
-    const checkOut = this.normalizeDate(b.check_out);
-    return (
-      b.unit.id === unitId &&
-      dayTime >= checkIn.getTime() &&
-      dayTime < checkOut.getTime()
-    );
-  });
+    const dayTime = day.getTime();
+    const booking = this.filteredBookings().find((b) => {
+      const checkIn = this.normalizeDate(b.check_in);
+      const checkOut = this.normalizeDate(b.check_out);
+      return (
+        b.unit.id === unitId &&
+        dayTime >= checkIn.getTime() &&
+        dayTime < checkOut.getTime()
+      );
+    });
 
-  if (booking?.status === 'confirmed') return 'green';
-  if (booking?.status === 'pending') return '#FFC810';
-  return undefined;
-}
+    if (booking?.status === 'confirmed') return 'green';
+    if (booking?.status === 'pending') return '#FFC810';
+    return undefined;
+  }
 
   /**
    * Gets the name of the booking guest for a given unit and day.
@@ -229,14 +236,29 @@ export class AvailabilityCalendarComponent {
     return this.getBookingLabel(unitId, day);
   }
 
+  /**
+   * Takes a date string in the format 'yyyy-mm-dd' and returns a Date object
+   * with the time set to 00:00:00.
+   *
+   * @param dateString - The date string to normalize.
+   * @returns A Date object representing the normalized date.
+   */
   normalizeDate(dateString: string): Date {
     return new Date(dateString + 'T00:00:00');
   }
 
+  /**
+   * Called when a booking in the calendar is clicked.
+   *
+   * Finds the booking associated with the given unit and day, and opens the
+   * booking popup with the booking details if one is found.
+   *
+   * @param unitId - The ID of the unit.
+   * @param day - The day of the booking to show.
+   */
   onBookingClick(unitId: number, day: Date): void {
-  const dayTime = day.getTime();
-  const booking = this.filteredBookings().find(
-    (b) => {
+    const dayTime = day.getTime();
+    const booking = this.filteredBookings().find((b) => {
       const checkIn = this.normalizeDate(b.check_in);
       const checkOut = this.normalizeDate(b.check_out);
       return (
@@ -244,14 +266,21 @@ export class AvailabilityCalendarComponent {
         dayTime >= checkIn.getTime() &&
         dayTime < checkOut.getTime()
       );
+    });
+    if (booking) {
+      this.dashboardService.showBooking.set(booking);
+      this.dashboardService.isbookingPopupOpen.set(true);
     }
-  );
-  if (booking) {
-    this.dashboardService.showBooking.set(booking);
-    this.dashboardService.isbookingPopupOpen.set(true);
   }
-}
 
+  /**
+   * Called when the user selects a different property from the dropdown.
+   *
+   * Updates the selected property ID signal, loads bookings for the selected
+   * property, and regenerates the calendar dates for the selected month.
+   *
+   * @param event - The select event.
+   */
   onSelectChange(event: Event) {
     const select = event.target as HTMLSelectElement;
     this.selectedPropertyId.set(Number(select.value));

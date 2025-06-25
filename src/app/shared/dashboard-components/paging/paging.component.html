@@ -1,16 +1,12 @@
 @if (totalPages() > 1) {
-  <nav>
-    <div class="pagination">
-        <button (click)="onPageChange(currentPage() - 1)" [disabled]="currentPage() === 1"><</button>
-        <span *ngFor="let page of visiblePages()"
-          [class.active]="currentPage() === page"
-          (click)="onPageChange(page)">
+<nav>
+  <div class="pagination">
+    <button (click)="onPageChange(currentPage() - 1)" [disabled]="currentPage() === 1">
+      << /button>
+        <span *ngFor="let page of visiblePages()" [class.active]="currentPage() === page" (click)="onPageChange(page)">
           {{ page }}
         </span>
-      
         <button (click)="onPageChange(currentPage() + 1) " [disabled]="currentPage() === totalPages()">></button>
-    </div>
-  </nav>
+  </div>
+</nav>
 }
-
-

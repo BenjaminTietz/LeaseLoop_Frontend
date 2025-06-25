@@ -1,48 +1,40 @@
 <div class="wrapper">
-<div class="form-field">
-  <input type="file" id="image" name="image" accept="image/*" multiple hidden (change)="onImageChange($event)">
-  <label for="image" class="upload-button">
-    <mat-icon>drive_folder_upload</mat-icon>
-    <span>Upload images</span>
-  </label>
-  @if (imageTooBig()) {
+  <div class="form-field">
+    <input type="file" id="image" name="image" accept="image/*" multiple hidden (change)="onImageChange($event)">
+    <label for="image" class="upload-button">
+      <mat-icon>drive_folder_upload</mat-icon>
+      <span>Upload images</span>
+    </label>
+    @if (imageTooBig()) {
     <small>Image "{{ imageTooBig() }}" is too big (max. 500KB)</small>
-  }
-  @else if (maxImagesReached()) {
-    <small>Maximum number of 30 images reached</small>
-  }
-</div>
-
-@if(isCreateMode() && imagePreviews.length > 0) {
-  <div class="image-field">
-    @for(preview of imagePreviews; track $index) {
-      <div class="image">
-        <img [src]="preview" alt="Selected image preview" />
-        <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
-        <textarea
-          type="text"
-          placeholder="Image description"
-          required
-          [value]="newImageDescriptions[$index]"
-          #descInput
-          (input)="newImageDescriptions[$index] = descInput.value; onDescriptionChange()" ></textarea>
-      </div>
     }
-    @if(missingDescription) {
-      <small>Please provide a description for every image before saving.</small>
+    @else if (maxImagesReached()) {
+    <small>Maximum number of 30 images reached</small>
     }
   </div>
-}
-
-
-@if (!isCreateMode() && (hasExistingImages() || imagePreviews.length > 0)) {
+  @if(isCreateMode() && imagePreviews.length > 0) {
+  <div class="image-field">
+    @for(preview of imagePreviews; track $index) {
+    <div class="image">
+      <img [src]="preview" alt="Selected image preview" />
+      <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
+      <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]" #descInput
+        (input)="newImageDescriptions[$index] = descInput.value; onDescriptionChange()"></textarea>
+    </div>
+    }
+    @if(missingDescription) {
+    <small>Please provide a description for every image before saving.</small>
+    }
+  </div>
+  }
+  @if (!isCreateMode() && (hasExistingImages() || imagePreviews.length > 0)) {
   <div class="image-field">
     @for(image of propertyService.selectedProperty()?.images || unitService.selectedUnit()?.images; track image.id) {
     <div class="image">
       <img [src]="getMediaUrl(image.image)" alt="property image" />
       <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
       <textarea type="text" placeholder="Image description" required [value]="image.alt_text || ''" #descInput
-      (input)="updateExistingImageDescription(image.id, descInput.value); onDescriptionChange()"></textarea>
+        (input)="updateExistingImageDescription(image.id, descInput.value); onDescriptionChange()"></textarea>
     </div>
     }
     @if(imagePreviews.length > 0) {
@@ -50,14 +42,14 @@
     <div class="image">
       <img [src]="preview" alt="Selected image preview" />
       <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
-      <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]" #previewInput
-      (input)="newImageDescriptions[$index] = previewInput.value; onDescriptionChange()" ></textarea>
+      <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]"
+        #previewInput (input)="newImageDescriptions[$index] = previewInput.value; onDescriptionChange()"></textarea>
     </div>
     }
     }
     @if(missingDescription) {
-      <small>Please provide a description for every image before updating.</small>
+    <small>Please provide a description for every image before updating.</small>
     }
   </div>
-}
+  }
 </div>
