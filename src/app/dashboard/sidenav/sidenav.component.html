@@ -1,19 +1,18 @@
-
-    <nav class="sidenav">
-        <div class="top-section">
-            <button (click)="this.navigator.navigateTo('owner/dashboard')">Dashboard</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/properties')">Properties</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/units')">Units</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard//clients')">Clients</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/bookings')">Bookings</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/services')">Services</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/promocodes')">Promocodes</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/invoices')">Invoices</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/analytics')">Analytics</button>
-        </div>
-        <div class="bottom-section">
-            <button (click)="this.navigator.navigateTo('owner/dashboard/settings')">Settings</button>
-            <button (click)="this.navigator.navigateTo('owner/dashboard/help')">Help</button>
-            <button (click)="this.auth.logout()">Logout</button>
-        </div>
-    </nav>
+<nav class="sidenav">
+  <div class="top-section">
+    <button (click)="navigateAndClose('owner/dashboard')">Dashboard</button>
+    <button (click)="navigateAndClose('owner/dashboard/properties')">Properties</button>
+    <button (click)="navigateAndClose('owner/dashboard/units')">Units</button>
+    <button (click)="navigateAndClose('owner/dashboard/clients')">Clients</button>
+    <button (click)="navigateAndClose('owner/dashboard/bookings')">Bookings</button>
+    <button (click)="navigateAndClose('owner/dashboard/services')">Services</button>
+    <button (click)="navigateAndClose('owner/dashboard/promocodes')">Promocodes</button>
+    <button (click)="navigateAndClose('owner/dashboard/invoices')">Invoices</button>
+    <button (click)="navigateAndClose('owner/dashboard/analytics')">Analytics</button>
+  </div>
+  <div class="bottom-section">
+    <button (click)="navigateAndClose('owner/dashboard/settings')">Settings</button>
+    <button (click)="navigateAndClose('owner/dashboard/help')">Help</button>
+    <button (click)="auth.logout()">Logout</button>
+  </div>
+</nav>

@@ -4,18 +4,26 @@ main {
     @include display(flex, column, flex-start, center);
     min-height: 100vh;
     height: fit-content;
-    padding: 60px 50px;
+    padding: 40px 60px;
     background-color: var(--color-bg-body);
     @media(max-width: 700px){
-        padding: 60px 20px;
+        padding: 40px 20px;
     }
 }
 
 .header {
-    @include display(flex, row, space-between, center);
+    @include display(flex, column, center, center);
     margin-bottom: 20px;
-    padding: 60px 40px;
+    padding-bottom: 60px;
     width: 100%;
+    margin: 0;
+    gap: 20px;
+    @media(max-width: 700px){
+        padding: 0px 60px 60px 60px;
+    }
+    @media(max-width:400px){
+        padding: 0px 20px 30px 20px;
+    }
 
     h1 {
         font-size: 32px;
@@ -26,6 +34,15 @@ main {
         margin: 0;
     }
 
+}
+
+.controls{
+    @include display(flex, row, space-between, center);
+    width: 100%;
+    gap: 20px;
+    @media(max-width:550px){
+        flex-direction: column;
+    }
 }
 
 app-search-input, app-filter{
@@ -49,13 +66,26 @@ app-search-input, app-filter{
             color: var(--color-text-base);
             padding: 12px;
             text-align: left;
+            
         }
+        
 
         th {
             background-color: #f8f8f8;
             color: #647188;
             text-wrap: nowrap
         }
+    }
+}
+
+.table-description{
+    @media(max-width:1440px){
+    @include elipsis($width:400px,$lines:3);
+    line-height: 36px;
+    }
+    @media(max-width:500px){
+        max-width: 250px;
+        width: 250px;
     }
 }
 
@@ -73,6 +103,12 @@ app-search-input, app-filter{
 
 .active-column{
     max-width: 55px;
+}
+
+.show{
+    @media(max-width:850px){
+        display: none;
+    }
 }
 
 .btn{

@@ -1,6 +1,6 @@
 <main>
     @if(isSidebarOpen()){
-        <app-sidenav [appClickOutside]="closeSidenav" [@fadeAnimation] ></app-sidenav>
+        <app-sidenav (closeNav)="closeSidenav()" [appClickOutside]="closeSidenav" [@fadeAnimation] ></app-sidenav>
     }
         <app-sidenav-toggle [isOpen]="isSidebarOpen().valueOf()" [ngStyle]="{'left': isSidebarOpen() ? mobileWidth() : '10px'}" (click)="toggleSidebar()"></app-sidenav-toggle>
         <app-theme-button></app-theme-button>
