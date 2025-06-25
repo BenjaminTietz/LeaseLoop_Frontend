@@ -2,7 +2,7 @@
     @if(isSidebarOpen()){
         <app-sidenav [appClickOutside]="closeSidenav" [@fadeAnimation] ></app-sidenav>
     }
-        <app-sidenav-toggle [isOpen]="isSidebarOpen().valueOf()" [ngStyle]="{'left': isSidebarOpen() ? mobileWidth() : '10px'}" (click)="isSidebarOpen.set(!isSidebarOpen())"></app-sidenav-toggle>
+        <app-sidenav-toggle [isOpen]="isSidebarOpen().valueOf()" [ngStyle]="{'left': isSidebarOpen() ? mobileWidth() : '10px'}" (click)="toggleSidebar()"></app-sidenav-toggle>
         <app-theme-button></app-theme-button>
     <router-outlet></router-outlet>
     @if (shouldShowOverlay()) {

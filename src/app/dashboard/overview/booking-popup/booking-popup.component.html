@@ -5,9 +5,10 @@
 @let promocode = this.dashboardService.showBooking()?.promo_code;
 
 <main class="booking-detail" [appClickOutside]="closePopup">
-    <mat-icon aria-label="Close" class="close-icon"
-        (click)="this.dashboardService.isbookingPopupOpen.set(false)">close</mat-icon>
+    
     <header class="booking-header">
+        <mat-icon aria-label="Close" class="close-icon"
+        (click)="this.dashboardService.isbookingPopupOpen.set(false)">close</mat-icon>
         <h1>Booking Details</h1>
         <div class="booking-status">
             Status: {{ booking?.status }}
