@@ -16,7 +16,10 @@
   <div class="image-field">
     @for(preview of imagePreviews; track $index) {
     <div class="image">
-      <img [src]="preview" alt="Selected image preview" />
+      <div class="image-box">
+        <img [src]="preview" alt="Selected image preview" />
+      </div>
+      
       <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
       <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]" #descInput
         (input)="newImageDescriptions[$index] = descInput.value; onDescriptionChange()"></textarea>
@@ -31,7 +34,9 @@
   <div class="image-field">
     @for(image of propertyService.selectedProperty()?.images || unitService.selectedUnit()?.images; track image.id) {
     <div class="image">
+      <div class="image-box">
       <img [src]="getMediaUrl(image.image)" alt="property image" />
+      </div>
       <mat-icon (click)="deleteImage(image.id)" aria-label="Delete">delete</mat-icon>
       <textarea type="text" placeholder="Image description" required [value]="image.alt_text || ''" #descInput
         (input)="updateExistingImageDescription(image.id, descInput.value); onDescriptionChange()"></textarea>
@@ -40,7 +45,9 @@
     @if(imagePreviews.length > 0) {
     @for(preview of imagePreviews; track $index) {
     <div class="image">
+      <div class="image-box">
       <img [src]="preview" alt="Selected image preview" />
+      </div>
       <mat-icon (click)="removePreview(preview)" aria-label="Delete">delete</mat-icon>
       <textarea type="text" placeholder="Image description" required [value]="newImageDescriptions[$index]"
         #previewInput (input)="newImageDescriptions[$index] = previewInput.value; onDescriptionChange()"></textarea>

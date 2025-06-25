@@ -8,6 +8,7 @@ import { Property } from '../../models/property.model';
 import { PagingComponent } from '../../shared/dashboard-components/paging/paging.component';
 import { SearchInputComponent } from '../../shared/dashboard-components/search-input/search-input.component';
 import { FilterComponent } from '../../shared/global/filter/filter.component';
+import { HorizontalDirectivesDirective } from '../../directives/horizontal-scroll/horizontal-directives.directive';
 
 @Component({
   selector: 'app-properties',
@@ -20,6 +21,7 @@ import { FilterComponent } from '../../shared/global/filter/filter.component';
     PagingComponent,
     SearchInputComponent,
     FilterComponent,
+    HorizontalDirectivesDirective
   ],
   templateUrl: './properties.component.html',
   styleUrl: './properties.component.scss',

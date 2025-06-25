@@ -1,42 +1,46 @@
 <main>
     <content>
         <div class="header">
-            <h1>Properties</h1>
-            <button (click)="openForm()">
-                <mat-icon>add</mat-icon>
-                <span>New Property</span>
-            </button>
-            <app-search-input (searchTerm)="this.search($event)" placeholder="Search properties"></app-search-input>
-            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterProperties($event)"></app-filter>
+            <div class="controls">
+                <h1>Properties</h1>
+                <button (click)="openForm()">
+                    <mat-icon>add</mat-icon>
+                    <span>New Property</span>
+                </button>
+            </div>
+            <div class="controls">
+                <app-search-input (searchTerm)="this.search($event)" placeholder="Search properties"></app-search-input>
+                <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterProperties($event)"></app-filter>
+            </div>
         </div>
-        <div class="table-wrapper">
+        <div class="table-wrapper" appHorizontalDirectives>
             @if(propertyService.sending()){
             <app-progress-bar></app-progress-bar>
             }
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="active-column">Active</th>
+                        <th class="active-column show">Active</th>
                         <th>Name</th>
                         <th>Units</th>
                         <th>Description</th>
                         <th>Address</th>
-                        <th>Images</th>
+                        <th class="show">Images</th>
                         <th>Edit property</th>
                     </tr>
                 </thead>
                 <tbody>
                     @for (property of propertyService.properties(); track property.id;) {
                     <tr>
-                        <td> <mat-icon
+                        <td class="show"> <mat-icon
                                 [ngClass]="property.active ? 'active' : 'inactive'">radio_button_checked</mat-icon>
                         </td>
                         <td>{{property.name}}</td>
                         <td>{{property.units.length}}</td>
-                        <td>{{property.description}}</td>
+                        <td class="table-description">{{property.description}}</td>
                         <td>{{property.address.country}}, {{property.address.city}}, {{property.address.street}}
                             {{property.address.house_number}}</td>
-                        <td>{{property.images.length}}</td>
+                        <td class="show">{{property.images.length}}</td>
                         <td> <button class="btn" [disabled]="propertyService.sending()"
                                 (click)=" openEditForm(property)">Edit</button></td>
                     </tr>
