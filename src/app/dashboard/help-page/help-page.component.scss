@@ -4,6 +4,9 @@
     margin: 40px auto;
     padding: 20px 52px;
     @include display(flex, column, flex-start, center);
+    @media (max-width: 700px) {
+        padding: 20px;
+    }
 }
 
 h1 {
@@ -75,6 +78,9 @@ input {
     margin-top: 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    @media(max-width:1000px){
+        width: 100%;
+    }
 }
 
 .search-preview {

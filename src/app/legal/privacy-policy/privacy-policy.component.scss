@@ -1,7 +1,10 @@
 @use "../../styles/landing-shared" as *;
 
 content {
-    padding: 40px 40px
+    padding: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
 .form-container {
@@ -16,8 +19,10 @@ content {
 
 h2,
 p,
-ul {
+ul, h1 {
+    margin: 0;
     width: 100%;
+    text-align: left;
     cursor: default;
 }
 
@@ -27,4 +32,13 @@ ul {
 
 strong {
     cursor: default !important;
+}
+
+@media(max-width:400px){
+    h1{
+        font-size: 30px;
+    }
+    h2{
+        font-size: 24px;
+    }
 }
