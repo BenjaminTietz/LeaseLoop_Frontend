@@ -5,8 +5,7 @@
             <app-logo
                 [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
                 (click)="this.navigator.navigateTo('/')"></app-logo>
-            <p>Your gateway to the perfect rental property</p>
-            <div (click)="this.navigator.navigateTo('owner')" class="btn">Register your property</div>
+            <p class="slogan">Your gateway to the perfect rental property</p>
             <app-theme-button></app-theme-button>
         </div>
         <!-- Router Outlet -->
@@ -45,18 +44,18 @@
                     <!-- Date selection -->
                     <div class="date-selector">
                         <div class="date-input">
-                            <p>Check-in</p>
-                            <input type="date" [min]="today" [value]="bookingService.checkInDate()"
+                            <label for="check-in">Check-in</label>
+                            <input id="check-in" type="date" [min]="today" [value]="bookingService.checkInDate()"
                                 (input)="setCheckInFromEvent($event)" />
                         </div>
                         <div class="date-input">
-                            <p>Check-out</p>
-                            <input type="date" [min]="today" [value]="bookingService.checkOutDate()"
+                            <label for="check-out">Check-out</label>
+                            <input id="check-out" type="date" [min]="today" [value]="bookingService.checkOutDate()"
                                 (input)="setCheckOutFromEvent($event)" />
                         </div>
                         <div class="date-input guest-count">
-                            <p>Guests</p>
-                            <input type="number" [min]="1" [max]="maxGuestCapacity()"
+                            <label for="guest-count">Guests</label>
+                            <input id="guest-count" type="number" [min]="1" [max]="maxGuestCapacity()"
                                 [value]="bookingService.guestCount()" (input)="setGuestCountFromEvent($event)" />
                         </div>
                         <button class="btn search-btn" (click)="searchAvailableUnits()">Search</button>
@@ -68,7 +67,7 @@
             </section>
             <!-- Mainarea -->
             <ng-container *ngIf="searchIsComplete(); else noResultsView">
-                <section>
+                <section class="available-properties">
                     <h2>Available Properties</h2>
                     <div class="grid">
                         @for (property of bookingService.properties(); track property.id) {

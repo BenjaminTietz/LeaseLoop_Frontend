@@ -33,7 +33,9 @@
     top: 50%;
     transform: translateY(-50%);
     border: none;
-    padding: 10px 14px;
+    padding: 14px;
+    width: 40px;
+    height: 40px;
     font-size: 22px;
     border-radius: 50%;
     cursor: pointer;
@@ -42,6 +44,12 @@
 
     &:hover {
         background-color: #ffffff;
+    }
+
+    p {
+        margin-top: -8px;
+        font-size: 32px;
+        font-weight: bold;
     }
 }
 
