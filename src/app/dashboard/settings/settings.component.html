@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="card">
-          <button (click)="openForm('changeEmail')">Change account e-mail</button>
+          <button (click)="openForm('changeEmail')">Change account email</button>
           @if(changeEmail()){
           <app-change-email-form (close)="closeAllForms()"></app-change-email-form>
           }

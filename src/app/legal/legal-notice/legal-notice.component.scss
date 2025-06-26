@@ -16,4 +16,19 @@ a {
     flex-direction: column;
     width: 100%;
     text-align: left;
+    
 }
+
+p{
+    gap: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
