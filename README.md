@@ -1,6 +1,6 @@
 # Guesthouse PMS Frontend 🌐
 
-## A responsive and multilingual Angular frontend for managing hotel and guesthouse operations — fully integrated with a Django REST API backend.
+## A responsive Angular frontend for managing hotel and guesthouse operations — fully integrated with a Django REST API backend.
 
 ---
 
