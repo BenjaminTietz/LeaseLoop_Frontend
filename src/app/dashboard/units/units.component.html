@@ -1,22 +1,26 @@
 <main>
-    <content>
+    <content >
         <div class="header">
+            <div class="controls">
             <h1>Units</h1>
             <button class="btn-add" (click)="openForm()">
                 <mat-icon>add</mat-icon>
                 <span>New Unit</span>
             </button>
+            </div>
+            <div class="controls">
             <app-search-input (searchTerm)="this.search($event)" placeholder="Search units"></app-search-input>
             <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterUnits($event)"></app-filter>
+            </div>
         </div>
-        <div class="table-wrapper">
+        <div class="table-wrapper" appHorizontalDirectives>
             <table class="table">
                 <thead>
                     <tr>
                         <th class="active-column">Active</th>
                         <th>Property</th>
                         <th>Name</th>
-                        <th>Max Capacity</th>
+                        <th>Capacity</th>
                         <th>Price</th>
                         <th>Status</th>
                         <th>Edit unit</th>

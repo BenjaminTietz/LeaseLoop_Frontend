@@ -16,6 +16,9 @@
   border-radius:  20px;
   overflow-y: scroll;
   scrollbar-width: none;
+  @media(max-width:800px){
+    max-width: 90vw;
+  }
 }
 
 .category-dropdown {
@@ -35,6 +38,9 @@
   background-color: var(--color-bg-body);
   &:hover {
     background-color: var(--color-bg-surface);
+  }
+  @media(max-width:450px){
+    flex-direction: column;
   }
 
 }

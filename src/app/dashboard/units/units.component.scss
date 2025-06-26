@@ -4,3 +4,9 @@
 button{
   margin-left: 0px;
 }
+
+@media(max-width:780px){
+    main{
+      padding: 40px 20px;
+    }
+}

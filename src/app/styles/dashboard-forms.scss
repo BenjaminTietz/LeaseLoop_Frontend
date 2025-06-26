@@ -200,6 +200,9 @@ small {
   width: 100%;
   position: relative;
   gap: 20px;
+  @media(max-width:420px){
+    flex-direction: column;
+  }
 }
 
 label{
@@ -209,6 +212,16 @@ label{
 
 ::placeholder{
   font-size: 16px;
+}
+
+.side-area{
+  @include display(flex, row, space-between, center);
+  width: 100%;
+  position: relative;
+  gap: 20px;
+  @media(max-width:880px){
+    flex-direction: column;
+  }
 }
 
 @media(max-width:750px){
