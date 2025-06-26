@@ -1,15 +1,19 @@
 <main>
     <content>
         <div class="header">
+            <div class="controls">
             <h1>Promocodes</h1>
             <button (click)="openForm()" class="btn-add">
                 <mat-icon>add</mat-icon>
-                <span>New Promocode</span>
+                <span>New Code</span>
             </button>
-            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search promocodes" ></app-search-input>
-            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterPromocodes($event)"></app-filter>
+            </div>
+            <div class="controls">
+                <app-search-input (searchTerm)="this.search($event)"  placeholder="Search promocodes" ></app-search-input>
+                <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterPromocodes($event)"></app-filter>
+            </div>
         </div>
-        <div class="table-wrapper">
+        <div class="table-wrapper" appHorizontalDirective>
             <table class="table">
                 <thead>
                     <tr>
@@ -17,7 +21,7 @@
                         <th>Name</th>
                         <th>Description</th>
                         <th>Valdid until</th>
-                        <th>Discount Percentage</th>
+                        <th>Discount %</th>
                         <th>Edit Code</th>
                     </tr>
                 </thead>

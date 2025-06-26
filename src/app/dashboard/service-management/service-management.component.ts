@@ -9,6 +9,7 @@ import { MatIcon } from '@angular/material/icon';
 import { PagingComponent } from '../../shared/dashboard-components/paging/paging.component';
 import { SearchInputComponent } from '../../shared/dashboard-components/search-input/search-input.component';
 import { FilterComponent } from '../../shared/global/filter/filter.component';
+import { HorizontalDirectivesDirective } from '../../directives/horizontal-scroll/horizontal-directives.directive';
 
 @Component({
   selector: 'app-service-management',
@@ -21,6 +22,7 @@ import { FilterComponent } from '../../shared/global/filter/filter.component';
     PagingComponent,
     SearchInputComponent,
     FilterComponent,
+    HorizontalDirectivesDirective
   ],
   templateUrl: './service-management.component.html',
   styleUrl: './service-management.component.scss',

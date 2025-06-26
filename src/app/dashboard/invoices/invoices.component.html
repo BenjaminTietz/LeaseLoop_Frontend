@@ -2,8 +2,10 @@
     <content>
         <div class="header">
             <h1>Invoices</h1>
-            <app-search-input (searchTerm)="this.search($event)" placeholder="Search invoices"></app-search-input>
-            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterInvoices($event)"></app-filter>
+            <div class="controls">
+                <app-search-input (searchTerm)="this.search($event)" placeholder="Search invoices"></app-search-input>
+                <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterInvoices($event)"></app-filter>
+            </div>
         </div>
         <div class="table-wrapper">
             @if(invoiceService.sending()) {

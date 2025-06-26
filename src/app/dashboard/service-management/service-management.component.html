@@ -1,15 +1,19 @@
 <main>
     <content>
         <div class="header">
-            <h1>Services</h1>
-            <button  (click)="openForm()">
-                <mat-icon>add</mat-icon>
-                <span>New Service</span>
-            </button>
-            <app-search-input (searchTerm)="this.search($event)"  placeholder="Search services" ></app-search-input>
-            <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterServices($event)"></app-filter>
+            <div class="controls">
+                <h1>Services</h1>
+                <button  (click)="openForm()">
+                    <mat-icon>add</mat-icon>
+                    <span>New Service</span>
+                </button>
+            </div>
+            <div class="controls">
+                <app-search-input (searchTerm)="this.search($event)"  placeholder="Search services" ></app-search-input>
+                <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterServices($event)"></app-filter>
+            </div>
         </div>
-        <div class="table-wrapper">
+        <div class="table-wrapper" appHorizontalDirectives >
             <table class="table">
                 <thead>
                     <tr>
@@ -18,7 +22,7 @@
                         <th>Associated property</th>
                         <th>Price (€)</th>
                         <th>Type</th>
-                        <th>Edit Service</th>
+                        <th>Edit</th>
                     </tr>
                 </thead>
                 <tbody>

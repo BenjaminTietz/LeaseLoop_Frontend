@@ -1,15 +1,19 @@
 <main>
   <content>
     <div class="header">
+      <div class="controls">
       <h1>Bookings</h1>
-      <button (click)="openForm()">
-        <mat-icon>add</mat-icon>
-        <span>New Booking</span>
-      </button>
-      <app-search-input (searchTerm)="this.search($event)" placeholder="Search bookings"></app-search-input>
-      <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterBookings($event)"></app-filter>
+        <button (click)="openForm()">
+          <mat-icon>add</mat-icon>
+          <span>New Booking</span>
+        </button>
+      </div>
+      <div class="controls">
+        <app-search-input (searchTerm)="this.search($event)" placeholder="Search bookings"></app-search-input>
+        <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterBookings($event)"></app-filter>
+      </div>
     </div>
-    <div class="table-wrapper">
+    <div class="table-wrapper" appHorizontalDirectives >
       <table class="table">
         <thead>
           <tr>
@@ -46,7 +50,7 @@
               @for (service of booking.services; track $index; let i = $index) {
               {{ service?.name }}@if (i < ((booking.services.length) - 1)) {, } } }@else { No booked services } </td>
             <td>{{ booking.total_price.toFixed(2) }} €</td>
-            <td>@if (booking.deposit_paid) {✔ {{ booking.deposit_amount.toFixed(2) }} €} @else {X}</td>
+            <td><span class="no-wrap">@if (booking.deposit_paid) {✔ {{ booking.deposit_amount.toFixed(2) }} €} @else {X}</span></td>
 
             <td> <button class="btn" (click)="openEditForm(booking)">Edit</button></td>
             <td> <button class="btn" (click)="this.dashboardService.showBooking.set(booking);
