@@ -1,5 +1,5 @@
 @use "../../styles/mixins.scss" as *;
-
+@use "../../styles/client-booking.scss" as *;
 
 main {
     margin-right: 0px;
@@ -7,7 +7,6 @@ main {
     min-height: 100vh;
     @include display(flex, column, space-between, center);
     padding: 40px 20px;
-
 }
 
 app-logo {
@@ -191,6 +190,7 @@ app-logo {
 app-landing-footer {
     margin-top: auto;
 }
+
 
 .input-wrapper {
     position: relative;
@@ -405,30 +405,19 @@ app-landing-footer {
     h2 {
         margin-bottom: 16px;
     }
+
+    .reset-btn {
+        margin-bottom: 16px;
+    }
 }
 
 @media (max-width: 768px) {
-
     .custom-dropdown {
         text-align: center;
     }
 
     .how-to-book {
-        padding: 48px 16px
-    }
-
-    ;
-
-    h1 {
-        font-size: min(48px, 7vw);
-    }
-
-    p {
-        font-size: min(28px, 4vw);
-    }
-
-    .btn {
-        font-size: min(16px, 4vw);
+        padding: 48px 16px;
     }
 
     .selector-container {
@@ -466,19 +455,6 @@ app-landing-footer {
     .how-to-book {
         height: auto;
         padding: 32px 12px;
-    }
-
-    h1 {
-        font-size: min(36px, 8vw);
-    }
-
-    p {
-        font-size: min(22px, 5vw);
-    }
-
-    .btn {
-        width: 100%;
-        font-size: min(14px, 5vw);
     }
 
     .slogan {

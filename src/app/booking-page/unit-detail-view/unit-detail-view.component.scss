@@ -1,4 +1,5 @@
 @use '../../styles/mixins.scss' as *;
+@use "../../styles/client-booking.scss" as *;
 
 .unit-detail {
     padding: 40px 20px;
@@ -32,7 +33,6 @@
             .btn {
                 padding: 12px 24px;
                 background-color: #4589ff;
-                color: white;
                 border-radius: 8px;
                 font-weight: bold;
                 cursor: pointer;
@@ -117,5 +117,27 @@
             font-size: 24px;
             line-height: 1.6;
         }
+    }
+}
+
+
+@media (max-width: 768px) {
+    .left {
+        text-align: center;
+    }
+
+    .left p {
+        margin-bottom: 24px;
+    }
+
+    .description h2 {
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .amenity {
+        padding: 4px 8px !important;
     }
 }

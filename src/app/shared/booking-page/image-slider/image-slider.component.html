@@ -4,8 +4,12 @@
     </div>
 </div>
 <!-- Navigation -->
-<button class="nav-button prev-button" (click)="prev()">‹</button>
-<button class="nav-button next-button" (click)="next()">›</button>
+<button class="nav-button prev-button" (click)="prev()">
+    <p>‹</p>
+</button>
+<button class="nav-button next-button" (click)="next()">
+    <p>›</p>
+</button>
 <!-- Dots -->
 <div class="dots">
     <div class="dot" *ngFor="let img of images(); let idx = index" [class.active]="idx === currentIndex()"
