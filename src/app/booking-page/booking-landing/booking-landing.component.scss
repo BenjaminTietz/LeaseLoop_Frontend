@@ -36,15 +36,18 @@ app-logo {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     color: white;
     text-align: center;
+    margin-top: 16px;
 
     h1 {
-        font-size: 64px;
+        font-size: min(64px, 8vw);
         margin-bottom: 12px;
+        line-height: 1.1;
     }
 
     p {
-        font-size: 36px;
+        font-size: min(36px, 4.5vw);
         margin-bottom: 24px;
+        line-height: 1.4;
     }
 
     .btn {
@@ -55,6 +58,7 @@ app-logo {
         font-weight: bold;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        font-size: min(18px, 3.5vw);
 
         &:hover {
             background-color: #005eff;
@@ -395,27 +399,89 @@ app-landing-footer {
             }
         }
     }
+}
 
+.available-properties {
+    h2 {
+        margin-bottom: 16px;
+    }
+}
 
-    @media (max-width: 768px) {
-        padding: 32px 16px;
+@media (max-width: 768px) {
 
-        h2 {
-            font-size: 28px;
-        }
+    .custom-dropdown {
+        text-align: center;
+    }
 
-        p {
-            font-size: 18px;
+    .how-to-book {
+        padding: 48px 16px
+    }
+
+    ;
+
+    h1 {
+        font-size: min(48px, 7vw);
+    }
+
+    p {
+        font-size: min(28px, 4vw);
+    }
+
+    .btn {
+        font-size: min(16px, 4vw);
+    }
+
+    .selector-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .date-selector {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .date-input {
+        width: 100%;
+
+        input {
+            width: 100%;
+            max-width: 300px;
         }
     }
 
-    @media (max-width: 480px) {
-        h2 {
-            font-size: 24px;
-        }
+    .slogan {
+        font-size: 18px ! important;
+    }
 
-        p {
-            font-size: 16px;
+    .available-properties {
+        h2 {
+            text-align: center;
         }
+    }
+}
+
+
+@media (max-width: 480px) {
+    .how-to-book {
+        height: auto;
+        padding: 32px 12px;
+    }
+
+    h1 {
+        font-size: min(36px, 8vw);
+    }
+
+    p {
+        font-size: min(22px, 5vw);
+    }
+
+    .btn {
+        width: 100%;
+        font-size: min(14px, 5vw);
+    }
+
+    .slogan {
+        display: none;
     }
 }
