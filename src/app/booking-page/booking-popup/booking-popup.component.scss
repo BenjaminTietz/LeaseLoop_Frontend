@@ -1,6 +1,7 @@
 @use "../../styles/mixins.scss" as *;
 @use '../../styles/dashboard-component.scss' as *;
 @use '../../styles/dashboard-forms.scss' as *;
+@use "../../styles/client-booking.scss" as *;
 
 .booking-popup-backdrop {
     position: fixed;

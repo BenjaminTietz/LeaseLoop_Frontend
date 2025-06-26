@@ -316,6 +316,7 @@ app-landing-footer {
         font-size: 14px;
         margin: 4px 0;
         color: black;
+        @include elipsis(100%, 3);
     }
 
     span {
@@ -403,10 +404,6 @@ app-landing-footer {
 
 .available-properties {
     h2 {
-        margin-bottom: 16px;
-    }
-
-    .reset-btn {
         margin-bottom: 16px;
     }
 }
