@@ -12,7 +12,13 @@
             </p>
         </div>
         <div class="right">
+            @if (bookingService.checkInDate()) {
             <button class="btn primary" (click)="openBookingPopup()">Book now</button>
+            }
+            @else {
+            <button class="btn primary" (click)="this.navigator.navigateTo('')">Choose
+                dates</button>
+            }
             <div class="price-box">
                 <span class="label">Price starts from</span>
                 <span class="price">€ {{ unit()?.price_per_night | number: '1.2-2' }} <span class="unit">/

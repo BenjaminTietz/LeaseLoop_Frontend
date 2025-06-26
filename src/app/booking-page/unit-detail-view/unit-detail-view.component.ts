@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ClientBookingService } from '../../services/client-booking/client-booking.service';
 import { ActivatedRoute } from '@angular/router';
 import { BookingPopupComponent } from '../booking-popup/booking-popup.component';
+import { NavigatorService } from '../../services/navigator/navigator.service';
 
 @Component({
   selector: 'app-unit-detail-view',
@@ -14,6 +15,7 @@ import { BookingPopupComponent } from '../booking-popup/booking-popup.component'
 })
 export class UnitDetailViewComponent {
   bookingService = inject(ClientBookingService);
+  navigator = inject(NavigatorService);
   route = inject(ActivatedRoute);
 
   unitId = signal<number | undefined>(undefined);
