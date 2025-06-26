@@ -1,59 +1,115 @@
-# HostPilot
+# Guesthouse PMS Frontend 🌐
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0-next.1.
+## A responsive and multilingual Angular frontend for managing hotel and guesthouse operations — fully integrated with a Django REST API backend.
 
-## Development server
+---
 
-To start a local development server, run:
+## Table of Contents
 
-```bash
-ng serve
-```
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Setup Instructions](#setup-instructions)
+5. [Development](#development)
+6. [Build & Deployment](#build--deployment)
+7. [Contact](#contact)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Introduction
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+The Guesthouse PMS frontend is built with **Angular 19**. It provides a modern user interface for managing properties, bookings, availability calendars, clients, services, and analytics.
 
-```bash
-ng generate component component-name
-```
+The UI includes multilingual support (DE/EN), reactive forms, Signals API, responsive layout, and component-based architecture with modular dialogs and calendar views.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## Features
 
-## Building
+- 🧭 Dashboard with key analytics
+- 📅 Availability Calendar
+- 🏠 Property & Unit Management
+- 🧾 Booking & Invoice Handling
+- 🔒 AuthGuard + AuthInterceptor
+- 📊 Revenue & Occupancy Charts (ApexCharts)
+- 🌐 Multilingual with `Signals`
+- 🧩 Modular Forms via Reactive Dialog Components
+- 🧪 Built-in validation & error handling
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## Tech Stack
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- **Angular 19**
+- **TypeScript**
+- **SCSS**
+- **RxJS & Signals**
+- **ApexCharts**
+- **Angular Router**
+- **REST API Integration (Django)**
 
-## Running unit tests
+---
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Setup Instructions
 
-```bash
-ng test
-```
+1. **Clone the repository:**
 
-## Running end-to-end tests
+   ```sh
+   git clone git@github.com:BenjaminTietz/LeaseLoop_Frontend.git
+   cd leaseloop_frontend
+   ```
 
-For end-to-end (e2e) testing, run:
+2. **Install dependencies:**
 
-```bash
-ng e2e
-```
+   ```sh
+   npm install
+   ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+3. **Start the development server:**
 
-## Additional Resources
+   ```sh
+   npm start
+   or
+   ng serve
+   ```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+4. **Open in browser:**
+
+   ```sh
+   http://localhost:4200
+
+   ```
+
+## Development
+
+### Environment Configuration
+
+Edit `src/environments/environment.ts`:
+
+````ts
+export const environment = {
+  production: false,
+  baseRefUrl: 'http://localhost:8000', // Django backend
+};
+
+###  Code scaffolding
+
+```ts
+ng generate component my-component
+ng generate service my-service
+````
+
+## Contact
+
+### 👤 Personal
+
+- [Portfolio](https://benjamin-tietz.com/)
+- [Drop me a mail](mailto:mail@benjamin-tietz.com)
+
+### 🌍 Social
+
+- [LinkedIn](https://www.linkedin.com/in/benjamin-tietz/)
+
+### 💻 Project Repository
+
+- [GitHub Repository](https://github.com/BenjaminTietz/LeaseLoop_Frontend)
