@@ -7,6 +7,7 @@ import { PagingComponent } from '../../shared/dashboard-components/paging/paging
 import { SearchInputComponent } from '../../shared/dashboard-components/search-input/search-input.component';
 import { AmenitiesService } from '../../services/amenities-service/amenities.service';
 import { FilterComponent } from '../../shared/global/filter/filter.component';
+import { HorizontalDirectivesDirective } from '../../directives/horizontal-scroll/horizontal-directives.directive';
 
 @Component({
   selector: 'app-units',
@@ -18,6 +19,7 @@ import { FilterComponent } from '../../shared/global/filter/filter.component';
     PagingComponent,
     SearchInputComponent,
     FilterComponent,
+    HorizontalDirectivesDirective
   ],
   templateUrl: './units.component.html',
   styleUrl: './units.component.scss',
