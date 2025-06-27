@@ -18,7 +18,7 @@
 
 ## Introduction
 
-The Guesthouse PMS frontend is built with **Angular 19**. It provides a modern user interface for managing properties, bookings, availability calendars, clients, services, and analytics.
+The Guesthouse PMS frontend is built with **Angular 18**. It provides a modern user interface for managing properties, bookings, availability calendars, clients, services, and analytics.
 
 The UI includes multilingual support (DE/EN), reactive forms, Signals API, responsive layout, and component-based architecture with modular dialogs and calendar views.
 
@@ -30,17 +30,18 @@ The UI includes multilingual support (DE/EN), reactive forms, Signals API, respo
 - 📅 Availability Calendar
 - 🏠 Property & Unit Management
 - 🧾 Booking & Invoice Handling
-- 🔒 AuthGuard + AuthInterceptor
+- 🔒 AuthGuard + custom HTTP Client
 - 📊 Revenue & Occupancy Charts (ApexCharts)
-- 🌐 Multilingual with `Signals`
+- 🌐 Angular `Signals`
 - 🧩 Modular Forms via Reactive Dialog Components
 - 🧪 Built-in validation & error handling
+- 🏠 Client side Booking.com alike clone
 
 ---
 
 ## Tech Stack
 
-- **Angular 19**
+- **Angular 18**
 - **TypeScript**
 - **SCSS**
 - **RxJS & Signals**
@@ -86,22 +87,34 @@ The UI includes multilingual support (DE/EN), reactive forms, Signals API, respo
 
 Edit `src/environments/environment.ts`:
 
-````ts
+```ts
 export const environment = {
   production: false,
-  baseRefUrl: 'http://localhost:8000', // Django backend
+  baseRefUrl: "http://localhost:8000", // Django backend
 };
+```
 
-###  Code scaffolding
+### Code scaffolding
 
 ```ts
 ng generate component my-component
 ng generate service my-service
-````
+```
 
 ## Contact
 
-### 👤 Personal
+### 👤 Personal - meet the developers
+
+#### Paul Ivan
+
+- [Portfolio](https://paul-ivan.com/)
+- [Drop me a mail](mailto:contact@paul-ivan.com)
+
+### 🌍 Social
+
+- [LinkedIn](https://www.linkedin.com/in/paul-ivan-a87585328/)
+
+#### Benjamin Tietz
 
 - [Portfolio](https://benjamin-tietz.com/)
 - [Drop me a mail](mailto:mail@benjamin-tietz.com)
