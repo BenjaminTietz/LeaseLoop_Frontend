@@ -47,6 +47,7 @@ export class PropertiesComponent implements OnInit {
    */
   ngOnInit(): void {
     this.propertyService.loadPaginatedProperties(1);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

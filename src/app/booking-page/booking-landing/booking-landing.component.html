@@ -12,7 +12,7 @@
         <router-outlet></router-outlet>
         <!-- Conditional Main Landing Content -->
         <ng-container
-            *ngIf="!bookingService.selectedPropertyDetail() || !navigator.actualRoute().includes('/unit/') && !navigator.actualRoute().includes('/property/')">
+            *ngIf="!bookingService.selectedPropertyDetail() && !navigator.actualRoute().includes('/unit/') && !navigator.actualRoute().includes('/property/')">
             <!-- Landing view above selector -->
             <section class="landing-view">
                 <h1>Find your perfect rental property</h1>

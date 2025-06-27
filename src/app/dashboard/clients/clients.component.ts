@@ -43,6 +43,7 @@ export class ClientsComponent implements OnInit {
    */
   ngOnInit(): void {
     this.clientService.loadPaginatedClients(1, '');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

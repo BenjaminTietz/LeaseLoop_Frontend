@@ -135,6 +135,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
    * active state, and amenities.
    */
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     disableBackgroundScroll();
     const selected = this.unitService.selectedUnit();
     if (selected) {
@@ -151,7 +152,6 @@ export class UnitFormComponent implements OnInit, OnDestroy {
         active: selected.active,
         amenities: selected.amenities,
       });
-
     }
   }
 

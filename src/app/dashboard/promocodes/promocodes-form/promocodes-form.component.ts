@@ -60,6 +60,7 @@ export class PromocodesFormComponent {
    */
   ngOnInit(): void {
     this.promocodeService.loadPromocodes();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

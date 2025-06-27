@@ -51,6 +51,7 @@ export class BookingsComponent implements OnInit {
    */
   ngOnInit() {
     this.bs.loadPaginatedBookings(1);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

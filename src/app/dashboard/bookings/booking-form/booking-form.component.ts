@@ -182,6 +182,7 @@ export class BookingFormComponent {
   ngOnInit(): void {
     this.bookingService.sending.set(false);
     this.setDataBooking();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

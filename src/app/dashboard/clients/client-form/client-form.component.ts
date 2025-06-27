@@ -46,6 +46,10 @@ export class ClientFormComponent {
     }),
   });
 
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
   constructor() {
     effect(() => {
       const selected = this.clientService.selectedClient();

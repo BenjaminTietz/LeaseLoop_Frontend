@@ -27,5 +27,6 @@ export class OverviewComponent implements OnInit {
    */
   ngOnInit(): void {
     this.dashboardService.getDashboardStats();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }

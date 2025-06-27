@@ -8,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './privacy-policy.component.scss'
 })
 export class PrivacyPolicyComponent {
-
+  
+    ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 }

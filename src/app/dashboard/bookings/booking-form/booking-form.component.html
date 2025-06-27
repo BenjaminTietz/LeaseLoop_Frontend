@@ -123,7 +123,7 @@
     <div class="input-area">
       <label for="deposit_paid">Deposit Paid</label>
       <div class="form-field">
-        <select name="deposit_paid" id="deposit_paid" formControlName="deposit_paid">
+        <select name="deposit_paid" id="deposit_paid" formControlName="deposit_paid" (change)="onValueChange()">
           <option [ngValue]="true">Yes</option>
           <option [ngValue]="false">No</option>
         </select>
@@ -160,7 +160,7 @@
       <div class="form-field">
         <select name="promo_code" id="promo_code" formControlName="promo_code" (change)="onValueChange()">
 
-          <option [ngValue]="0">Select Promo Code</option>
+          <option [ngValue]="null">Select Promo Code</option>
 
 
           @for(promocode of promoService.promocodes(); track $index) {

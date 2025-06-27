@@ -280,4 +280,8 @@ export class HelpPageComponent {
   closeForm() {
     this.contactFormOpen.set(false);
   }
+
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 }
