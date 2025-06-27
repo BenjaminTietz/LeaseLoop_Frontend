@@ -66,7 +66,7 @@ export class UnitFormComponent implements OnInit, OnDestroy {
     'condo',
     'townhouse',
   ];
-  unitStatus = ['available', 'booked', 'unavailable', 'booked', 'maintenance'];
+  unitStatus = ['available', 'booked', 'unavailable', 'maintenance'];
   amenitiesOpen = signal(false);
   amenities = signal<number[]>(
     this.unitService.selectedUnit()?.amenities || []

@@ -50,7 +50,7 @@ export class ImageUploadComponent {
    */
   ngOnInit(): void {
     this.propertyService.clearDeletedImages();
-    //this.unitService.clearDeletedImages();   TODO : whats that, do we need it ?
+    //this.unitService.clearDeletedImages();
     const property = this.propertyService.selectedProperty();
     const unit = this.unitService.selectedUnit();
     this.existingImageBase64s = [];
@@ -148,6 +148,7 @@ export class ImageUploadComponent {
    */
   deleteImage(id: number) {
     this.propertyService.markImageForDeletion(id);
+    this.unitService.markImageForDeletion(id);
   }
 
   /**

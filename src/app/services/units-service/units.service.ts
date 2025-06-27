@@ -301,4 +301,23 @@ export class UnitsService {
         error: this.handleError('Update unit failed'),
       });
   }
+
+  /**
+   * Marks an image for deletion by its ID.
+   *
+   * This method removes the image with the specified ID from the selected unit's images
+   * and adds the ID to the list of deleted image IDs. The image is not immediately deleted from
+   * the database; instead, it is marked for deletion, allowing batch processing of deletions.
+   *
+   * @param id - The ID of the image to mark for deletion.
+   */
+  markImageForDeletion(id: number) {
+    const unit = this.selectedUnit();
+    if (!unit) return;
+    unit.images = unit.images.filter((img) => img.id !== id);
+    this.deletedImageIds.set([...this.deletedImageIds(), id]);
+  }
 }
+
+
+
