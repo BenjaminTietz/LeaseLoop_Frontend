@@ -4,7 +4,7 @@
         <div class="booking-header">
             <app-logo
                 [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
-                (click)="this.navigator.navigateTo('') "></app-logo>
+                (click)="this.navigator.navigateTo('/') "></app-logo>
             <p class="slogan">Your gateway to the perfect rental property</p>
             <app-theme-button></app-theme-button>
         </div>
@@ -12,7 +12,7 @@
         <router-outlet></router-outlet>
         <!-- Conditional Main Landing Content -->
         <ng-container
-            *ngIf="!bookingService.selectedPropertyDetail() && !navigator.actualRoute().includes('/unit/') && !navigator.actualRoute().includes('/property/')">
+            *ngIf="!bookingService.selectedPropertyDetail() || !navigator.actualRoute().includes('/unit/') && !navigator.actualRoute().includes('/property/')">
             <!-- Landing view above selector -->
             <section class="landing-view">
                 <h1>Find your perfect rental property</h1>
@@ -61,7 +61,7 @@
                         <button class="btn search-btn"  [disabled]="disableSearchButton()" (click)="searchAvailableUnits()">Search</button>
                     </div>
                 </div>
-                @if (bookingService.guestCount() >= maxGuestCapacity()) {
+                @if (bookingService.guestCount() > maxGuestCapacity()) {
                 <p class="info">Max. guest capacity reached – please reduce guest count or change filters.</p>
                 }
             </section>
