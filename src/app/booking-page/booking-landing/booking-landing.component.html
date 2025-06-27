@@ -56,9 +56,11 @@
                         <div class="date-input guest-count">
                             <label for="guest-count">Guests</label>
                             <input id="guest-count" type="number" [min]="1" [max]="maxGuestCapacity()"
-                                [value]="bookingService.guestCount()" (input)="setGuestCountFromEvent($event)" />
+                                [value]="bookingService.guestCount()" (input)="onGuestCountTyping($event)"
+                                (blur)="clampGuestCount($event)" />
                         </div>
-                        <button class="btn search-btn"  [disabled]="disableSearchButton()" (click)="searchAvailableUnits()">Search</button>
+                        <button class="btn search-btn" [disabled]="disableSearchButton()"
+                            (click)="searchAvailableUnits()">Search</button>
                     </div>
                 </div>
                 @if (bookingService.guestCount() > maxGuestCapacity()) {
