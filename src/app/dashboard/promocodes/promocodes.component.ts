@@ -46,6 +46,7 @@ export class PromocodesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPromocodes();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

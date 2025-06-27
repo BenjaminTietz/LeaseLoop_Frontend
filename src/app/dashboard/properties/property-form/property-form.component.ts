@@ -83,6 +83,7 @@ export class PropertyFormComponent {
    * Clears the deleted images list and if a property is selected, it patches the property form with the selected property values.
    */
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     this.propertyService.clearDeletedImages();
     const selected = this.propertyService.selectedProperty();
     if (selected) {

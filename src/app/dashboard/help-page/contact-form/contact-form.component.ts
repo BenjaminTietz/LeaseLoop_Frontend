@@ -51,6 +51,10 @@ export class ContactFormComponent {
     theme: ['', [Validators.required]],
   });
 
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
   sendMessage = () => {
     this.sending.set(true);
     this.httpClient

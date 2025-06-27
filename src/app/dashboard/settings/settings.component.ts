@@ -53,6 +53,10 @@ export class SettingsComponent {
     return !!data && typeof data === 'object' && Object.keys(data).length > 0;
   });
 
+  ngOnInit() {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
   /**
    * Lifecycle hook that is called after the component has been initialized.
    * Calls SettingsService.getUserFullData() to fetch the user's data.

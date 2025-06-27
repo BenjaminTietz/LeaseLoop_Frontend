@@ -36,5 +36,6 @@ export class AnalyticsComponent implements OnInit {
    */
   ngOnInit(): void {
     this.analyticsService.setDefaultDateRange();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }

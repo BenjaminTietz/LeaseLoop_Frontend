@@ -16,4 +16,8 @@ export class BookingPopupComponent {
   closePopup = () => {
     this.dashboardService.isbookingPopupOpen.set(false);
   };
+
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 }

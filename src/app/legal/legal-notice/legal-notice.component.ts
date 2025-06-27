@@ -8,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './legal-notice.component.scss'
 })
 export class LegalNoticeComponent {
-
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
 }

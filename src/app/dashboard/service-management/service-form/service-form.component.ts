@@ -89,6 +89,7 @@ export class ServiceFormComponent implements OnInit {
    */
   ngOnInit(): void {
     this.propertyService.loadProperties();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

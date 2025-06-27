@@ -45,6 +45,7 @@ export class InvoicesComponent implements OnInit {
    */
   ngOnInit(): void {
     this.invoiceService.getInvoices();
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

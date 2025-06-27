@@ -48,6 +48,7 @@ export class UnitsComponent implements OnInit {
 
   ngOnInit(): void {
     this.unitsService.loadPaginatedUnits(1);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /**

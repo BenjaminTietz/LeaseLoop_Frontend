@@ -52,6 +52,7 @@ export class ServiceManagementComponent implements OnInit {
    * This is a lifecycle hook that is called automatically by Angular when the component is created.
    */
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     this.loadServices();
   }
 

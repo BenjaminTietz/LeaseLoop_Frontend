@@ -71,6 +71,10 @@ export class DashboardComponent {
     });
   }
 
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
   /**
    * Toggles the sidebar open or closed. If the sidebar is already open, it sets its state to false.
    * If the sidebar is closed, it sets its state to true.
