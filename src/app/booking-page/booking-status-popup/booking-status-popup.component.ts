@@ -51,7 +51,7 @@ export class BookingStatusPopupComponent implements OnInit {
   ngOnInit(): void {
     if (this.status === 'unavailable') {
       setTimeout(() => {
-        this.navigator.navigateTo('');
+        this.navigator.navigateTo('/');
         this.bookingService.closeBookingStatusPopup();
       }, 3000);
     }
