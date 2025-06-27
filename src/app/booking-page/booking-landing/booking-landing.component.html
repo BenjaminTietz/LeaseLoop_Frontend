@@ -4,7 +4,7 @@
         <div class="booking-header">
             <app-logo
                 [ngClass]="navigator.actualRoute() == 'owner/legal-notice' || navigator.actualRoute() == 'owner/privacy-policy' || navigator.actualRoute() == 'owner/' ? 'logo-scrollbar' : ''"
-                (click)="this.navigator.navigateTo('') "></app-logo>
+                (click)="this.navigator.navigateTo('/') "></app-logo>
             <p class="slogan">Your gateway to the perfect rental property</p>
             <app-theme-button></app-theme-button>
         </div>
