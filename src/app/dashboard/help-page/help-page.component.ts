@@ -84,7 +84,7 @@ export class HelpPageComponent {
             Once a booking is created, an invoice is automatically generated based on the booking details. 
             When the booking is updated, a new updated invoice is automatically created.
           `,
-          gif: 'helppage/property.gif', // TODO:  Replace Placeholder for invoice gif
+          gif: 'help-page/invoice.gif',
         },
         {
           title: 'Step 7: Track Analytics',
@@ -105,13 +105,13 @@ export class HelpPageComponent {
           title: 'Creating Your First Property',
           content:
             'Go to the "Properties" section, click "Add Property", and fill in the basic information.',
-          gif: 'helppage/property.gif',
+          gif: 'help-page/property.gif',
         },
         {
           title: 'Adding Units to a Property',
           content:
             'After creating a property, click "Add Unit" and set up room details.',
-          gif: 'help-page/property.gif',
+          gif: 'help-page/unit.gif',
         },
       ],
     },
@@ -281,7 +281,7 @@ export class HelpPageComponent {
     this.contactFormOpen.set(false);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }
