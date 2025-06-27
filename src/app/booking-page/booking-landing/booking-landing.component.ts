@@ -48,15 +48,15 @@ export class BookingLandingComponent implements OnInit {
 );
   
 
-  readonly searchIsComplete = computed(
-    () =>
-      this.searchInput().trim() &&
-      this.bookingService.checkInDate() &&
-      this.bookingService.checkOutDate() &&
-      this.bookingService.guestCount() > 0 &&
-      this.bookingService.properties().length > 0 &&
-      this.bookingService.filteredMode()
-  );
+  readonly searchIsComplete = computed(() =>
+  this.searchInput().trim() !== '' &&
+  this.bookingService.checkInDate() !== '' &&
+  this.bookingService.checkOutDate() !== '' &&
+  this.bookingService.guestCount() >= 1 &&
+  this.bookingService.guestCount() <= this.maxGuestCapacity() &&
+  this.bookingService.properties().length > 0 &&
+  this.bookingService.filteredMode()
+);
 
   /**
    * Initializes the component by loading the initial data and clearing the search input.
@@ -78,7 +78,6 @@ export class BookingLandingComponent implements OnInit {
     const value = (event.target as HTMLInputElement).value;
     this.searchInput.set(value);
     this.showLocationDropdown.set(!!value.trim());
-
     if (!value.trim()) {
       this.bookingService.resetFilters();
     }
@@ -112,6 +111,7 @@ export class BookingLandingComponent implements OnInit {
    */
   clearSearchInput() {
     this.searchInput.set('');
+    this.bookingService.resetFilters();
     this.showLocationDropdown.set(false);
   }
 
@@ -154,18 +154,32 @@ export class BookingLandingComponent implements OnInit {
    * If the input value is not a valid number, it is set to 1.
    * @param event - The input event from the guest count field.
    */
- setGuestCountFromEvent(event: Event) {
-  const input = event.target as HTMLInputElement;
-  let value = parseInt(input.value, 10);
-  const max = this.maxGuestCapacity();
-  if (isNaN(value) || value < 1) {
-    value = 1;
-  } else if (value > max) {
-    value = max;
+  onGuestCountTyping(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseInt(input.value, 10);
+    this.bookingService.setGuestCount(isNaN(value) ? 1 : value);
   }
-  this.bookingService.setGuestCount(value);
-  input.value = value.toString(); 
-}
+
+  /**
+   * Clamps the guest count to a valid value when the user stops typing.
+   * If the input value is not a valid number, it is set to 1.
+   * If the input value is greater than the maximum guest capacity, it is set to the maximum guest capacity.
+   * @param event - The input event from the guest count field.
+   */
+  clampGuestCount(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = parseInt(input.value, 10);
+    const max = this.maxGuestCapacity();
+
+    if (isNaN(value) || value < 1) {
+      value = 1;
+    } else if (value > max) {
+      value = max;
+    }
+
+    this.bookingService.setGuestCount(value);
+    input.value = value.toString();
+  }
 
   /**
    * Initiates the fetching of available units for the current search parameters.
