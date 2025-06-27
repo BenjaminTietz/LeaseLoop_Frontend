@@ -39,13 +39,13 @@ export class BookingLandingComponent implements OnInit {
     );
   });
 
-  disableSearchButton = computed(
-    () =>
-      this.searchInput().trim() === '' ||
-      this.bookingService.checkInDate() === '' ||
-      this.bookingService.checkOutDate() === '' ||
-      this.bookingService.guestCount() < 1  
-  );
+  disableSearchButton = computed(() =>
+  this.searchInput().trim() === '' ||
+  this.bookingService.checkInDate() === '' ||
+  this.bookingService.checkOutDate() === '' ||
+  this.bookingService.guestCount() < 1 ||
+  this.bookingService.guestCount() > this.maxGuestCapacity()
+);
   
 
   readonly searchIsComplete = computed(
@@ -154,11 +154,18 @@ export class BookingLandingComponent implements OnInit {
    * If the input value is not a valid number, it is set to 1.
    * @param event - The input event from the guest count field.
    */
-  setGuestCountFromEvent(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const value = parseInt(input.value, 10);
-    this.bookingService.setGuestCount(isNaN(value) ? 1 : value);
+ setGuestCountFromEvent(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = parseInt(input.value, 10);
+  const max = this.maxGuestCapacity();
+  if (isNaN(value) || value < 1) {
+    value = 1;
+  } else if (value > max) {
+    value = max;
   }
+  this.bookingService.setGuestCount(value);
+  input.value = value.toString(); 
+}
 
   /**
    * Initiates the fetching of available units for the current search parameters.
