@@ -1,12 +1,13 @@
 @use '../../../styles/mixins.scss' as *;
 
-header{
+header {
   position: relative;
   width: 100%;
   @include display(flex, row, space-between, center);
   max-width: 1440px;
   padding: 20px 20px 0px 20px;
-  @media (max-width:400px){
+
+  @media (max-width:400px) {
     flex-direction: column;
     align-items: center;
     gap: 20px;
@@ -19,25 +20,22 @@ header{
   gap: 20px;
 }
 
-button{
+button {
   margin-right: 0px;
 }
 
 
-span{
+span {
   width: fit-content;
   overflow: visible;
   margin-left: 0px;
 }
 
-app-logo{
+app-logo {
   margin: 0 0 0 0;
+  cursor: pointer;
 }
 
-.logo-scrollbar{
+.logo-scrollbar {
   margin-right: -12px
 }
-
-
-
-

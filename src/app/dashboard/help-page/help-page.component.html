@@ -2,7 +2,8 @@
     <content>
         <div class="help-container">
             <h1>Help Center</h1>
-            <input type="text" placeholder="Search Help Topics..." [(ngModel)]="searchTerm" class="search-bar" />
+            <input id="search-help-topics" type="text" placeholder="Search Help Topics..." [(ngModel)]="searchTerm"
+                class="search-bar" />
             @if (searchTerm() && searchResults().length > 0) {
             <div class="search-preview">
                 @for (result of searchResults(); track result.sectionTitle; let index =$index) {
