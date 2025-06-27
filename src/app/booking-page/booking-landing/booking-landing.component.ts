@@ -38,6 +38,14 @@ export class BookingLandingComponent implements OnInit {
       loc.toLowerCase().includes(this.searchInput().toLowerCase())
     );
   });
+
+  disableSearchButton = computed(
+    () =>
+      this.searchInput().trim() === '' ||
+      this.bookingService.checkInDate() === '' ||
+      this.bookingService.checkOutDate() === '' ||
+      this.bookingService.guestCount() < 1  
+  );
   
 
   readonly searchIsComplete = computed(
@@ -57,6 +65,7 @@ export class BookingLandingComponent implements OnInit {
     this.bookingService.loadInitialData();
     this.clearSearchInput();
     this.showLocationDropdown.set(false);
+    this.bookingService.selectedPropertyDetail.set(null);
   }
 
   /**
@@ -104,7 +113,6 @@ export class BookingLandingComponent implements OnInit {
   clearSearchInput() {
     this.searchInput.set('');
     this.showLocationDropdown.set(false);
-    this.bookingService.resetFilters();
   }
 
   /**

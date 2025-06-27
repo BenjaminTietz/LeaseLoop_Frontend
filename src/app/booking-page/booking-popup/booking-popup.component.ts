@@ -23,12 +23,12 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { BookingStatusPopupComponent } from '../booking-status-popup/booking-status-popup.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-booking-popup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, MatIcon],
   templateUrl: './booking-popup.component.html',
   styleUrl: './booking-popup.component.scss',
   animations: [
@@ -319,5 +319,10 @@ export class BookingPopupComponent implements OnInit {
           });
         },
       });
+  }
+
+  closeClientForm(){
+    this.clientForm.reset();
+    this.showClientForm.set(false);
   }
 }

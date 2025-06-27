@@ -65,6 +65,7 @@
     </div>
     } @else {
     <!-- Client Form -->
+    <mat-icon class="close-icon" (click)="closeClientForm()" >close</mat-icon>
     <h3>Please fill in your details</h3>
     <form [formGroup]="clientForm">
         <div class="form-input-wrapper">
