@@ -5,6 +5,7 @@ import { ClientBookingService } from '../../services/client-booking/client-booki
 import { ActivatedRoute } from '@angular/router';
 import { BookingPopupComponent } from '../booking-popup/booking-popup.component';
 import { NavigatorService } from '../../services/navigator/navigator.service';
+import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
 
 @Component({
   selector: 'app-unit-detail-view',
@@ -31,6 +32,8 @@ export class UnitDetailViewComponent {
       .find((p) => p.id === unit.property.id);
   });
 
+  showPopup = signal(false);
+
   unitImages = computed(() => this.unit()?.images ?? []);
 
   /**
@@ -45,7 +48,13 @@ export class UnitDetailViewComponent {
     });
   }
 
-  showPopup = signal(false);
+  /**
+   * Scrolls to the top of the page when the component is initialized.
+   * Used to reset the scroll position when navigating to a unit detail view.
+   */
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   /**
    * Opens the booking popup.
@@ -53,9 +62,14 @@ export class UnitDetailViewComponent {
    */
   openBookingPopup() {
     this.showPopup.set(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    disableBackgroundScroll()
   }
 
   closeBookingPopup = () => {
     this.showPopup.set(false);
+    enableBackgroundScroll();
   };
+
 }
+

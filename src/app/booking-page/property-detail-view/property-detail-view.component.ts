@@ -27,4 +27,11 @@ export class PropertyDetailViewComponent {
       ? this.bookingService.getPropertyById(id)
       : undefined;
   });
+
+  /**
+   * Scrolls to the top of the page when the component is initialized.
+   */
+  ngOnInit(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

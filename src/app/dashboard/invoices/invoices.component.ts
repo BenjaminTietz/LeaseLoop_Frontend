@@ -6,6 +6,7 @@ import { PagingComponent } from '../../shared/dashboard-components/paging/paging
 import { SearchInputComponent } from '../../shared/dashboard-components/search-input/search-input.component';
 import { FilterComponent } from '../../shared/global/filter/filter.component';
 import { getMediaUrl } from '../../utils/media-path.utils';
+import { HorizontalDirectivesDirective } from '../../directives/horizontal-scroll/horizontal-directives.directive';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { getMediaUrl } from '../../utils/media-path.utils';
     PagingComponent,
     SearchInputComponent,
     FilterComponent,
+    HorizontalDirectivesDirective
   ],
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.scss',

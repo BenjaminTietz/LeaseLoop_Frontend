@@ -21,7 +21,7 @@
             <p>Sleeps up to {{ unit.max_capacity }}</p>
             <p>{{ unit.type | titlecase }}</p>
             <p>Starting from:</p>
-            <span>{{ unit.price_per_night }}</span>
+            <span>{{ unit.price_per_night.toFixed(2) }}</span>
             <button class="book-now" (click)="navigator.navigateTo('property/' + prop.id + '/unit/' + unit.id)">
                 Check availability
             </button>

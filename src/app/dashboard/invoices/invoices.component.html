@@ -7,7 +7,7 @@
                 <app-filter [filterBy]="this.filterBy" (filterByChange)="this.filterInvoices($event)"></app-filter>
             </div>
         </div>
-        <div class="table-wrapper">
+        <div class="table-wrapper" appHorizontalDirectives>
             @if(invoiceService.sending()) {
             <app-progress-bar></app-progress-bar>
             }
