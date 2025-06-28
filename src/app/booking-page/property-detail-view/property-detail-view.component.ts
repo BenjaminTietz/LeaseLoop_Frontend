@@ -34,4 +34,9 @@ export class PropertyDetailViewComponent {
   ngOnInit(){
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  goBackToOverview() {
+    this.navigator.navigateTo('/');
+    this.bookingService.selectedPropertyDetail.set(null);
+  }
 }
