@@ -28,6 +28,7 @@ export class BookingLandingComponent implements OnInit {
   showLocationDropdown = signal(false);
   searchInput = signal<string>('');
   today = new Date().toISOString().split('T')[0];
+  hasSearched = signal(false);
 
   filteredLocations = computed(() => {
     const allLocations = [
@@ -62,10 +63,12 @@ export class BookingLandingComponent implements OnInit {
    * Initializes the component by loading the initial data and clearing the search input.
    */
   ngOnInit() {
+    this.hasSearched.set(false);
     this.bookingService.loadInitialData();
     this.clearSearchInput();
     this.showLocationDropdown.set(false);
     this.bookingService.selectedPropertyDetail.set(null);
+    console.log(this.navigator.actualRoute())
   }
 
   /**
@@ -75,9 +78,11 @@ export class BookingLandingComponent implements OnInit {
    * @param event the event object
    */
   onLocationInput(event: Event) {
+    this.hasSearched.set(false);
     const value = (event.target as HTMLInputElement).value;
     this.searchInput.set(value);
     this.showLocationDropdown.set(!!value.trim());
+    this.bookingService.searchLocation.set(value);
     if (!value.trim()) {
       this.bookingService.resetFilters();
     }
@@ -90,9 +95,11 @@ export class BookingLandingComponent implements OnInit {
    * @param location the selected location
    */
   onLocationSelect(location: string) {
+    this.hasSearched.set(false);
     this.searchInput.set(location);
     this.showLocationDropdown.set(false);
     this.bookingService.filterPropertiesByLocation(location);
+    this.bookingService.searchLocation.set(location);
   }
 
   /**
@@ -103,6 +110,7 @@ export class BookingLandingComponent implements OnInit {
    * close it when the input field loses focus.
    */
   onBlurDropdownClose() {
+    this.hasSearched.set(false);
     setTimeout(() => this.showLocationDropdown.set(false), 150);
   }
 
@@ -110,6 +118,7 @@ export class BookingLandingComponent implements OnInit {
    * Clears the search input and resets the filters.
    */
   clearSearchInput() {
+    this.hasSearched.set(false);
     this.searchInput.set('');
     this.bookingService.resetFilters();
     this.showLocationDropdown.set(false);
@@ -125,6 +134,7 @@ export class BookingLandingComponent implements OnInit {
    */
 
   setCheckInFromEvent(event: Event) {
+    this.hasSearched.set(false);
     const target = event.target as HTMLInputElement;
     const checkIn = target.value;
     this.bookingService.setCheckIn(checkIn);
@@ -155,6 +165,7 @@ export class BookingLandingComponent implements OnInit {
    * @param event - The input event from the guest count field.
    */
   onGuestCountTyping(event: Event) {
+    this.hasSearched.set(false);
     const input = event.target as HTMLInputElement;
     const value = parseInt(input.value, 10);
     this.bookingService.setGuestCount(isNaN(value) ? 1 : value);
@@ -167,6 +178,7 @@ export class BookingLandingComponent implements OnInit {
    * @param event - The input event from the guest count field.
    */
   clampGuestCount(event: Event) {
+    this.hasSearched.set(false);
     const input = event.target as HTMLInputElement;
     let value = parseInt(input.value, 10);
     const max = this.maxGuestCapacity();
@@ -187,7 +199,9 @@ export class BookingLandingComponent implements OnInit {
    * check-out date and guest count.
    */
   searchAvailableUnits() {
+    this.hasSearched.set(true);
     this.bookingService.fetchAvailableUnits();
+
   }
 
   /**
@@ -207,6 +221,7 @@ export class BookingLandingComponent implements OnInit {
    * until a new property is selected.
    */
   resetPropertyDetails() {
+    this.hasSearched.set(false);
     this.bookingService.hidePropertyDetails();
   }
 
@@ -215,6 +230,7 @@ export class BookingLandingComponent implements OnInit {
    * This also resets the search input field to be empty.
    */
   resetFilters() {
+    this.hasSearched.set(false);
     this.bookingService.resetFilters();
     this.searchInput.set('');
   }

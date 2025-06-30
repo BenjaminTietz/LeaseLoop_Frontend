@@ -8,13 +8,14 @@ import { NavigationEnd } from '@angular/router';
 })
 export class NavigatorService {
   router = inject(Router);
-  actualRoute = signal(this.router.url);
+  actualRoute = signal<string>('');
 
   /**
    * Listens to router events and updates the actualRoute signal
    * whenever a NavigationEnd event is received.
    */
   constructor() {
+    this.actualRoute.set(this.router.url);
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
