@@ -35,6 +35,30 @@ export class ClientBookingService {
   selectedPropertyDetail = signal<Property | null>(null);
   services = signal<Service[]>([]);
   clientId = signal<number | null>(null);
+  searchLocation = signal<string | null>(null);
+  cityError = signal<string | null>(null);
+
+  validSearchParams = computed(() => {
+  const loc = this.searchLocation();
+  const checkIn = this.checkInDate();
+  const checkOut = this.checkOutDate();
+
+  const locationIsValid = !!loc && (
+    this.cityList().includes(loc) ||
+    this.countryList().includes(loc)
+  );
+
+  const rangeIsValid = !!checkIn && !!checkOut && checkIn < checkOut;
+
+  return {
+    ready: !!checkIn && !!checkOut && !!this.guestCount() && locationIsValid && rangeIsValid,
+    checkIn,
+    checkOut,
+    guests: this.guestCount(),
+    location: loc,
+    locationIsValid,
+  };
+});
 
   showPropertyDetail = signal(false);
 
@@ -149,28 +173,28 @@ export class ClientBookingService {
    * If the request fails, the method logs an error message to the console.
    */
   fetchAvailableUnits() {
-    const checkIn = this.checkInDate();
-    const checkOut = this.checkOutDate();
-    const guests = this.guestCount();
-    if (!checkIn || !checkOut) return;
-    const params = new HttpParams()
-      .set('check_in', checkIn)
-      .set('check_out', checkOut)
-      .set('guests', guests.toString());
-    this.httpService
-      .get<Unit[]>(
-        `${
-          environment.apiBaseUrl
-        }/api/public/booking/available-units/?${params.toString()}`
-      )
-      .subscribe({
-        next: (units) => {
-          this.units.set(units);
-          this.filteredMode.set(true);
-        },
-        error: (err) => console.error('Error fetching available units', err),
-      });
+  const params = this.validSearchParams();
+  if (!params.ready) {
+    this.cityError.set(params.locationIsValid ? null : 'Please select a valid city or country.');
+    return;
   }
+
+  const httpParams = new HttpParams()
+    .set('check_in', params.checkIn!)
+    .set('check_out', params.checkOut!)
+    .set('guests', params.guests.toString());
+
+  this.httpService
+    .get<Unit[]>(`${environment.apiBaseUrl}/api/public/booking/available-units/?${httpParams.toString()}`)
+    .subscribe({
+      next: (units) => {
+        this.units.set(units);
+        this.filteredMode.set(true);
+        this.cityError.set(null);
+      },
+      error: (err) => console.error('Error fetching available units', err),
+    });
+}
 
   /**
    * Loads services for a given property and updates the services signal.

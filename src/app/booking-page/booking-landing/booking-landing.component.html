@@ -11,8 +11,7 @@
         <!-- Router Outlet -->
         <router-outlet></router-outlet>
         <!-- Conditional Main Landing Content -->
-        <ng-container
-            *ngIf="!bookingService.selectedPropertyDetail() || !navigator.actualRoute().includes('/property/')">
+        <ng-container *ngIf="navigator.actualRoute() === '/'">
             <!-- Landing view above selector -->
             <section class="landing-view">
                 <h1>Find your perfect rental property</h1>
@@ -66,6 +65,9 @@
                 @if (bookingService.guestCount() > maxGuestCapacity()) {
                 <p class="info">Max. guest capacity reached – please reduce guest count or change filters.</p>
                 }
+                @if (hasSearched() && !bookingService.validSearchParams().locationIsValid) {
+                    <strong>Please select a valid city or country.</strong>
+                }
             </section>
             <!-- Mainarea -->
             <ng-container *ngIf="searchIsComplete(); else noResultsView">
@@ -89,6 +91,7 @@
                     <button class="btn reset-btn" (click)="resetFilters()">Reset search</button>
                 </section>
             </ng-container>
+           
             <ng-template #noResultsView>
                 <section class="default-suggestion">
                     <h2>Plan your next getaway</h2>
