@@ -7,6 +7,8 @@ import { FormService } from '../../services/form-service/form.service';
 import { NavigatorService } from '../../services/navigator/navigator.service';
 import { ProgressBarComponent } from '../../shared/global/progress-bar/progress-bar.component';
 import { AriaConverterDirective } from '../../directives/aria-label-converter/aria-converter.directive';
+import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
+import { InfoOverlayComponent } from "../../shared/global/info-overlay/info-overlay.component";
 
 @Component({
   selector: 'app-register',
@@ -16,7 +18,8 @@ import { AriaConverterDirective } from '../../directives/aria-label-converter/ar
     ReactiveFormsModule,
     ProgressBarComponent,
     AriaConverterDirective,
-  ],
+    InfoOverlayComponent
+],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -25,7 +28,7 @@ export class RegisterComponent {
   toast = inject(ToastService);
   formService = inject(FormService);
   navigator = inject(NavigatorService);
-
+  infoOverlay = signal(true)
   passVisible = signal(false);
 
   registerForm = inject(FormBuilder).nonNullable.group({
@@ -62,6 +65,14 @@ export class RegisterComponent {
     checkbox: [false, [Validators.requiredTrue]],
   });
 
+  
+  
+    closeInfo() {
+      this.infoOverlay.set(false)
+      enableBackgroundScroll();
+      sessionStorage.setItem('infoShownRegister', 'true');
+    }
+
   /**
    * Lifecycle hook that is called after Angular has initialized the component.
    * It's used to reset the register form if the user is already logged in.
@@ -85,6 +96,12 @@ export class RegisterComponent {
     localStorage.removeItem('user');
     sessionStorage.removeItem('user');
     this.auth.loginData.set({});
+    if (sessionStorage.getItem('infoShownRegister') === 'true') {
+        this.infoOverlay.set(false);
+      } else {
+        this.infoOverlay.set(true);
+        disableBackgroundScroll();
+      }
   }
 
   /**

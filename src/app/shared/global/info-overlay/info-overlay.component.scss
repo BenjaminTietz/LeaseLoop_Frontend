@@ -1,0 +1,40 @@
+@use '../../../styles/mixins.scss'  as *;
+
+main{
+  @include position(fixed, $top:50%, $left:50%);
+  transform: translate(-50%, -50%);
+  z-index: 89;
+  background-color: rgba(0,0,0,0.65);
+  height: 100svh;
+  @include display(flex, column, center, center);
+  
+}
+
+div{
+  @include display(flex, column, center, center);
+  gap: 50px;
+  padding: 20px;
+  background-color: var(--color-bg-surface);
+  border-radius: 20px;
+  text-align: center;
+  max-width: 95%;
+}
+
+h1{
+  font-size: 56px;
+}
+
+p, button{
+  font-size: 32px;
+  
+}
+
+@media(max-width:600px){
+  h1{
+    font-size: 32px;
+  }
+  p, button{
+    font-size: 24px;
+  }
+}
+

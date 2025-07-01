@@ -16,7 +16,7 @@
             <section class="landing-view">
                 <h1>Find your perfect rental property</h1>
                 <p>Explore our selection of properties and book your next stay with us.</p>
-                <div class="btn" (click)="this.navigator.navigateTo('owner')">Register your property</div>
+                <button class="btn primary" (click)="this.navigator.navigateTo('owner')">Register your property</button>
             </section>
             <!-- Selector selection -->
             <section class="selector">
@@ -58,8 +58,12 @@
                                 [value]="bookingService.guestCount()" (input)="onGuestCountTyping($event)"
                                 (blur)="clampGuestCount($event)" />
                         </div>
-                        <button class="btn search-btn" [disabled]="disableSearchButton()"
+                        <div class="btn-container">
+                            <button class="btn search-btn" [disabled]="disableSearchButton()"
                             (click)="searchAvailableUnits()">Search</button>
+                            <button class="btn search-btn" (click)="resetFilters()" [disabled]="!hasSearched()">Reset search</button>
+                        </div>
+                        
                     </div>
                 </div>
                 @if (bookingService.guestCount() > maxGuestCapacity()) {
@@ -88,7 +92,6 @@
                         </div>
                         }
                     </div>
-                    <button class="btn reset-btn" (click)="resetFilters()">Reset search</button>
                 </section>
             </ng-container>
            
@@ -119,6 +122,9 @@
         <!-- Footer -->
         <app-landing-footer></app-landing-footer>
     </content>
+    @if(infoOverlay()){
+        <app-info-overlay [title]="'Important Notice: Demo Mode'" [message]="'This is a demonstration environment. Please do not enter any real or personal data. All data will be deleted automatically every 48 hours.'" (closeInfo)="closeInfo()"></app-info-overlay>
+    }
 </main>
 <app-booking-status-popup *ngIf="bookingService.bookingStatusPopup()"
     [status]="bookingService.bookingStatusPopup()!.status" [bookingId]="bookingService.bookingStatusPopup()!.bookingId"

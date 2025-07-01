@@ -4,8 +4,11 @@
             <div class="container">
                 <h1>Property Management System</h1>
                 <p>Manage your guesthouse or Airbnb with ease – bookings, invoices, seasonal prices & more.</p>
-                <button class="btn primary" (click)="this.navigator.navigateTo('owner/register')">Start Free
-                    Trial</button>
+                <div class="controls">
+                    <button class="btn primary" (click)="this.navigator.navigateTo('owner/register')">Start Demo Trial</button>
+                    <button class="btn primary" (click)="this.navigator.navigateTo('/')">Back to booking</button>
+                </div>
+                
             </div>
         </section>
         <section class="features-section">
@@ -40,4 +43,7 @@
             </div>
         </section>
     </content>
+    @if(infoOverlay()){
+       <app-info-overlay [title]="'Important Notice: Demo Mode'" [message]="'This is a demonstration environment. Please do not enter any real or personal data. All data will be deleted automatically every 48 hours.'" (closeInfo)="closeInfo()"></app-info-overlay>
+    }
 </main>
