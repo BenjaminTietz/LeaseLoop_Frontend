@@ -7,6 +7,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from '../../shared/global/progress-bar/progress-bar.component';
 import { AriaConverterDirective } from '../../directives/aria-label-converter/aria-converter.directive';
 import { FormService } from '../../services/form-service/form.service';
+import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
+import { InfoOverlayComponent } from "../../shared/global/info-overlay/info-overlay.component";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,8 @@ import { FormService } from '../../services/form-service/form.service';
     MatProgressBarModule,
     ProgressBarComponent,
     AriaConverterDirective,
-  ],
+    InfoOverlayComponent
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -26,6 +29,7 @@ export class LoginComponent {
   navigator = inject(NavigatorService);
   formService = inject(FormService);
   passVisible = signal(false);
+  infoOverlay = signal(true)
 
   loginForm = new FormBuilder().nonNullable.group({
     email: [
@@ -42,6 +46,12 @@ export class LoginComponent {
       ],
     ],
   });
+
+  closeInfo() {
+    this.infoOverlay.set(false)
+    enableBackgroundScroll();
+    sessionStorage.setItem('infoShownLogin', 'true');
+  }
 
   /**
    * Initializes the LoginComponent and sets up an effect to reset the login form
@@ -62,6 +72,12 @@ export class LoginComponent {
    */
   ngOnInit() {
     this.auth.rememberedLogin();
+    if (sessionStorage.getItem('infoShownLogin') === 'true') {
+      this.infoOverlay.set(false);
+    } else {
+      this.infoOverlay.set(true);
+      disableBackgroundScroll();
+    }
   }
 
   /**

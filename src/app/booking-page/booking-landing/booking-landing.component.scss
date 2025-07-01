@@ -22,6 +22,11 @@ app-logo, app-theme-button {
     }
 }
 
+.btn-container{
+    @include display(flex, row, center, center);
+    gap: 20px;
+}
+
 .landing-view {
     @include display(flex, column, center, center);
     width: 100%;

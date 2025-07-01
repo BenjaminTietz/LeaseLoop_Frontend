@@ -7,6 +7,8 @@ import { LandingFooterComponent } from '../../shared/landing-components/landing-
 import { LogoComponent } from '../../shared/landing-components/logo/logo.component';
 import { RouterOutlet } from '@angular/router';
 import { BookingStatusPopupComponent } from '../booking-status-popup/booking-status-popup.component';
+import { InfoOverlayComponent } from "../../shared/global/info-overlay/info-overlay.component";
+import { disableBackgroundScroll, enableBackgroundScroll } from '../../utils/scroll.utils';
 
 @Component({
   selector: 'app-booking-landing',
@@ -18,7 +20,8 @@ import { BookingStatusPopupComponent } from '../booking-status-popup/booking-sta
     LogoComponent,
     RouterOutlet,
     BookingStatusPopupComponent,
-  ],
+    InfoOverlayComponent
+],
   templateUrl: './booking-landing.component.html',
   styleUrl: './booking-landing.component.scss',
 })
@@ -29,6 +32,7 @@ export class BookingLandingComponent implements OnInit {
   searchInput = signal<string>('');
   today = new Date().toISOString().split('T')[0];
   hasSearched = signal(false);
+  infoOverlay = signal(false);
 
   filteredLocations = computed(() => {
     const allLocations = [
@@ -50,6 +54,7 @@ export class BookingLandingComponent implements OnInit {
   
 
   readonly searchIsComplete = computed(() =>
+  this.hasSearched() &&
   this.searchInput().trim() !== '' &&
   this.bookingService.checkInDate() !== '' &&
   this.bookingService.checkOutDate() !== '' &&
@@ -68,7 +73,17 @@ export class BookingLandingComponent implements OnInit {
     this.clearSearchInput();
     this.showLocationDropdown.set(false);
     this.bookingService.selectedPropertyDetail.set(null);
-    console.log(this.navigator.actualRoute())
+    if(sessionStorage.getItem('infoShownBooking') === 'true') {
+      this.infoOverlay.set(false);
+    }else{
+      this.infoOverlay.set(true);
+    }
+  }
+
+  closeInfo() {
+    enableBackgroundScroll();
+    this.infoOverlay.set(false);
+    sessionStorage.setItem('infoShownBooking', 'true');
   }
 
   /**

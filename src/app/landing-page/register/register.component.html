@@ -89,4 +89,7 @@
     </form>
     }
   </content>
+    @if(infoOverlay()){
+      <app-info-overlay [title]="'Important Notice: Demo Mode'" [message]="'This is a demonstration environment. Please do not enter any real or personal data. All data will be deleted automatically every 48 hours.'" (closeInfo)="closeInfo()"></app-info-overlay>
+    }
 </main>

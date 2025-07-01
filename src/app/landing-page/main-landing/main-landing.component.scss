@@ -100,3 +100,8 @@ p {
 .button-container {
     position: relative;
 }
+
+.controls{
+    @include display(flex, column, center, center);
+    gap: 20px;
+}
